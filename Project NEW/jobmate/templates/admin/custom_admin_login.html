@@ -1,0 +1,19 @@
+
+
+{% block content %}
+<div class="custom-login-form">
+    <h2 style="color: #000;">Login to the Admin Panel</h2>
+    <form method="post" action="{% url 'admin:login' %}" class="login-form">
+        {% csrf_token %}
+        <div style="margin-bottom: 10px;">
+            <label for="{{ form.username.id_for_label }}" style="color: #000;">Username:</label>
+            {{ form.username }}
+        </div>
+        <div style="margin-bottom: 10px;">
+            <label for="{{ form.password.id_for_label }}" style="color: #000;">Password:</label>
+            {{ form.password }}
+        </div>
+        <button type="submit" class="submit-button" style="background-color: #000; color: #fff; border: none; padding: 10px 20px;">Login</button>
+    </form>
+</div>
+{% endblock %}

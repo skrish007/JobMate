@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Sign Up</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+  
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon2.png' %}" rel="icon">
+  <link href="{% static 'assets/img/search.png' %}" rel="apple-touch-icon">
+  
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cinzel">
+
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  
+  <!-- Template Main CSS File -->
+  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+  
+  <!-- =======================================================
+  * Template Name: JobMate
+  * Updated: Sep 18 2023 with Bootstrap v5.3.2
+  * Template URL: https://bootstrapmade.com/JobMate-free-onepage-bootstrap-theme/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+  <style>
+    body {
+            background-color: #f8f9fa;
+        }
+
+        #reg {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        /* Two-column layout */
+        .form-column {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .form-column .form-group {
+            flex-basis: calc(50% - 10px);
+        }
+
+        /* Center the submission portion */
+        .submit-button,#cb {
+            text-align: center;
+            margin-top: 20px; /* Proper spacing between fields and submission portion */
+            
+        }
+        .submit-button .btn:hover {
+          background-color: #007A6C; /* Green background color on hover */
+          color: #FFFFFF; /* Black text color on hover */
+      }
+      .form-check-input:checked {
+        background-color: #007a6c;
+        border-color: #007a6c;
+    }
+    
+   
+.error-field {
+    border: 1px solid red; 
+}
+
+  </style>
+
+<body>
+  <!-- ... your existing HTML content ... -->
+
+
+
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top d-flex align-items-center">
+    <div class="container d-flex justify-content-between">
+
+      <div class="logo">
+        <h1 style="font-family: 'Cinzel', serif; color: white;" onmouseover="this.style.color='#21cfaf'" onmouseout="this.style.color='white'"><a href="index.html"></a>JobMate</h1>
+
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!-- <a href="home.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+      </div>
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link scrollto active" href="/">Home</a></li>
+          <li><a class="nav-link scrollto" href="login">Already have an Account? Login</a></li>
+          <li><a class="nav-link scrollto" href="register">New Candidate? Sign Up</a></li>
+          <!--<li><a class="nav-link scrollto" href="#about">About</a></li>
+          <li><a class="nav-link scrollto" href="#services">Services</a></li>
+          <li><a class="nav-link scrollto " href="#portfolio">Portfolio</a></li>
+          
+          <li class="dropdown"><a href="#"><span>Register</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a href="register">New Candidate ?</a></li>
+              
+              </li>
+              <li><a href="register">New Job Provider ?</a></li>
+              
+            </ul>
+          </li>
+          <li><a class="nav-link scrollto" href="#contact">Contact</a></li> -->
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+        <br>
+      </nav><!-- .navbar -->
+
+    </div>
+  </header><!-- End Header -->
+  
+  
+
+  <div class="container" id="reg">
+    <h1 class="text-center mb-4">Company Registration</h1>
+    <form method="POST" action="/companyreg" enctype="multipart/form-data" onsubmit="return validateForm();">
+      {% csrf_token %}
+    <div class="form-column">
+            <div class="form-group">
+                <label class="form-label" for="cname">Company Name</label>
+                <input type="text" id="cname" name="cname" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="email">E-mail</label>
+                <input type="email" id="email" name="email" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cphone">Contact</label>
+              <input type="tel" id="cphone" name="cphone" name="cphone" class="form-control" />
+          </div>
+
+            <div class="form-group">
+              <label class="form-label" for="caddress">Address</label>
+              <input type="text" id="caddress" name="caddress" class="form-control" style="height: 100px;" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="ctype">Company Type</label>
+            <select id="ctype" name="ctype" class="form-select">
+                <option value="" selected disabled>Select</option>
+                <option value="tech">Technology</option>
+                <option value="finance">Finance</option>
+                <option value="design">Arts/Design</option>
+                <option value="edu">Education</option>
+                <option value="sales">Sales/Retail</option>
+                <option value="pr">Marketing/Advertising/PR</option>
+                <option value="media">Media/Communication</option>
+                <option value="food">Food/Beverage</option>
+                <option value="logistics">Supply Chain\Logistics</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+        
+        <div class="form-group" id="otherctype" style="display: none;">
+            <label class="form-label" for="otherctype">Specify Other Company Type</label>
+            <input type="text" id="otherctype" name="otherctype"  class="form-control" placeholder="Specify other company type">
+        </div>
+        
+        <script>
+            const ctypeSelect = document.getElementById("ctype");
+            const otherctypeField = document.getElementById("otherctype");
+            const otherTypeInput = document.getElementById("otherctype"); // Change to "otherTypeInput" to match the HTML
+            
+            ctypeSelect.addEventListener("change", function () { // Change "companyTypeSelect" to "ctypeSelect" to match the variable name
+                if (ctypeSelect.value === "other") { // Change "companyTypeSelect" to "ctypeSelect" to match the variable name
+                    otherctypeField.style.display = "block";
+                    otherTypeInput.required = true;
+                } else {
+                    otherctypeField.style.display = "none";
+                    otherTypeInput.required = false;
+                }
+            });
+        </script>
+        
+        <div class="form-group">
+          <label class="form-label" for="cdescription">About Company</label>
+          <input type="text" id="cdescription" name="cdescription"  class="form-control" style="height: 100px;" />
+      </div>
+          
+          
+            <div class="form-group">
+                <label class="form-label" for="cloc">Company Location</label>
+                <input type="text" id="cloc" name="cloc"  class="form-control" />
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="empno">Number of Employees</label>
+              <input type="number" id="empno" name="empno"  class="form-control" />
+          </div>
+          
+            <div class="form-group">
+                <label class="form-label" for="clicense">License Number</label>
+                <input type="text" id="clicense" name="clicense" class="form-control" />
+            </div>
+            
+           
+            <div class="form-group">
+              <label class="form-label" for="fyear">Year Founded</label>
+              <input type="text" id="fyear" name="fyear" class="form-control" />
+          </div>
+        <div class="form-column">
+            <div class="form-group">
+                <label class="form-label" for="ceoname">CEO Name</label>
+                <input type="text" id="ceoname" name="ceoname" class="form-control" />
+            </div>
+            
+            
+            <div class="form-group">
+              <label class="form-label" for="website">Website</label>
+              <input type="url" id="website" name="website"  class="form-control" placeholder="https://www.example.com" />
+          </div>
+          
+
+            <div class="form-group">
+              <label class="form-label" for="logo">Upload Logo</label>
+              <input type="file" id="logo" name="logo" class="form-control" accept="image/*" />
+          </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="licensefile">Upload License</label>
+        <input type="file" id="licensefile" name="licensefile"  class="form-control" accept=".pdf,.doc,.docx" />
+    </div>
+    
+
+          
+        </div>
+        <div class="form-check mb-4">
+          <input class="form-check-input" type="checkbox" value="" id="agree" />
+          <label class="form-check-label" for="agree">
+              I agree to the <a href="#!">Terms of Service</a>
+          </label>
+      </div>
+        <!-- Centered submission portion -->
+        <div class="submit-button">
+            <button type="submit" class="btn btn-dark btn-lg">Register</button>
+        </div>
+    </form>
+    <p><center> OR </p>
+      <h3> Continue with Google</h3>
+      <br><br> <br>
+  </div>
+  <script>
+  function validateForm() {
+    const cnameInput = document.getElementById("cname");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const confirmPasswordInput = document.getElementById("confirmPassword");
+    const cphoneInput = document.getElementById("cphone");
+    const fyearInput = document.getElementById("fyear");
+    const agreeInput = document.getElementById("agree");
+
+    // Remove any previously added error-field classes
+    const inputs = [cnameInput, emailInput, passwordInput, confirmPasswordInput, cphoneInput, fyearInput];
+    inputs.forEach(input => {
+        input.classList.remove("error-field");
+    });
+
+    const cname = cnameInput.value;
+    const email = emailInput.value;
+    const password = passwordInput.value;
+    const confirmPassword = confirmPasswordInput.value;
+    const cphone = cphoneInput.value;
+    const fyear = new Date(fyearInput.value);
+    const today = new Date();
+
+    // Check if any mandatory field is blank
+    if (cname === "" || email === "" || password === "" || confirmPassword === "" || cphone === "" || fyearInput === "") {
+        alert("All fields must be filled out.");
+        inputs.forEach(input => {
+            if (input.value === "") {
+                input.classList.add("error-field");
+            }
+        });
+        return false;
+    }
+
+    if (!email.includes("@") || !email.includes(".")) {
+        alert("Please enter a valid email address.");
+        emailInput.focus();
+        emailInput.classList.add("error-field");
+        return false;
+    }
+
+    if (password !== confirmPassword) {
+        alert("Password and Confirm Password must match.");
+        passwordInput.focus();
+        passwordInput.classList.add("error-field");
+        return false;
+    }
+
+    if (fyear >= today) {
+        alert("Date Founded cannot be in the future.");
+        fyearInput.focus();
+        fyearInput.classList.add("error-field");
+        return false;
+    }
+
+    if (!/^[6-9]\d{9}$/.test(cphone)) {
+        alert("Please enter a valid 10-digit phone number starting with 6, 7, 8, or 9.");
+        cphoneInput.focus();
+        cphoneInput.classList.add("error-field");
+        return false;
+    }
+
+    if (password.length < 6) {
+        alert("Password must be at least 6 characters long.");
+        passwordInput.focus();
+        passwordInput.classList.add("error-field");
+        return false;
+    }
+
+    if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}/.test(password)) {
+        alert("Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.");
+        passwordInput.focus();
+        passwordInput.classList.add("error-field");
+        return false;
+    }
+
+    if (!agreeInput.checked) {
+        alert("Please agree to the Terms of Service.");
+        return false;
+    }
+
+    // If all validations pass, the form will submit
+    return true;
+}
+</script>
+</head>
+
+
+
+<!-- ======= Footer ======= -->
+<footer id="footer">
+  <div class="footer-top">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-lg-3 col-md-6">
+          <div class="footer-info">
+            <h3>JobMate</h3>
+            <p>
+              A108 Adam Street <br>
+              NY 535022, USA<br><br>
+              <strong>Phone:</strong> +1 5589 55488 55<br>
+              <strong>Email:</strong> info@example.com<br>
+            </p>
+            <div class="social-links mt-3">
+              <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
+              <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+              <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+              <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
+              <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-md-6 footer-links">
+          <h4>Useful Links</h4>
+          <ul>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-6 footer-links">
+          <h4>Our Services</h4>
+          <ul>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
+            <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-4 col-md-6 footer-newsletter">
+          <h4>Our Newsletter</h4>
+          <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna</p>
+          <form action="" method="post">
+            <input type="email" name="email"><input type="submit" value="Subscribe">
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="copyright">
+      &copy; Copyright <strong><span>JobMate</span></strong>. All Rights Reserved
+    </div>
+    <div class="credits">
+      <!-- All the links in the footer should remain intact. -->
+      <!-- You can delete the links only if you purchased the pro version. -->
+      <!-- Licensing information: https://bootstrapmade.com/license/ -->
+      <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/JobMate-free-onepage-bootstrap-theme/ -->
+      Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+    </div>
+  </div>
+</footer><!-- End Footer -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- Vendor JS Files -->
+<script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+<script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+<script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+<script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+<script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+
+<!-- Template Main JS File -->
+<script src="{% static 'assets/js/main.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+</body>
+
+</html>

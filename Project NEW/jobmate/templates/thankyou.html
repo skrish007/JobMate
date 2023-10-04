@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>JobMate Bootstrap Template - Index</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+  
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+  
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cinzel">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  
+  <!-- Template Main CSS File -->
+  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+  
+  <!-- =======================================================
+  * Template Name: JobMate
+  * Updated: Sep 18 2023 with Bootstrap v5.3.2
+  * Template URL: https://bootstrapmade.com/JobMate-free-onepage-bootstrap-theme/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+ <style>
+  /* Increase button size on hover */
+  .btn.btn-dark:hover {
+      transform: scale(1.05);
+  }
+  
+  /* Change button background color to green on hover */
+  .btn.btn-dark:hover {
+      background-color: #21cfaf; /* Green color with opacity */
+      color: black;
+  }
+  
+  /* Remove the "Hello Welcome" and Logout Button */
+  .welcome-msg,
+  .logout-btn {
+      display: none;
+  }
+  
+  /* Center the logo on the page */
+  .logo {
+      text-align: center;
+      margin-top: 100px; /* Adjust the margin as needed */
+  }
+  
+  /* Center the "Thank You" content */
+  .center-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+  }
+  
+  /* Style the "Thank You" content */
+  .card-container {
+      background-color: white;
+      border: 3px solid #21cfaf;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+  }
+  
+  /* Center-align the "Back Home" button */
+  .back-home-btn {
+      margin-top: 20px;
+      text-align: center;
+      
+  }
+  </style>
+</head>
+<body>
+  <header>
+  <!-- ======= Main Content ======= -->
+  <main id="main">
+    <div class="container">
+      
+      <nav>
+      <!-- Center the logo on the page -->
+      <div class="logo">
+        <h1 style="font-family: 'Cinzel', serif; color: white;" onmouseover="this.style.color='#21cfaf'" onmouseout="this.style.color='white'"><a href="/">JobMate</a></h1>
+      </div> </nav>
+
+      <!-- Center the "Thank You" content -->
+      <div class="center-content">
+        <div class="col-md-4 card-container">
+          <div class="mb-4 text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="success-icon" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+              <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z" />
+            </svg>
+          </div>
+          <div class="text-center">
+            <h1>Successfully Logged Out!!</h1>
+            <p>Thanks for spending some quality time with JobMate today.</p>
+            <a href="/" class="btn btn-outline-dark back-home-btn">Back Home</a>
+          </div>
+        </div>
+      </div>
+      <!-- End of "Thank You" content -->
+    </div>
+  </main>
+  <!-- ... (your footer and scripts) ... -->
+</body>
+</html>
