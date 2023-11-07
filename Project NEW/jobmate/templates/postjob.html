@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Sign Up</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+  
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon2.png' %}" rel="icon">
+  <link href="{% static 'assets/img/search.png' %}" rel="apple-touch-icon">
+  
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cinzel">
+
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  
+  <!-- Template Main CSS File -->
+  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+  
+  <!-- =======================================================
+  * Template Name: JobMate
+  * Updated: Sep 18 2023 with Bootstrap v5.3.2
+  * Template URL: https://bootstrapmade.com/JobMate-free-onepage-bootstrap-theme/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+  <style>
+    body {
+            background-color: #f8f9fa;
+        }
+
+        #reg {
+            max-width: 800px;;
+            margin: 0 auto;
+            padding: 80px;
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        /* Two-column layout */
+        .form-column {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .form-column .form-group {
+            flex-basis: calc(50% - 10px);
+        }
+
+        /* Center the submission portion */
+        #submitBtn {
+            background-color: #333; /* Default background color */
+            color: #fff; /* Default text color */
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s; /* Transition effect for background and text color changes */
+        }
+    
+        #submitBtn:hover {
+            background-color: #007A6C; /* Green background color on hover */
+            color: #FFFFFF; /* White text color on hover */
+        }
+      .form-check-input:checked {
+        background-color: #007a6c;
+        border-color: #007a6c;
+    }
+    
+   
+.error-field {
+    border: 1px solid red; 
+}
+
+    /* Style for the container */
+ .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+    }
+
+    /* Style for the form section */
+    .form-section {
+        width: 50%; /* Take up the right half of the page */
+    }
+
+    /* Style for the image section */
+    .image-section {
+        width: 50%; /* Take up the left half of the page */
+    }
+
+    /* Style for the image (you can set a specific width and height) */
+    
+</style>
+ 
+
+
+
+
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top d-flex align-items-center">
+    <div class="container d-flex justify-content-between">
+
+      <div class="logo">
+        <h1 style="font-family: 'Cinzel', serif; color: white;" onmouseover="this.style.color='#21cfaf'" onmouseout="this.style.color='white'"><a href="index.html"></a>JobMate</h1>
+
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!-- <a href="home.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+      </div>
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link scrollto active" href="/">Home</a></li>
+          <li><a class="nav-link scrollto" href="login">Already have an Account? Login</a></li>
+          <li><a class="nav-link scrollto" href="register">New Candidate? Sign Up</a></li>
+          <!--<li><a class="nav-link scrollto" href="#about">About</a></li>
+          <li><a class="nav-link scrollto" href="#services">Services</a></li>
+          <li><a class="nav-link scrollto " href="#portfolio">Portfolio</a></li>
+          
+          <li class="dropdown"><a href="#"><span>Register</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a href="register">New Candidate ?</a></li>
+              
+              </li>
+              <li><a href="register">New Job Provider ?</a></li>
+              
+            </ul>
+          </li>
+          <li><a class="nav-link scrollto" href="#contact">Contact</a></li> -->
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+        <br>
+      </nav><!-- .navbar -->
+
+    </div>
+  </header><!-- End Header -->
+  
+  <body>
+    <div class="container">
+        
+             <div class="col-md-6">
+            <img src="{% static 'assets/img/jobpost.jpg' %}" alt="" style="max-height: 1000px; max-width: 600px;" class="image">
+       
+    </div>
+        <div class="form-section" id="reg">
+        <h2 style="text-align: center; font-weight: bold; color: black;">Connect Now</h2>
+        <br> <br>
+        <form method="POST" action="#" enctype="multipart/form-data" onsubmit="return validateForm();">
+            {% csrf_token %}
+            <div class="form-column">
+                <!-- Job Title -->
+                <div class="form-group">
+                    <label class="form-label" for="title">Job Title</label>
+                    <input type="text" id="title" name="title" class="form-control" required>
+                </div>
+
+                <!-- Job Type -->
+                <div class="form-group">
+                    <label class="form-label" for="type">Job Type</label>
+                    <select id="type" name="type" class="form-select" required>
+                        <option value="" selected disabled>Select</option>
+                        <option value="Full-Time">Full-Time</option>
+                        <option value="Part-Time">Part-Time</option>
+                        <option value="Contract">Contract</option>
+                    </select>
+                </div>
+
+                <!-- Job Location -->
+                <div class="form-group">
+                    <label class="form-label" for="location">Job Location</label>
+                    <input type="text" id="location" name="location" class="form-control" required>
+                </div>
+
+                <!-- Job Description -->
+                <div class="form-group">
+                    <label class="form-label" for="description">Job Description</label>
+                    <textarea id="description" name="description" class="form-control" required></textarea>
+                </div>
+
+                <!-- Job Requirements -->
+                <div class="form-group">
+                    <label class="form-label" for="requirements">Job Requirements</label>
+                    <textarea id="requirements" name="requirements" class="form-control" required></textarea>
+                </div>
+
+                <!-- Experience Required -->
+                <div class="form-group">
+                    <label class="form-label" for="experience_required">Experience Required</label>
+                    <input type="text" id="experience_required" name="experience_required" class="form-control" value="Fresher">
+                </div>
+
+                
+                
+
+                <!-- Company Category -->
+                <div class="form-group">
+                    <label class="form-label" for="category">Company Category</label>
+                    <input type="text" id="category" name="category" class="form-control" required>
+                </div>
+
+                <!-- Job Status -->
+                <div class="form-group">
+                    <label class="form-label" for="status">Job Status</label>
+                    <input type="text" id="status" name="status" class="form-control" required>
+                </div>
+
+                <!-- Salary Package -->
+                <div class="form-group">
+                    <label class="form-label" for="salary">Salary Package</label>
+                    <input type="text" id="salary" name="salary" class="form-control" value="NOT DISCLOSED">
+                </div>
+
+                <!-- Application Deadline -->
+                <div class="form-group">
+                    <label class="form-label" for="deadline">Application Deadline</label>
+                    <input type="date" id="deadline" name="deadline" class="form-control">
+                </div>
+
+                <!-- Mode (Online/Offline/Both) -->
+                <div class="form-group">
+                    <label class="form-label" for="mode">Mode</label>
+                    <select id="mode" name="mode" class="form-select" required>
+                        <option value="" selected disabled>Select</option>
+                        <option value="Online">Online</option>
+                        <option value="Offline">Offline</option>
+                        <option value="Both">Both</option>
+                    </select>
+                </div>
+
+                
+            <div class="form-group">
+                <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" required id="agree" name="agree">
+                    <label class="form-check-label" for="agree">
+                        I agree to the <a href="#!">Terms of Service</a>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div style="text-align: center;">
+                <button type="submit" class="btn btn-dark btn-lg" id="submitBtn" disabled>Add Job</button>
+            </div>
+
+            <script>
+                // Function to enable the submit button when the checkbox is checked
+                document.getElementById('agree').addEventListener('change', function () {
+                    const submitBtn = document.getElementById('submitBtn');
+                    submitBtn.disabled = !this.checked;
+                });
+            </script>
+        </form>
+    </div>
+</div>

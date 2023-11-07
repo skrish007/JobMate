@@ -45,12 +45,52 @@
     .btn.btn-dark:hover {
         background-color: #21cfaf; /* Green color with opacity */
         color: black;
+        #btn
+    {
+      background-color: #007a6c;
     }
+
+    #session {
+      background-color: black;;
+      color: white;
+      padding: 10px 10px;
+      margin-right: 10px;
+      border-radius: 10px;
+      transition: background-color 0.3s ease; /* Add transition for smooth hover effect */
+  }
+
+  #session:hover {
+      background-color: #007a6c; /* Change background color on hover */
+      color: white; /* Change text color on hover */
+  
+    }
+    .sidebar {
+      /* Your existing sidebar styles */
+      /* Make sure to set an initial position for the sidebar */
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+    }
+  
+    .sidebar-open {
+      transform: translateX(0);
+    }
+  
+    .sidebar-toggle {
+      /* Add styling for the hamburger menu icon */
+    }
+    .profile-box {
+      border: 1px solid #ddd;
+      padding: 20px;
+      margin: 20px 0;
+  }
+  
+  .profile-box h3 {
+      margin-top: 0;
+  }
     
 </style>
 </head>
 <body>
-  
 
 
 
@@ -59,8 +99,8 @@
   <header id="header" class="fixed-top d-flex align-items-center">
     <div class="container d-flex justify-content-between">
 
-      <div class="logo">
-        <h1 style="font-family: 'Cinzel', serif; color: white;" onmouseover="this.style.color='#21cfaf'" onmouseout="this.style.color='white'"><a href="index.html"></a>JobMate</h1>
+      <div class="logo" id="badge">
+        <h1 style="font-family: 'Cinzel', serif; color: white;" onmouseover="this.style.color='#21cfaf'" onmouseout="this.style.color='white'"> <a href="/"></a>JobMate</h1>
 
         <!-- Uncomment below if you prefer to use an image logo -->
         <!-- <a href="home.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
@@ -68,108 +108,200 @@
 
       <nav id="navbar" class="navbar">
         <ul>
-          <!-- Inside the <nav> element -->
-          <li><form class="d-flex">
-          <input class="form-control me-2" type="search" placeholder="Search Jobs" aria-label="Search">
-          <div class="input-group-append">
-            <button class="btn btn-success" type="button">Search</button>
-          </form></li>
+            <li class="d-flex justify-content-center"> <!-- Add the justify-content-center class -->
+                <form class="d-flex">
+                    <input class="form-control me-2" type="search" placeholder="Search Jobs" aria-label="Search">
+                    <div class="input-group-append">
+                        <button class="btn btn-success" id="btn" type="button">Search</button>
+                    </div> <!-- Close the div here -->
+                </form>
+            </li>
 
-          <li><a class="nav-link scrollto active" href="/">Home</a></li>
+          <li><a class="nav-link scrollto active" href="userdash">Home</a></li>
           <li><a class="nav-link scrollto" href="#">View Jobs</a></li>
           
-          
-          <li><a class="nav-link scrollto" id="signout" href="logout" onclick="logout()">Logout</a>
-          <script>
-            function logout() {
-              // Add your logout logic here, such as clearing session data
-              alert("You have been logged out.");
-            }
-          </script>
-        </li>
+          <br>
+  
 
-          <li class="dropdown"><a href="#"><span>My Profile</span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-              <li><a href="register">Update Profile</a></li>
+        <li class="dropdown">
+          <a href="#">
+             
+            <span id="session" >
+               {{ request.session.f_name }}</span>
+            <i class="bi bi-chevron-down"></i>
+          </a>
+          <ul>
               
-              </li>
-              <li><a href="register">Sign Out</a></li>
-              
-            </ul>
-          </li>
-          <!--<li><a class="nav-link scrollto" href="#contact">Contact</a></li>-->
-        </ul>
-        <i class="bi bi-list mobile-nav-toggle"></i>
-        <br>
+              <li><a href="seekerpro"><i class="bi bi-pencil-square"></i> My Profile</a></li>
+              <li><a href="change_password"><i class="bi bi-shield-lock"></i> Change Password</a></li>
+              <li><a href="logout"onclick="logout()"><i class="bi bi-box-arrow-right"></i> Sign Out</a></li>
+              <script>
+                function logout() {
+                  // Add your logout logic here, such as clearing session data
+                  alert("You have been logged out.");
+                }
+              </script>
+          </ul>
+      </li>
+      
+      
       </nav><!-- .navbar -->
-
+    </div>
     </div>
   </header><!-- End Header -->
-  
-  <main id="main">
-    <div class="container">
-        <br>
-        <br>
-        <br>
-        <div class="greeting">Hello, <span class="username">[User Name]</span>! <i class="bi bi-5-circle-fill"></i></div>
-        <button type="submit" class="btn btn-dark btn-logout btn-block mb-lg-4" style="font-size: 24px;">Logout</button>
-        
-        <!-- Profile Summary -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <h2 class="card-title">Your Profile</h2>
-                <div class="row">
-                    <div class="col-lg-4">
-                        <div class="profile-image">
-                            <img src="profile.jpg" alt="Profile Picture">
-                        </div>
-                    </div>
-                    <div class="col-lg-8">
-                        <p><strong>Job Title:</strong> Job Seeker</p>
-                        <p><strong>Location:</strong> City, State</p>
-                        <p><strong>Skills:</strong> JavaScript, HTML, CSS</p>
-                        <p><strong>Experience:</strong> 2+ years</p>
-                    </div>
-                </div>
-            </div>
+
+  {% load static %}
+
+<main id="main">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <br><br><br><br><br>
+        <div class="sidebar-toggle">
+          <IconButton edge="start" color="inherit" aria-label="menu" onClick="toggleSidebar()">
+            
+          </IconButton>
         </div>
         
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+        
+          <h3>Filter & Sort</h3>
+          <ul class="list-unstyled">
+            <li>
+              <label for="location">Location:</label>
+              <input type="text" id="location" class="form-control">
+            </li>
+            <li>
+              <label for="job-type">Job Type:</label>
+              <select id="job-type" class="form-control">
+                <option value="full-time">Full-time</option>
+                <option value="part-time">Part-time</option>
+                <option value="contract">Contract</option>
+              </select>
+            </li>
+            <li>
+              <label for="sort">Sort By:</label>
+              <select id="sort" class="form-control">
+                <option value="recent">Most Recent</option>
+                <option value="popular">Most Popular</option>
+              </select>
+            </li>
+            <li>
+              <button class="btn btn-primary">Apply Filters</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <!-- Rest of your content here -->
+        
+
+        <!-- Profile Summary -->
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card mb-4">
+              <div class="card-body">
+                <h2 class="card-title">My Profile</h2>
+                {% if request.session.f_name %}
+                <p>Welcome, {{ request.session.f_name }}!</p>
+                {% else %}
+                <p>Name not found in the session.</p>
+                {% endif %}
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="profile-box">
+                      <div class="profile-picture" style="width: 250px; height: 250px; border: 5px solid #007a6c; border-radius: 50%; overflow: hidden; margin: 0 auto;">
+                          <img src="{{ seeker.pro_pic.url }}"  style="width: 100%; height: 100%; object-fit: cover;" class="rounded-circle">
+                  </div>
+                 
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Job Search Section -->
-        <div class="card mb-4">
-            <div class="card-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card mb-4">
+              <div class="card-body">
                 <h2 class="card-title">Find Your Dream Job</h2>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Search for jobs...">
-                    <div class="input-group-append">
-                        <button class="btn btn-success" type="button">Search</button>
-                    </div>
+                  <!-- Location field with an SVG icon -->
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+                        <path d="M8 1a5 5 0 0 1 5 5c0 3.2-4 10-5 10S3 9.2 3 6a5 5 0 0 1 5-5zM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" />
+                      </svg>
+                    </span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Location">
+
+                  <!-- Jobs field with an SVG icon -->
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-briefcase" viewBox="0 0 16 16">
+                        <path d="M3 1a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2h1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h1V1zm1 3h8v1H4V4z" />
+                        <path d="M2.5 5.5A.5.5 0 0 1 3 5h10a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5v-9z" />
+                      </svg>
+                    </span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Jobs">
+
+                  <!-- Search button -->
+                  <div class="input-group-append">
+                    <button class="btn btn-success" type="button">Search</button>
+                  </div>
                 </div>
+              </div>
             </div>
+          </div>
         </div>
-        
+
         <!-- Recommended Jobs -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <h2 class="card-title">Recommended Jobs</h2>
-                <div class="job-card">
-                    <h3>Job Title 1</h3>
-                    <p>Company Name</p>
-                    <p>Location</p>
-                    <button class="btn btn-info">Apply</button>
-                </div>
-                
-                <div class="job-card">
-                    <h3>Job Title 2</h3>
-                    <p>Company Name</p>
-                    <p>Location</p>
-                    <button class="btn btn-info">Apply</button>
-                </div>
-                
-                <!-- Add more job cards here -->
+        <div class="row">
+          <div class="col-md-12">
+            <h2 class="card-title">Recommended Jobs</h2>
+          </div>
+          <div class="col-md-4">
+            <div class="job-card">
+              <h3>Job Title 1</h3>
+              <p>Company Name</p>
+              <p>Location</p>
+              <button class="btn btn-info">Apply</button>
             </div>
+          </div>
+          <div class="col-md-4">
+            <div class="job-card">
+              <h3>Job Title 2</h3>
+              <p>Company Name</p>
+              <p>Location</p>
+              <button class="btn btn-info">Apply</button>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="job-card">
+              <h3>Job Title 3</h3>
+              <p>Company Name</p>
+              <p>Location</p>
+              <button class="btn btn-info">Apply</button>
+            </div>
+          </div>
+          <!-- Add more job cards as needed -->
         </div>
+      </div>
     </div>
+  </div>
 </main>
+
+<script>
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('sidebar-open'); // Add a CSS class to show/hide the sidebar
+  }
+</script>
 
 <!-- ======= Footer ======= -->
 <footer id="footer">

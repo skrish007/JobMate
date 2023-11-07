@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'jobapp',
 ]
 
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -60,7 +62,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',
+                'django.template.context_processors.request', 
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -68,6 +70,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 
 WSGI_APPLICATION = 'jobmate.wsgi.application'
@@ -128,6 +131,7 @@ STATICFILES_DIRS = [
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AUTH_USER_MODEL="jobapp.User"
 import os
 
 
@@ -147,3 +151,10 @@ SESSION_COOKIE_AGE = 1209600  # Set the session timeout in seconds (e.g., 2 week
 SESSION_COOKIE_SECURE = False  # Set to True for HTTPS.
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Lax'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'prxnv2832@gmail.com'
+EMAIL_HOST_PASSWORD = 'hvgk djlb aqgq qadw'

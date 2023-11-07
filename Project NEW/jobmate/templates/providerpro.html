@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>JLogin</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+  
+   <!-- Favicons -->
+   <link href="{% static 'assets/img/favicon2.png' %}" rel="icon">
+   <link href="{% static 'assets/img/search.png' %}" rel="apple-touch-icon">
+  
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cinzel">
+
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  
+  <!-- Template Main CSS File -->
+  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+  
+  <!-- =======================================================
+  * Template Name: JobMate
+  * Updated: Sep 18 2023 with Bootstrap v5.3.2
+  * Template URL: https://bootstrapmade.com/JobMate-free-onepage-bootstrap-theme/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+  <style>
+    /* Increase button size on hover */
+    .btn.btn-dark:hover {
+        transform: scale(1.05);
+    }
+
+    /* Change button background color to green on hover */
+    .btn.btn-dark:hover {
+        background-color: #007a6c; /* Green color with opacity */
+        color: black;
+    }
+    #btn
+    {
+      background-color: #007a6c;
+    }
+
+    #session {
+      background-color: black;;
+      color: white;
+      padding: 10px 10px;
+      margin-right: 10px;
+      border-radius: 10px;
+      transition: background-color 0.3s ease; /* Add transition for smooth hover effect */
+  }
+
+  #session:hover,.btn2:hover {
+      background-color: #007a6c; /* Change background color on hover */
+      color: white; /* Change text color on hover */
+  }
+  .container2 {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.profile-box {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.profile-box h3 {
+    margin-top: 0;
+}
+
+.table td {
+    padding: 10px;
+}
+.btn2{
+    background-color:#DC3545;
+    margin:auto;
+    padding:25px;
+    border-radius: 10px;
+    font-weight:bold;
+
+    font-family:Lato;
+    color:white;
+   
+}
+</style>
+</head>
+
+
+
+
+
+   <!-- ======= Header ======= -->
+   <header id="header" class="fixed-top d-flex align-items-center">
+    <div class="container d-flex justify-content-between">
+
+      <div class="logo">
+        <h1 style="font-family: 'Cinzel', serif; color: white;" onmouseover="this.style.color='#21cfaf'" onmouseout="this.style.color='white'"><a href="index.html"></a>JobMate</h1>
+
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!-- <a href="home.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+      </div>
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          
+
+          <li><a class="nav-link scrollto active" href="companydash">Home</a></li>
+          <li><a class="nav-link scrollto" href="#">View Jobs</a></li>
+          
+          
+          
+          </script>
+        </li>
+
+        <li class="dropdown">
+          <a href="#">
+             
+            <span id="session" >
+               {{ request.session.user_name }}</span>
+            <i class="bi bi-chevron-down"></i>
+          </a>
+          <ul>
+              <li><a href="#"><i class="bi bi-pencil-square"></i> Update Profile</a></li>
+              <li><a href="change_password"><i class="bi bi-shield-lock"></i> Change Password</a></li>
+              <li><a href="logout"><i class="bi bi-box-arrow-right"></i> Sign Out</a></li>
+              <script>
+                function logout() {
+                  // Add your logout logic here, such as clearing session data
+                  alert("You have been logged out.");
+                }
+              </script>
+          </ul>
+      </li>
+      
+      
+      </nav><!-- .navbar -->
+    </div>
+    </div>
+  </header><!-- End Header -->
+  <br> <br>
+  <div class="container2">
+    <h1>My Profile</h1>
+
+    <!-- First Box: Basic Information -->
+    <div class="profile-box">
+        <div class="profile-picture" style="width: 250px; height: 250px; border: 5px solid #007a6c; border-radius: 50%; overflow: hidden; margin: 0 auto;">
+            <img src="{{ provider.logo.url }}" alt="Profile Picture" style="width: 100%; height: 100%; object-fit: cover;" class="rounded-circle">
+        </div>
+        <br> <br>
+        <!-- Add a "View License" button -->
+        <a href="{{ provider.licensefile.url }}" target="_blank" class="btn2" style="display: block; text-align: center;"><i class="bi bi-patch-check"></i>        View License</a>
+    </div>
+    
+    <div class="profile-box">
+        <h3>Profile Information</h3>
+        <form method="post" action="{% url 'provider_profile_update' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <table class="table table-striped">
+                <tbody>
+                    <!-- Basic Information -->
+                    <tr>
+                        <td><strong>Company Name:</strong></td>
+                        <td><input type="text" name="cname" value="{{ provider.cname }}"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>CEO Name:</strong></td>
+                        <td><input type="text" name="ceoname" value="{{ provider.ceoname }}"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Email:</strong></td>
+                        <td><input type="email" name="email" value="{{ user.email }}"></td>
+                    </tr>
+    
+                    <!-- Detailed Information for Job Provider -->
+                    <tr>
+                        <td><strong>Company Address:</strong></td>
+                        <td><input type="text" name="caddress" value="{{ provider.caddress }}"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Company Type:</strong></td>
+                        <td><input type="text" name="ctype" value="{{ provider.ctype }}"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Other Company Type:</strong></td>
+                        <td><input type="text" name="otherctype" value="{{ provider.otherctype }}"></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Company Description:</strong></td>
+                      <td><textarea name="cdescription">{{ provider.cdescription }}</textarea></td>
+                  </tr>
+                  
+                  <tr>
+                      <td><strong>Founded Date:</strong></td>
+                      <td><input type="date" name="fyear" value="{{ provider.fyear|date:'Y-m-d' }}"></td>
+                  </tr>
+                  
+                  <tr>
+                      <td><strong>Phone Number:</strong></td>
+                      <td><input type="text" name="cphone" value="{{ provider.cphone }}"></td>
+                  </tr>
+                  
+                  <tr>
+                      <td><strong>Website URL:</strong></td>
+                      <td><input type="text" name="website" value="{{ provider.website }}"></td>
+                  </tr>
+                  
+                  <tr>
+                      <td><strong>Employee Number:</strong></td>
+                      <td><input type="text" name="empno" value="{{ provider.empno }}"></td>
+                  </tr>
+                  
+    
+                    <!-- Upload Company License -->
+                    <tr>
+                        <td><strong>Company License:</strong></td>
+                        <td><input type="file" name="clicense" value="{{ provider.clicense }}"></td>
+                    </tr>
+                    <!-- Upload Logo -->
+                    <tr>
+                        <td><strong>Company Logo:</strong></td>
+                        <td><input type="file" name="logo"></td>
+                    </tr>
+                </tbody>
+            
+            
+       
+    </div>
+</div>
+
+</table>
+<button type="submit" class="btn btn-warning">Update Profile</button>
+<button type="submit" class="btn btn-danger">Delete Profile</button>
+</form>
+    

@@ -1,10 +1,15 @@
 from django.contrib import admin
-from .models import *
-from django.urls import reverse
-from .models import Job_Providers
+from .models import Job_Seekers, Job_Providers,User
 
 
+class Job_SeekersAdmin(admin.ModelAdmin):
+    list_display = ( 'user','seeker_id','gender','phone','loc','qual',)  # Add the fields you want to display
 
-admin.site.register(Job_Seekers)
+class Job_ProvidersAdmin(admin.ModelAdmin):
+    list_display = ('cname', 'ctype', 'status')
+     # Add the fields you want to display
 
-admin.site.register(Job_Providers)
+# Register the models with their respective admin classes
+admin.site.register(Job_Seekers, Job_SeekersAdmin)
+admin.site.register(Job_Providers, Job_ProvidersAdmin)
+admin.site.register(User)
