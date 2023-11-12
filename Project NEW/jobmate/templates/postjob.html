@@ -166,7 +166,7 @@
         <div class="form-section" id="reg">
         <h2 style="text-align: center; font-weight: bold; color: black;">Connect Now</h2>
         <br> <br>
-        <form method="POST" action="#" enctype="multipart/form-data" onsubmit="return validateForm();">
+        <form method="POST" action="{% url 'postjob' %}" enctype="multipart/form-data" onsubmit="return validateForm();">
             {% csrf_token %}
             <div class="form-column">
                 <!-- Job Title -->

@@ -33,16 +33,30 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
+    
     'django.contrib.contenttypes',
+    'django.contrib.sites',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    #'allauth.socialaccount.providers.github',
+    #'allauth.socialaccount.providers.instagram',
+    #'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google',
     'jobapp',
 ]
 
 
 
+
+
+
+
 MIDDLEWARE = [
+    
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -50,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'jobmate.urls'
@@ -64,12 +79,39 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request', 
                 'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.request',
+
                 'django.contrib.messages.context_processors.messages',
             ],
             
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = [
+   
+    'django.contrib.auth.backends.ModelBackend',
+
+    
+    'allauth.account.auth_backends.AuthenticationBackend',
+    
+]
+LOGIN_REDIRECT_URL = 'userdash'  # Redirect after login
+LOGOUT_REDIRECT_URL = 'logout'  
+
+
+SITE_ID = 1
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+# settings.py
+SOCIALACCOUNT_ADAPTER = 'jobapp.adapters.CustomSocialAccountAdapter'
 
 
 

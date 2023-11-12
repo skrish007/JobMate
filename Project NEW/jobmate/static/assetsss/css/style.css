@@ -2202,6 +2202,35 @@ table tr:hover .table-links {
 		margin-top: 1px;
 		border-radius: 0 3px 3px 0;
 	}
+	.topbar {
+		width: 100%;
+		height: 60px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0 10px;
+	  }
+	  
+	.toggle {
+		position: relative;
+		width: 60px;
+		height: 60px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 2.5rem;
+		cursor: pointer;
+	  }
+	.toggle {
+		z-index: 10001;
+	  }
+	.main.active .toggle {
+		color: #fff;
+		position: fixed;
+		right: 0;
+		left: initial;
+	  }
+	}
 	.dropdown-list-toggle {
 		position: static;
 	}
@@ -2276,7 +2305,7 @@ table tr:hover .table-links {
 	.dropzone .dz-message {
 		margin: 2em;
 	}
-}
+
 @media (min-width: 576px) and (max-width: 767.98px) {
 	.navbar .form-inline .search-element {
 		display: block;

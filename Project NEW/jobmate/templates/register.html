@@ -174,7 +174,7 @@ border-color: #007a6c;
           {% endif %}
      
   
-    <form method="POST" action="/register" enctype="multipart/form-data" onsubmit= "return validateForm();">
+    <form method="POST" class="was-validated" action="/register" enctype="multipart/form-data" onsubmit= "return validateForm();">
       {% csrf_token %}
         <div class="form-column">
             <div class="form-group">

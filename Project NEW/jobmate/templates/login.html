@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 {% load static %}
+{% load socialaccount %}
+
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -121,7 +123,7 @@
           {% endif %}
      
           
-        <form method="post" action="{% url 'login' %}" onsubmit= "return validateForm()">
+        <form method="post"  action="{% url 'login' %}" onsubmit= "return validateForm()">
           {% csrf_token %}
           <!-- Email input with label above -->
 
@@ -173,10 +175,12 @@
               <p>OR</p>
               <p>Continue using</p>
               
-              <button type="button" class="btn btn-white btn-floating mx-3">
-                <i class="bi bi-google" style="font-size: 26px;"></i>
-              </button>
-               
+              <a href="{% provider_login_url 'google' method='oauth2' %}">
+                <button type="button" class="btn btn-white btn-floating mx-3">
+                    <i class="bi bi-google" style="font-size: 26px;"></i>
+                </button>
+            </a>
+            
               
             
           

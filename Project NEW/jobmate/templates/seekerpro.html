@@ -132,8 +132,8 @@
             <i class="bi bi-chevron-down"></i>
           </a>
           <ul>
-              <li><a href="seeker_profile_update"><i class="bi bi-pencil-square"></i> Update Profile</a></li>
-              <li><a href="change_password"><i class="bi bi-shield-lock"></i> Change Password</a></li>
+              <li><a href="seekerupdate"><i class="bi bi-pencil-square"></i> Update Profile</a></li>
+              <li><a href="changepw_seeker"><i class="bi bi-shield-lock"></i> Change Password</a></li>
               <li><a href="logout"><i class="bi bi-box-arrow-right"></i> Sign Out</a></li>
               <script>
                 function logout() {
@@ -166,79 +166,76 @@
     
     <div class="profile-box">
         <h3>Profile Information</h3>
-        <form method="post" action="{% url 'seeker_profile_update' %}" enctype="multipart/form-data">
-            {% csrf_token %}
-            <table class="table table-striped">
-                <tbody>
-                    <!-- Basic Information -->
-                    <tr>
-                        <td><strong>First Name:</strong></td>
-                        <td><input type="text" name="first_name" value="{{ user.first_name }}"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Last Name:</strong></td>
-                        <td><input type="text" name="last_name" value="{{ user.last_name }}"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Email:</strong></td>
-                        <td><input type="email" name="email" value="{{ user.email }}"></td>
-                    </tr>
+        <table class="table table-striped">
+            <tbody>
+                <!-- Basic Information -->
+                <tr>
+                    <td><strong>First Name:</strong></td>
+                    <td>{{ user.first_name }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Last Name:</strong></td>
+                    <td>{{ user.last_name }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Email:</strong></td>
+                    <td>{{ user.email }}</td>
+                </tr>
     
-                    <!-- Detailed Information -->
-                    <tr>
-                        <td><strong>Date of Birth:</strong></td>
-                        <td><input type="date" name="dob" value="{{ seeker.dob|date:'Y-m-d' }}"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Gender:</strong></td>
-                        <td><input type="text" name="gender" value="{{ seeker.gender }}"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Location:</strong></td>
-                        <td><input type="text" name="loc" value="{{ seeker.loc }}"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Phone:</strong></td>
-                        <td><input type="number" name="phone" value="{{ seeker.phone }}"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Qualification:</strong></td>
-                        <td><input type="text" name="qual" value="{{ seeker.qual }}"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Other Qualification:</strong></td>
-                        <td><input type="text" name="oqual" value="{{ seeker.oqual }}"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Skills:</strong></td>
-                        <td><input type="text" name="skills" value="{{ seeker.skills }}"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Work Experience:</strong></td>
-                        <td><input type="text" name="exp" value="{{ seeker.exp }}"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Aadhaar Number:</strong></td>
-                        <td><input type="text" name="aadhaar" value="{{ seeker.aadhaar }}"></td>
-                    </tr>
-                    <!-- Add input fields for other detailed information here -->
+                <!-- Detailed Information -->
+                <tr>
+                    <td><strong>Date of Birth:</strong></td>
+                    <td>{{ seeker.dob|date:'Y-m-d' }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Gender:</strong></td>
+                    <td>{{ seeker.gender }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Location:</strong></td>
+                    <td>{{ seeker.loc }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Phone:</strong></td>
+                    <td>{{ seeker.phone }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Qualification:</strong></td>
+                    <td>{{ seeker.qual }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Other Qualification:</strong></td>
+                    <td>{{ seeker.oqual }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Skills:</strong></td>
+                    <td>{{ seeker.skills }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Work Experience:</strong></td>
+                    <td>{{ seeker.exp }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Aadhaar Number:</strong></td>
+                    <td>{{ seeker.aadhaar }}</td>
+                </tr>
+                <!-- Add rows for other detailed information here -->
     
-                    <!-- Upload Profile Picture -->
-                    <tr>
-                        <td><strong>Profile Picture:</strong></td>
-                        <td><input type="file" name="pro_pic"></td>
-                    </tr>
-                    <!-- Upload Resume -->
-                    <tr>
-                        <td><strong>Resume:</strong></td>
-                        <td><input type="file" name="resume"></td>
-                    </tr>
-                </tbody>
-            </table>
-            <button type="submit" class="btn btn-warning">Update Profile</button>
-            <button type="button" class="btn btn-danger">Delete Profile</button>
-        </form>
+
+    
+                <!-- Resume -->
+                <tr>
+                    <td><strong>Resume:</strong></td>
+                    <td>
+                        {% if seeker.resume %}
+                            <a href="{{ seeker.resume.url }}" target="_blank">View Resume</a>
+                        {% else %}
+                            No resume available
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <a href="/seekerupdate" class="btn btn-warning">Edit Info</a>
     </div>
     
-   
-</html>

@@ -116,71 +116,34 @@
             </div>
           </div>
         </div>
-        <ul class="sidebar-menu">
-          <li class="menu-header">Dashboard</li>
-          <li class="active">
-            <a href="admindash"><i class="ion ion-speedometer"></i><span>Dashboard</span></a>
-          </li>
-
-          <li class="menu-header">Components</li>
-
-          <li>
-            <a href="companylist" class="has-dropdown"><i class="ion ion-flag"></i><span>View Companies</span></a>
-            <ul class="menu-dropdown">
-              <li><a href="seekerlist"><i class="ion ion-ios-circle-outline"></i> View Jobseekers</a></li>
-              <li><a href="companylist"><i class="ion ion-ios-circle-outline"></i> View Companies</a></li>
-            </ul>
-            <a href="seekerlist" class="has-dropdown"><i class="ion ion-flag"></i><span>View Jobseekers</span></a>
-          </li>
-        </ul>
         <div class="p-3 mt-4 mb-4">
-          <a href="/" class="btn btn-danger btn-shadow btn-round has-icon has-icon-nofloat btn-block">
-            <i class="ion ion-help-buoy"></i> <div>Log Out!</div>
-          </a>
-        </div>
+            <button class="btn btn-primary btn-shadow btn-round has-icon has-icon-nofloat btn-block" onclick="searchCompaniesSidebar()">
+              <i class="ion ion-search"></i> <div>Search Companies</div>
+            </button>
+          </div>
       </aside>
-    </div>
-<div id="app">
-  <div class="main-wrapper">
-    <div class="navbar-bg"></div>
-    <nav class="navbar navbar-expand-lg main-navbar">
-      <form class="form-inline mr-auto">
-        <ul class="navbar-nav mr-3">
-          <li><a href="#" data-toggle="sidebar" class="nav-link nav-link-lg"><i class="ion ion-navicon-round"></i></a></li>
-          <li><a href="#" data-toggle="search" class="nav-link nav-link-lg d-sm-none"><i class="ion ion-search"></i></a></li>
-        </ul>
-        <div class="search-element">
-          <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn" type="submit"><i class="ion ion-search"></i></button>
-        </div>
-      </form>
-      <ul class="navbar-nav navbar-right">
-          <li class="dropdown dropdown-list-toggle">
-              <a href="#" data-toggle="dropdown" class="nav-link notification-toggle nav-link-lg beep">
-                  <i class="ion ion-ios-bell-outline"></i>
-              </a>
-              <div class="dropdown-menu dropdown-list dropdown-menu-right">
-                  <!-- Add notifications here -->
-              </div>
-          </li>
-          <li class="dropdown">
-              <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg">
-                  <i class="ion ion-android-person d-lg-none"></i>
-                  <div class="d-sm-none d-lg-inline-block">{{ user.username }}
-                  <span id="more-details"><i class="ti-angle-down"></i></span> </div>
-              </a>
-              <div class="dropdown-menu dropdown-menu-right">
-                  <ul>
-                      <li class="more-details">
-                          <a href="#"><i class="ti-user"></i>View Profile</a>
-                          <a href="#!"><i class="ti-settings"></i>Settings</a>
-                          <a href="/logout"><i class="ti-layout-sidebar-left"></i>Logout</a> <!-- Changed the logout link -->
-                      </li>
-                  </ul>
-              </div>
-          </li>
+  
+      <ul class="sidebar-menu">
+        <li class="menu-header">Dashboard</li>
+        <li class="active">
+          <a href="admindash"><i class="ion ion-speedometer"></i><span>Dashboard</span></a>
+        </li>
+
+        <li class="menu-header">Components</li>
+
+        <li>
+          <a href="companylist" class="has-dropdown"><i class="ion ion-flag"></i><span>View Companies</span></a>
+          <ul class="menu-dropdown">
+            <li><a href="seekerlist"><i class="ion ion-ios-circle-outline"></i> View Jobseekers</a></li>
+            <li><a href="companylist"><i class="ion ion-ios-circle-outline"></i> View Companies</a></li>
+          </ul>
+          <a href="seekerlist" class="has-dropdown"><i class="ion ion-flag"></i><span>View Jobseekers</span></a>
+        </li>
       </ul>
-    </nav>
+      
+  </aside>
+</div>
+
 <div id="app">
 <div class="main-wrapper">
   <div class="navbar-bg"></div>
@@ -190,9 +153,10 @@
         <li><a href="#" data-toggle="sidebar" class="nav-link nav-link-lg"><i class="ion ion-navicon-round"></i></a></li>
         <li><a href="#" data-toggle="search" class="nav-link nav-link-lg d-sm-none"><i class="ion ion-search"></i></a></li>
       </ul>
+      <!-- Search input in the main navbar -->
       <div class="search-element">
-        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn" type="submit"><i class="ion ion-search"></i></button>
+        <input class="form-control" type="search" placeholder="Search now" aria-label="Search" id="mainSearchInput">
+        <button class="btn" type="button" onclick="searchMain()"><i class="ion ion-search"></i></button>
       </div>
     </form>
     <ul class="navbar-nav navbar-right">
@@ -223,109 +187,130 @@
     </ul>
   </nav>
 
-      <div class="main-content">
-        <section class="section">
-          <h1 class="section-header">
-            <div>Welcome {{  user.username}}</div>
-          </h1>
-          
-            
-           
-          <div class="container">
+  <div class="main-content">
+    <section class="section">
+        <h1 class="section-header">
+            <div>Welcome {{ user.username }}</div>
+        </h1>
+        <div class="container">
             <h1>Company List</h1>
-            <form method="POST">
-              {% csrf_token %}
-              <table class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Status</th>
-                    <th>Email</th>
-                    
-                    <th>CEO Name</th>
-                    <th>Company Type</th>
-                    <th>Other Company Type</th>
-                    
-                    <th>Contact Phone</th>
-                    
-                    
-                    <th>License Number</th>
-                    <th>License File</th>
-                    <th>Logo</th>
-                    <th>View More</th>
-                    <th>Delete</th>
-                    <th>Save</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for company in companies %}
-                    <tr>
-                      <td>{{ company.pro_id }}</td>
-                      <td>{{ company.user.first_name }}</td>
-                      <td>
-                        <select class="form-control" name="approval_status_{{ company.id }}">
-                          <option value="Not Verified" {% if company.status == 'Not Verified' %}selected{% endif %}>Not Verified</option>
-                          <option value="Verified" {% if company.status == 'Verified' %}selected{% endif %}>Verified</option>
-                        </select>
-          
-                      <td>{{ company.user.email }}</td>
-                      
-                      <td>{{ company.ceoname }}</td>
-                      <td>{{ company.ctype }}</td>
-                      <td>{{ company.otherctype }}</td>
-                      
-                      <td>{{ company.cphone }}</td>
-                      
-                      <td>{{ company.clicense }}</td>
-                      <td><a href="{{ company.licensefile.url }}" target="_blank">View</a></td>
-                      <td><a href="{{ company.logo.url }}" target="_blank">View</a></td>
-                      <td>
-                        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#viewMoreModal{{ company.pro_id }}">View More</button>
-                      </td>
-                      <td>
-                        <button type="button" class="btn btn-danger">Delete</button>
-                      </td>
-                      <td>
-                        <button type="submit" >Save</button>
-                      </td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </form>
+            <div class="filter-form">
+              <form method="get">
+                  <label for="email">Filter by Email (A-Z):</label>
+                  <input type="text" name="email" id="email" value="{{ request.GET.email }}">
+                 
+                  
+                  <br>
+                  <button type="submit">Apply Filters</button>
+              </form>
           </div>
-          <script>
-            function approveCompany(companyId) {
-              var statusElement = document.getElementById('status' + companyId);
-              var approveButton = statusElement.nextElementSibling;
-          
-              // Check the current status and update it
-              if (statusElement.classList.contains('text-danger')) {
-                // Update the status to "Verified"
-                statusElement.classList.remove('text-danger');
-                statusElement.classList.add('text-success');
-                statusElement.textContent = 'Verified';
-                // Hide the "Approve" button
-                approveButton.style.display = 'none';
-              }
-            }
-            <script>
-              function submitApproval(button) {
-                // Submit the hidden form when the "Approve" button is clicked
+            <form method="POST" action="{% url 'savecompanies' %}">
+                {% csrf_token %}
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Email</th>
+                            <th>CEO Name</th>
+                            <th>Company Type</th>
+                            <th>Other Company Type</th>
+                            <th>Contact Phone</th>
+                            <th>License Number</th>
+                            <th>License File</th>
+                            <th>Logo</th>
+                            <th>Save</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for company in companies %}
+                        <tr>
+                            <td>{{ company.pro_id }}</td>
+                            <td>{{ company.user.first_name }}</td>
+                            <td>
+                              <div class="btn-group" data-toggle="buttons">
+                                {% if company.status == 'Not Verified' %}
+                                    
+                                    <label class="btn btn-success">
+                                        <input type="radio" name="approval_status_{{ company.id }}" value="Verified" style="display: none;">
+                                        Verified
+                                    </label>
+                                {% else %}
+                                    <label class="btn btn-danger">
+                                        <input type="radio" name="approval_status_{{ company.id }}" value="Not Verified" style="display: none;">
+                                        Not Verified
+                                    </label>
+                                    
+                                {% endif %}
+                            </div>
+                            
+                            </td>
+                            <td>{{ company.user.email }}</td>
+                            <td>{{ company.ceoname }}</td>
+                            <td>{{ company.ctype }}</td>
+                            <td>{{ company.otherctype }}</td>
+                            <td>{{ company.cphone }}</td>
+                            <td>{{ company.clicense }}</td>
+                            <td><a href="{{ company.licensefile.url }}" target="_blank">View</a></td>
+                            <td><img src="{{ company.logo.url }}" class="rounded-circle" alt="Profile Image" style="height: 50px; width: 50px;"></td>
+                            <td>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </form>
+            <div class="pagination">
+              <span class="step-links">
+                  {% if companies.has_previous %}
+                      <a href="?page=1">&laquo; first</a>
+                      <a href="?page={{ companies.previous_page_number }}">previous</a>
+                  {% endif %}
+                  <span class="current-page">
+                      Page {{ companies.number }} of {{ companies.paginator.num_pages }}.
+                  </span>
+                  {% if companies.has_next %}
+                      <a href="?page={{ companies.next_page_number }}">next</a>
+                      <a href="?page={{ companies.paginator.num_pages }}">last &raquo;</a>
+                  {% endif %}
+              </span>
+          </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const statusButtons = document.querySelectorAll('.btn-group label');
+                statusButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        // Toggle the "active" class for the selected button
+                        statusButtons.forEach(b => b.classList.remove('active'));
+                        button.classList.add('active');
+
+                        // Update the hidden input value
+                        const hiddenInput = button.querySelector('input[type="radio"]');
+                        hiddenInput.checked = true;
+                    });
+                });
+            });
+
+            function submitApproval(button) {
+                // Submit the hidden form when the "Save" button is clicked
                 button.form.submit();
-              }
-            </script>
-          </script>
-         
-      <footer class="main-footer">
+            }
+        </script>
+    </section>
+
+    <footer class="main-footer">
         <div class="footer-left">
-          Copyright &copy; 2023 <div class="bullet"></div> JobMate</a>
+            Copyright &copy; 2023 <div class="bullet"></div> JobMate
         </div>
         <div class="footer-right"></div>
-      </footer>
-    </div>
-  </div>
+    </footer>
+</div>
+</div>
+
 
   <!-- Include the necessary JavaScript libraries -->
   <script src="{% static 'modules/jquery.min.js' %}"></script>

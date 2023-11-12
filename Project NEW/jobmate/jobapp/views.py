@@ -5,7 +5,7 @@ from django.contrib.auth import logout
 import hashlib
 from django.views.decorators.cache import never_cache
 
-from .models import Job_Seekers, Job_Providers,User
+from .models import Job_Seekers, Job_Providers,User,PostJobs
 
 def home(request):
     return render(request, "home.html")
@@ -119,7 +119,14 @@ def login_view(request):
                 request.session['user_id'] = user.id
                 request.session['f_name'] = f"{user.first_name} {user.last_name}"
                 request.session['user_role'] = 'jobseeker'
-                return  render(request, 'userdash.html')  # Replace with your jobseeker page URL name
+                
+                user = request.user
+                seeker, created = Job_Seekers.objects.get_or_create(user=user)
+                user.save()
+
+
+
+                return render(request, 'userdash.html',{"seeker":seeker})  # Replace with your jobseeker page URL name
             elif user.role == User.Role.JOBPROVIDER:
     # Set session data for the provider
                 request.session['user_id'] = user.id
@@ -149,14 +156,25 @@ def logout_view(request):
     request.session.flush()
     return redirect('/')
 
+
+
 def success_view(request):
     user = request.user
+
     if user.role == User.Role.ADMIN:
         return render(request, 'admindash.html')
     elif user.role == User.Role.JOBPROVIDER:
         return render(request, 'companydash.html')
     elif user.role == User.Role.JOBSEEKER:
-        return render(request, 'userdash.html')
+        try:
+            seeker = Job_Seekers.objects.get(user=user)
+            return render(request, 'userdash.html')
+        except Job_Seekers.DoesNotExist:
+            # If Job_Seekers profile doesn't exist, you might want to handle this
+            # differently for social logins. For now, let's create a new Job_Seekers
+            # profile for the user.
+            seeker = Job_Seekers.objects.create(user=user)
+            return render(request, 'userdash.html')
     else:
         messages.error(request, 'Invalid user role.')
         return redirect('login')
@@ -214,7 +232,7 @@ def seeker_profile_update(request):
         messages.success(request, 'Profile updated successfully.')
         return redirect('userdash')  # Redirect to the user's dashboard on success
 
-    return render(request, 'seekerpro.html')  
+    return render(request, 'seekerupdate.html')  
 
 @login_required
 def providerpro(request):
@@ -278,13 +296,13 @@ def seekerlist(request):
 
 
 
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from .models import PostJob  # Import your PostJob model
 
-def PostJob(request):
+
+def post_job(request):
+    user= request.session['user_id']
+    print(user)
     if request.method == 'POST':
-        # Retrieve data from the POST request
+        # Get the form data from the POST request
         title = request.POST.get('title')
         type = request.POST.get('type')
         location = request.POST.get('location')
@@ -293,35 +311,38 @@ def PostJob(request):
         experience_required = request.POST.get('experience_required')
         category = request.POST.get('category')
         status = request.POST.get('status')
-        mode = request.POST.get('mode')
         salary = request.POST.get('salary')
         deadline = request.POST.get('deadline')
-        email_id = request.POST.get('email_id')  # Assuming this is the email associated with the company
-
-        # Create a new job posting instance
-        job = PostJob(
+        mode = request.POST.get('mode')
+        pro_id=user
+        # Create and save a new PostJob instance with the form data
+        post_job = PostJobs(
             title=title,
             type=type,
             location=location,
             description=description,
             requirements=requirements,
-            minexp=minexp,
+            minexp=experience_required,
+            pro_id=1,
             status=status,
-            mode=mode,
             salary=salary,
             deadline=deadline,
-             # Assign the email to the foreign key field
+            mode=mode
         )
-        job.save()
-        messages.success(request, 'Job Posted successfully.')
-        
-        # You can perform additional actions here, like sending email notifications or redirecting to a success page.
-        return redirect('alljob', job_id=job.id)  # Redirect to a job detail page, change 'job_detail' to your URL name
+        post_job.save()
 
-    return render(request, 'postjob.html')  # Render the job posting form template
+        # Optionally, you can perform additional actions here, like sending email notifications or performing other logic.
+        return redirect('viewpostedjobs')  # You can customize the response message
 
-def display(request):
-    return render(request,'')
+    return render(request, 'postjob.html')
+
+
+
+
+def posted_jobs(request):
+    jobs = PostJobs.objects.all()
+    return render(request, 'viewpostedjobs.html', {'jobs': jobs})
+
 
 
 def admin(request):
@@ -341,3 +362,104 @@ def companylist(request):
 
     companies = Job_Providers.objects.all()
     return render(request, 'companylist.html', {'companies': companies})
+
+def savecompanies(request):
+              if request.method == 'POST':
+                  for company in request.POST:
+                      if company.startswith('approval_status_'):
+                          company_id = int(company.replace('approval_status_', ''))
+                          status = request.POST[company]
+                          # Update the status of the company with the given ID
+                          Company.objects.filter(id=company_id).update(status=status)
+              
+              return redirect('companylist')  # Redirect back to the company list page
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+
+from django.contrib.auth import authenticate, login
+
+def changepw_seeker(request):
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('login')  # Redirect to login if the user is not authenticated
+
+    b = Job_Seekers.objects.filter(user_id=user_id).first()
+
+    if request.method == 'POST':
+        new_password = request.POST.get('new_password')
+        current_password = request.POST.get('current_password')
+        confirm_password = request.POST.get('confirm_password')
+       
+
+        if new_password != confirm_password:
+            context = {'msg': 'Passwords do not match', 'msg_type': 'error'}
+            return render(request, 'changepw_seeker.html', {'b': b, 'msg': context})
+        if current_password == new_password:
+            context = {'msg': 'Please use a different password than your old password', 'msg_type': 'error'}
+            return render(request, 'changepw_seeker.html', {'b': b, 'msg': context})
+
+        user = authenticate(request, email=b.user.email, password=current_password)
+
+        if user is not None:
+            user.set_password(new_password)
+            user.save()
+
+            # Re-authenticate the user with the new credentials
+            user = authenticate(request, email=b.user.email, password=new_password)
+
+            if user is not None:
+                login(request, user)
+                context = {'msg': 'Password Changed Successfully', 'msg_type': 'success'}
+                return render(request, 'login.html', {'b': b, 'msg': context})
+            else:
+                context = {'msg': 'Failed to re-authenticate after changing the password', 'msg_type': 'error'}
+                return render(request, 'changepw_seeker.html', {'b': b, 'msg': context})
+        else:
+            context = {'msg': 'Your Old Password is Wrong', 'msg_type': 'error'}
+            return render(request, 'changepw_seeker.html', {'b': b, 'msg': context})
+
+    return render(request, 'changepw_seeker.html', {'b': b})
+
+
+from django.contrib.auth import authenticate, login
+
+def changepw_pro(request):
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('login')  # Redirect to login if the user is not authenticated
+
+    b = Job_Providers.objects.filter(user_id=user_id).first()
+
+    if request.method == 'POST':
+        new_password = request.POST.get('new_password')
+        current_password = request.POST.get('current_password')
+        confirm_password = request.POST.get('confirm_password')
+        
+
+        if new_password != confirm_password:
+            context = {'msg': 'Passwords do not match', 'msg_type': 'error'}
+            return render(request, 'changepw_pro.html', {'b': b, 'msg': context})
+        if current_password == new_password:
+            context = {'msg': 'Please use a different password than your old password', 'msg_type': 'error'}
+            return render(request, 'changepw_pro.html', {'b': b, 'msg': context})
+        user = authenticate(request, email=b.user.email, password=current_password)
+
+        if user is not None:
+            user.set_password(new_password)
+            user.save()
+
+            # Re-authenticate the user with the new credentials
+            user = authenticate(request, email=b.user.email, password=new_password)
+
+            if user is not None:
+                login(request, user)
+                context = {'msg': 'Password Changed Successfully', 'msg_type': 'success'}
+                return render(request, 'login.html', {'b': b, 'msg': context})
+            else:
+                context = {'msg': 'Failed to re-authenticate after changing the password', 'msg_type': 'error'}
+                return render(request, 'changepw_pro.html', {'b': b, 'msg': context})
+        else:
+            context = {'msg': 'Your Old Password is Wrong', 'msg_type': 'error'}
+            return render(request, 'changepw_pro.html', {'b': b, 'msg': context})
+
+    return render(request, 'changepw_pro.html', {'b': b})

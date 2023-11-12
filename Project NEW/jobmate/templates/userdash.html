@@ -105,52 +105,49 @@
         <!-- Uncomment below if you prefer to use an image logo -->
         <!-- <a href="home.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
       </div>
-
       <nav id="navbar" class="navbar">
-        <ul>
-            <li class="d-flex justify-content-center"> <!-- Add the justify-content-center class -->
-                <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search Jobs" aria-label="Search">
-                    <div class="input-group-append">
-                        <button class="btn btn-success" id="btn" type="button">Search</button>
-                    </div> <!-- Close the div here -->
-                </form>
-            </li>
-
-          <li><a class="nav-link scrollto active" href="userdash">Home</a></li>
-          <li><a class="nav-link scrollto" href="#">View Jobs</a></li>
-          
-          <br>
-  
-
-        <li class="dropdown">
-          <a href="#">
-             
-            <span id="session" >
-               {{ request.session.f_name }}</span>
-            <i class="bi bi-chevron-down"></i>
-          </a>
-          <ul>
-              
-              <li><a href="seekerpro"><i class="bi bi-pencil-square"></i> My Profile</a></li>
-              <li><a href="change_password"><i class="bi bi-shield-lock"></i> Change Password</a></li>
-              <li><a href="logout"onclick="logout()"><i class="bi bi-box-arrow-right"></i> Sign Out</a></li>
-              <script>
-                function logout() {
-                  // Add your logout logic here, such as clearing session data
-                  alert("You have been logged out.");
-                }
-              </script>
-          </ul>
+        <ul class="d-flex justify-content-between align-items-center">
+          <li class="d-flex align-items-center">
+            <form class="d-flex">
+                <input class="form-control me-2" type="search" placeholder="Search Jobs" aria-label="Search">
+                <div class="input-group-append">
+                    <button class="btn btn-success" id="btn" type="button">Search</button>
+                </div>
+            </form>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link scrollto active" href="userdash">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link scrollto" href="viewpostedjobs"> Jobs</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link scrollto" href="#">Companies</a>
       </li>
-      
-      
-      </nav><!-- .navbar -->
+        <li class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                <span id="session">
+                    {% if request.session.f_name %}
+                        {{ request.session.f_name }}
+                    {% elif request.user.username %}
+                        {{ request.user.username }}
+                    {% endif %}
+                </span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-right">
+                <li><a href="seekerpro"><i class="bi bi-pencil-square"></i> My Profile</a></li>
+                <li><a href="changepw_seeker"><i class="bi bi-shield-lock"></i> Change Password</a></li>
+                <li><a href="logout" onclick="logout()"><i class="bi bi-box-arrow-right"></i> Sign Out</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav><!-- .navbar -->
+    
     </div>
     </div>
   </header><!-- End Header -->
 
-  {% load static %}
+
 
 <main id="main">
   <div class="container">
@@ -204,17 +201,17 @@
               <div class="card-body">
                 <h2 class="card-title">My Profile</h2>
                 {% if request.session.f_name %}
-                <p>Welcome, {{ request.session.f_name }}!</p>
-                {% else %}
-                <p>Name not found in the session.</p>
+                  <p>Welcome, {{ request.session.f_name }}!</p>
+                {% elif request.user.username %}
+                  <p>Welcome, {{ request.user.username }}!</p>
                 {% endif %}
                 <div class="row">
                   <div class="col-md-4">
                     <div class="profile-box">
                       <div class="profile-picture" style="width: 250px; height: 250px; border: 5px solid #007a6c; border-radius: 50%; overflow: hidden; margin: 0 auto;">
-                          <img src="{{ seeker.pro_pic.url }}"  style="width: 100%; height: 100%; object-fit: cover;" class="rounded-circle">
-                  </div>
-                 
+                        <img src="{{ seeker.pro_pic.url }}" style="width: 100%; height: 100%; object-fit: cover;" class="rounded-circle">
+                      </div>
+                    </div>     
                   </div>
                 </div>
               </div>

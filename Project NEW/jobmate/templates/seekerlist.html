@@ -239,7 +239,7 @@
             <table class="table table-bordered">
               <thead>
                 <tr>
-                  
+                  <th>ID</th>
                   <th>Name</th>
                   <th>Date of Birth</th>
                   <th>Location</th>
@@ -247,7 +247,8 @@
                   <th>Qualification</th>
                   <th>Upload Resume</th>
                   <th>Aadhaar No</th>
-                  <th>Upload Photos</th>
+                  <th>Image</th>
+                  <th>Resume</th>
                   <th>Gender</th>
                   <th>Actions</th>
                 </tr>
@@ -255,6 +256,7 @@
               <tbody>
                 {% for seeker in seekers %}
                   <tr>
+                    <td>{{ seeker.seeker_id }}</td>
                     <td>{{ seeker.user.first_name }}</td>
                     <td>{{ seeker.dob|date:'Y-m-d' }}</td>
                     <td>{{ seeker.loc }}</td>
@@ -262,7 +264,8 @@
                     <td>{{ seeker.qual }}</td>                   
                     <td>{{ seeker.resume }}</td>
                     <td>{{ seeker.aadhaar }}</td>
-                    <td>{{ seeker.pro_pic }}</td>
+                    <td><img src="{{ seeker.pro_pic.url }}" class="rounded-circle" alt="Profile Image" style="height: 50px; width: 50px;"></td>
+                    <td><a href="{{ seeker.resume.url }}" target="_blank">View</a></td>
                     <td>{{ seeker.gender }}</td>
                     <td>
                       <button class="btn btn-danger" type="submit" name="delete{{ seeker.seeker_id }}">Delete</button>

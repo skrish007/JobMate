@@ -68,8 +68,7 @@ class Job_Providers(models.Model):
     status = models.CharField('Current Status', max_length=20, default='Not Verified')
     
 
-
-class PostJob(models.Model):
+class PostJobs(models.Model):
     ONLINE = 'Online'
     OFFLINE = 'Offline'
     BOTH = 'Both'
@@ -96,7 +95,7 @@ class PostJob(models.Model):
     description = models.TextField()  # Job Description
     requirements = models.TextField()  # Job Requirements
     minexp = models.CharField(max_length=10, default='Fresher')
-    pro_id = models.ForeignKey(Job_Providers, on_delete=models.CASCADE, related_name='posted_jobs')
+    pro_id = models.IntegerField(default=1)
     status = models.CharField(max_length=20)  # Job Status, e.g., Open, Closed
     timestamp = models.DateTimeField(auto_now_add=True)  # Automatically set to the current time
     salary = models.TextField(default='NOT DISCLOSED')
