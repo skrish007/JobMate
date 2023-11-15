@@ -172,68 +172,113 @@
                     <!-- Basic Information -->
                     <tr>
                         <td><strong>Company Name:</strong></td>
-                        <td><input type="text" name="cname" value="{{ provider.cname }}"></td>
+                        <td>
+                            <input type="text" onInput="validateCname()" name="cname" value="{{ provider.cname }}">
+                            <span id="cname_error" class="cname_error"></span>
+                        </td>
                     </tr>
+                    <!-- CEO Name -->
                     <tr>
                         <td><strong>CEO Name:</strong></td>
-                        <td><input type="text" name="ceoname" value="{{ provider.ceoname }}"></td>
+                        <td>
+                            <input type="text" onInput="validateName()" name="ceoname" value="{{ provider.ceoname }}">
+                            <span id="ceoname_error" class="ceoname_error"></span>
+                        </td>
                     </tr>
+                    <!-- Email -->
                     <tr>
                         <td><strong>Email:</strong></td>
-                        <td><input type="email" name="email" value="{{ user.email }}"></td>
+                        <td>
+                            <input type="email" onInput="validateEmail() "name="email" value="{{ user.email }}">
+                            <span id="email_error" class="email_error"></span>
+                        </td>
                     </tr>
     
                     <!-- Detailed Information for Job Provider -->
-                    <tr>
-                        <td><strong>Company Address:</strong></td>
-                        <td><input type="text" name="caddress" value="{{ provider.caddress }}"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Company Type:</strong></td>
-                        <td><input type="text" name="ctype" value="{{ provider.ctype }}"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Other Company Type:</strong></td>
-                        <td><input type="text" name="otherctype" value="{{ provider.otherctype }}"></td>
-                    </tr>
-                    <tr>
-                      <td><strong>Company Description:</strong></td>
-                      <td><textarea name="cdescription">{{ provider.cdescription }}</textarea></td>
-                  </tr>
-                  
-                  <tr>
-                      <td><strong>Founded Date:</strong></td>
-                      <td><input type="date" name="fyear" value="{{ provider.fyear|date:'Y-m-d' }}"></td>
-                  </tr>
-                  
-                  <tr>
-                      <td><strong>Phone Number:</strong></td>
-                      <td><input type="text" name="cphone" value="{{ provider.cphone }}"></td>
-                  </tr>
-                  
-                  <tr>
-                      <td><strong>Website URL:</strong></td>
-                      <td><input type="text" name="website" value="{{ provider.website }}"></td>
-                  </tr>
-                  
-                  <tr>
-                      <td><strong>Employee Number:</strong></td>
-                      <td><input type="text" name="empno" value="{{ provider.empno }}"></td>
-                  </tr>
-                  
-    
-                    <!-- Upload Company License -->
-                    <tr>
-                        <td><strong>Company License:</strong></td>
-                        <td><input type="file" name="clicense" value="{{ provider.clicense }}"></td>
-                    </tr>
-                    <!-- Upload Logo -->
-                    <tr>
-                        <td><strong>Company Logo:</strong></td>
-                        <td><input type="file" name="logo"></td>
-                    </tr>
-                </tbody>
-            
+                    <!-- Company Address -->
+<tr>
+    <td><strong>Company Address:</strong></td>
+    <td>
+        <input type="text" onInput="validateAddress()" name="caddress" value="{{ provider.caddress }}">
+        <span id="caddress_error" class="caddress_error"></span>
+    </td>
+</tr>
+<!-- Company Type -->
+<tr>
+    <td><strong>Company Type:</strong></td>
+    <td>
+        <input type="text" name="ctype" onInput="validateCtype()" value="{{ provider.ctype }}">
+        <span id="ctype_error" class="ctype_error"></span>
+    </td>
+</tr>
+<!-- Other Company Type -->
+<tr>
+    <td><strong>Other Company Type:</strong></td>
+    <td>
+        <input type="text" name="otherctype" value="{{ provider.otherctype }}">
+        <span id="otherctype_error" class="otherctype_error"></span>
+    </td>
+</tr>
+<!-- Company Description -->
+<tr>
+    <td><strong>Company Description:</strong></td>
+    <td>
+        <textarea name="cdescription" onInput="validateDescription()">{{ provider.cdescription }}</textarea>
+        <span id="cdescription_error" class="cdescription_error"></span>
+    </td>
+</tr>
+<!-- Founded Date -->
+<tr>
+    <td><strong>Founded Date:</strong></td>
+    <td>
+        <input type="date" name="fyear" onInput="validateDate()" value="{{ provider.fyear|date:'Y-m-d' }}">
+        <span id="fyear_error" class="fyear_error"></span>
+    </td>
+</tr>
+<!-- Phone Number -->
+<tr>
+    <td><strong>Phone Number:</strong></td>
+    <td>
+        <input type="text" name="cphone" onInput="validatePhone()" value="{{ provider.cphone }}">
+        <span id="cphone_error" class="cphone_error"></span>
+    </td>
+</tr>
+<!-- Website URL -->
+<tr>
+    <td><strong>Website URL:</strong></td>
+    <td>
+        <input type="text" name="website" onInput="validateUrl()" value="{{ provider.website }}">
+        <span id="website_error" class="website_error"></span>
+    </td>
+</tr>
+<!-- Employee Number -->
+<tr>
+    <td><strong>Employee Number:</strong></td>
+    <td>
+        <input type="text" name="empno" onInput="validateEmpno()" value="{{ provider.empno }}">
+        <span id="empno_error" class="empno_error"></span>
+    </td>
+</tr>
+
+<!-- ... (Repeat for other fields) -->
+
+<!-- Upload Company License -->
+<tr>
+    <td><strong>Company License:</strong></td>
+    <td>
+        <input type="file" name="clicense" onInput="validateLicense()"value="{{ provider.clicense }}">
+        <span id="clicense_error" class="clicense_error"></span>
+    </td>
+</tr>
+<!-- Upload Logo -->
+<tr>
+    <td><strong>Company Logo:</strong></td>
+    <td>
+        <input type="file" onInput="validateLogo()" name="logo">
+        <span id="logo_error" class="logo_error"></span>
+    </td>
+</tr>
+<tbody>
             
        
     </div>
@@ -241,6 +286,171 @@
 
 </table>
 <button type="submit" class="btn btn-warning">Update Profile</button>
-<button type="submit" class="btn btn-danger">Delete Profile</button>
+<button type="#" class="btn btn-danger">Delete Profile</button>
 </form>
+<script>
+    // Function to validate the profile update form
+    function validateForm() {
+        const cname = document.querySelector('input[name="cname"]').value.trim();
+        const ceoname = document.querySelector('input[name="ceoname"]').value.trim();
+        const email = document.querySelector('input[name="email"]').value.trim();
+        const caddress = document.querySelector('input[name="caddress"]').value.trim();
+        const ctype = document.querySelector('input[name="ctype"]').value.trim();
+        const otherctype = document.querySelector('input[name="otherctype"]').value.trim();
+        const cdescription = document.querySelector('textarea[name="cdescription"]').value.trim();
+        const fyear = document.querySelector('input[name="fyear"]').value.trim();
+        const cphone = document.querySelector('input[name="cphone"]').value.trim();
+        const website = document.querySelector('input[name="website"]').value.trim();
+        const empno = document.querySelector('input[name="empno"]').value.trim();
+        const clicense = document.querySelector('input[name="clicense"]').value.trim();
+        const logo = document.querySelector('input[name="logo"]').value.trim();
+
+        let isValid = true;
+
+        // Check if any of the fields is empty
+        if (
+            cname === "" ||
+            ceoname === "" ||
+            email === "" ||
+            caddress === "" ||
+            ctype === "" ||
+            (ctype === "other" && otherctype === "") ||
+            cdescription === "" ||
+            fyear === "" ||
+            cphone === "" ||
+            website === "" ||
+            empno === "" ||
+            clicense === "" ||
+            logo === ""
+        ) {
+            isValid = false;
+            alert('Please fill in all the required fields.');
+        }
+
+        if (isValid) {
+            // All fields are filled, proceed with form submission
+            document.querySelector('.profile-box form').submit();
+        }
+    }
+
+    // Attach the validateProfileForm function to the form's onsubmit event
+    document.querySelector('.profile-box form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submission
+        validateProfileForm();
+    });
+   
+        // Validation functions (replace with your actual validation logic)
+        function validateCname() {
+            let cname = document.getElementsByName("cname")[0].value;
+            let cnameError = document.getElementById("cname_error");
+            if (cname.trim() === "") {
+                cnameError.innerText = "Company Name is required.";
+                cnameError.classList.add("text-danger");
+                return false;
+            } else {
+                cnameError.innerText = "";
+                return true;
+            }
+        }
     
+        function validateName() {
+            let ceoname = document.getElementsByName("ceoname")[0].value;
+            let ceonameError = document.getElementById("ceoname_error");
+            // Validation: ceo name should not contain special characters or numbers
+            if (!/^[a-zA-Z\s]*$/.test(ceoname)) {
+                ceonameError.innerText = "CEO Name should only contain letters and spaces.";
+                ceonameError.classList.add("text-danger");
+                return false;
+            } else {
+                ceonameError.innerText = "";
+                return true;
+            }
+        }
+    
+        function validateEmail() {
+            let email = document.getElementsByName("email")[0].value;
+            let emailError = document.getElementById("email_error");
+            // Validation: Email with popular domains
+            if (!/^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|outlook\.com|example\.com)$/.test(email)) {
+                emailError.innerText = "Enter a valid email address with popular domains.";
+                emailError.classList.add("text-danger");
+                return false;
+            } else {
+                emailError.innerText = "";
+                return true;
+            }
+        }
+    
+        function validateAddress() {
+            let caddress = document.getElementsByName("caddress")[0].value;
+            let caddressError = document.getElementById("caddress_error");
+            // Validation: Address should be minimum 50 characters
+            if (caddress.trim().length < 10) {
+                caddressError.innerText = "Address should be at least 10 characters.";
+                caddressError.classList.add("text-danger");
+                return false;
+            } else {
+                caddressError.innerText = "";
+                return true;
+            }
+        }
+    
+        // Add similar validation functions for other fields
+    
+        // Function to validate all fields
+        function validateAllFields() {
+            return (
+                validateCname() &&
+                validateName() &&
+                validateEmail() &&
+                validateAddress() &&
+                // Add calls to other validation functions
+                validateLicense() &&
+                validateLogo()
+            );
+        }
+    
+        document.getElementById("profileForm").addEventListener("submit", function (event) {
+            // Additional validations for date and phone number
+            if (!validateDate() || !validatePhone()) {
+                event.preventDefault();
+                return;
+            }
+    
+            if (!validateAllFields()) {
+                event.preventDefault();
+            }
+        });
+    
+        // Additional validation for date: should not be in the future
+        function validateDate() {
+            let fyear = document.getElementsByName("fyear")[0].value;
+            let fyearError = document.getElementById("fyear_error");
+            let currentDate = new Date();
+            let selectedDate = new Date(fyear);
+    
+            if (selectedDate > currentDate) {
+                fyearError.innerText = "Founded date cannot be in the future.";
+                fyearError.classList.add("text-danger");
+                return false;
+            } else {
+                fyearError.innerText = "";
+                return true;
+            }
+        }
+    
+        // Additional validation for phone: should be ten digits starting with 9, 8, 7, or 6
+        function validatePhone() {
+            let cphone = document.getElementsByName("cphone")[0].value;
+            let cphoneError = document.getElementById("cphone_error");
+    
+            if (!/^[6-9]\d{9}$/.test(cphone)) {
+                cphoneError.innerText = "Enter a valid 10-digit phone number starting with 9, 8, 7, or 6.";
+                cphoneError.classList.add("text-danger");
+                return false;
+            } else {
+                cphoneError.innerText = "";
+                return true;
+            }
+        }
+    </script>

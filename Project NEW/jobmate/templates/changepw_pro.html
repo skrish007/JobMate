@@ -137,23 +137,24 @@
   </header><!-- End Header -->
 <body> <br> <br>
 
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-6">
-                    <!-- Left half for image -->
-                    <br> <br> <br>
-                    <img src="{% static 'assets/img/pw.jpg' %}"  alt="" class="img-fluid" style="height: 700px; width: 700px;">
-                </div>
-                <div class="col-md-6">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Left half for image -->
+                <br> <br> <br>
+                <img src="{% static 'assets/img/pw.jpg' %}"  alt="." class="img-fluid" style="height: 700px; width: 700px;">
+            </div>
+            <div class="col-md-6" >
                     <!-- Right half for the form -->
-                    <center>
+                    
                         <br> <br> <br>  <br> <br> 
                         {% if msg %}
                             <div id="alertBox" class="alert alert-danger">
                                 {{ msg }}
                             </div>
                         {% endif %}
-                        <h4 class="mt-5" style="font-weight:bold">Change Password</h4><br>
+                        <center>
+                        <h4 class="mt-5" style="font-weight:bold">Change Password</h4><br> </center>
     
                         <table class="table table-hover">
                             <form role="form" class="was-validated" name="frm" method="post">
@@ -182,7 +183,7 @@
                     </div>
                     <br> 
         
-                
+                    <center>
                                     <button type="submit" class="btn btn-dark" id="bt" name="bt" onclick="validatePassword(); validateConfirmPassword();">Update</button> <br> <br>
                                     <button type="reset" class="btn btn-danger" id="rt" name="rt">Reset</button>
                                 </form>

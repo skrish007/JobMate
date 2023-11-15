@@ -51,7 +51,7 @@ class Job_Seekers(models.Model):
 class Job_Providers(models.Model):
     #Company Information
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    pro_id= models.IntegerField(primary_key=True)
+    pro_id = models.AutoField(primary_key=True)
     cname = models.CharField('Name', max_length=50)
     ceoname = models.CharField('CEO Name', max_length=50)
     caddress = models.CharField('Company Address', max_length=150)
@@ -95,10 +95,11 @@ class PostJobs(models.Model):
     description = models.TextField()  # Job Description
     requirements = models.TextField()  # Job Requirements
     minexp = models.CharField(max_length=10, default='Fresher')
-    pro_id = models.IntegerField(default=1)
+    pro_id = models.ForeignKey(Job_Providers, on_delete=models.CASCADE)
     status = models.CharField(max_length=20)  # Job Status, e.g., Open, Closed
     timestamp = models.DateTimeField(auto_now_add=True)  # Automatically set to the current time
-    salary = models.TextField(default='NOT DISCLOSED')
+    min_salary = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+    max_salary = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     deadline = models.DateField(null=True)  # Application Deadline
     mode = models.CharField(max_length=10, choices=MODE_CHOICES, default=ONLINE)  # Online, Offline, Both
 

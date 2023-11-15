@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
@@ -33,21 +33,17 @@ def register(request):
         if User.objects.filter(email=email).exists():
             messages.error(request, 'User with this email already exists. Please sign in.')
         else:
-            user = User.objects.create_user(username=email, password=password,first_name=first_name,last_name=last_name,email=email,)
+            # Explicitly set the authentication backend when creating the user
+            user = User.objects.create_user(username=email, password=password, email=email)
+            user.backend = 'django.contrib.auth.backends.ModelBackend'  # Set the appropriate backend
             login(request, user)
 
-        # Create a JobSeeker instance
-            seeker = Job_Seekers(user=user,dob=dob,
-                gender=gender,
-                loc=loc,
-                phone=phone,
-                qual=qual,
-                oqual=oqual,
-                skills=skills,
-                exp=exp,
-                aadhaar=aadhaar,
-                pro_pic=pro_pic,
-                resume=resume )
+            # Create a JobSeeker instance
+            seeker = Job_Seekers(
+                user=user, dob=dob, gender=gender, loc=loc, phone=phone,
+                qual=qual, oqual=oqual, skills=skills, exp=exp,
+                aadhaar=aadhaar, pro_pic=pro_pic, resume=resume
+            )
             seeker.save()
 
             # Create and save a new JobSeeker object
@@ -299,8 +295,18 @@ def seekerlist(request):
 
 
 def post_job(request):
-    user= request.session['user_id']
-    print(user)
+    user_id = request.session.get('user_id')
+    
+    # Check if the user is logged in
+    if not user_id:
+        return HttpResponse("User not logged in.")  # You can customize this response
+
+    # Check if the Job_Providers profile exists for the logged-in user
+    try:
+        job_provider = Job_Providers.objects.get(user_id=user_id)
+    except Job_Providers.DoesNotExist:
+        return HttpResponse("Job_Providers profile does not exist. Please create your profile first.")
+
     if request.method == 'POST':
         # Get the form data from the POST request
         title = request.POST.get('title')
@@ -311,11 +317,12 @@ def post_job(request):
         experience_required = request.POST.get('experience_required')
         category = request.POST.get('category')
         status = request.POST.get('status')
-        salary = request.POST.get('salary')
+        min_salary = request.POST.get('min_salary')
+        max_salary = request.POST.get('max_salary')
         deadline = request.POST.get('deadline')
         mode = request.POST.get('mode')
-        pro_id=user
-        # Create and save a new PostJob instance with the form data
+
+        # Create and save a new PostJobs instance with the form data
         post_job = PostJobs(
             title=title,
             type=type,
@@ -323,16 +330,17 @@ def post_job(request):
             description=description,
             requirements=requirements,
             minexp=experience_required,
-            pro_id=1,
+            pro_id=job_provider,  # Assign the Job_Providers instance
             status=status,
-            salary=salary,
+            min_salary=min_salary,
+            max_salary=max_salary,
             deadline=deadline,
             mode=mode
         )
-        post_job.save()
 
+        post_job.save()
         # Optionally, you can perform additional actions here, like sending email notifications or performing other logic.
-        return redirect('viewpostedjobs')  # You can customize the response message
+        return redirect('companydash')  # You can customize the response message
 
     return render(request, 'postjob.html')
 
@@ -463,3 +471,9 @@ def changepw_pro(request):
             return render(request, 'changepw_pro.html', {'b': b, 'msg': context})
 
     return render(request, 'changepw_pro.html', {'b': b})
+
+
+
+def viewjobdetails(request, job_id):
+    job = get_object_or_404(PostJobs, job_id=job_id)
+    return render(request, 'jobdetails.html', {'job': job})

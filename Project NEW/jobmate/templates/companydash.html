@@ -99,7 +99,7 @@
             </li>
 
           <li><a class="nav-item" href="companydash">Home</a></li>
-          
+          <li><a class="nav-item" href="viewpostedjobs">My Jobs</a></li>
           
           <br>
   
@@ -187,44 +187,31 @@
                         </ul>
                     </div>
                  <!-- Dashboard content -->
-                 <div class="card mb-4">
-                  <div class="card-body">
-                      <h2 class="card-title">My Profile</h2>
-                      {% if request.session.user_name %}
-                      <p>Welcome, {{ request.session.user_name }}!</p>
-                      {% else %}
-                      <p>Name not found in the session.</p>
-                      {% endif %}
-                      <div class="row">
-                          <div class="col-md-4">
-                              <div class="profile-image">
-                                  <span>
-                                      <!-- Integrate the profile image -->
-                                      <img src="{{ MEDIA_URL }}company/images/{{ Job_Providers.image }}" alt="Profile Picture">
-                                  </span>
-                              </div>
-                          </div>
-                          <div class="profile-picture" style="width: 250px; height: 250px; border: 5px solid #007a6c; border-radius: 50%; overflow: hidden; margin: 0 auto;">
-                            <img src="{{ provider.logo.url }}" alt="Profile Picture" style="width: 100%; height: 100%; object-fit: cover;" class="rounded-circle">
-                          </div>
-                          <div class="col-md-8">
-                              {% if user.is_authenticated %}
-                              <p>Hello, {{ request.session.user_name }}!</p>
-                              {% endif %}
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h2 class="section-title">Applicants</h2>
-                                <!-- Display a list of job applicants here -->
-                                <ul class="applicant-list">
-                                    <li><a href="#">Applicant Name 1</a></li>
-                                    <li><a href="#">Applicant Name 2</a></li>
-                                    <li><a href="#">Applicant Name 3</a></li>
-                                </ul>
+                </div>
+                <div class="container">
+                    <br><br><br><br>
+                    <h1>Your Posted Jobs</h1>
+                    <div class="row">
+                        {% for job in company_jobs %}
+                            <div class="col-md-4 mb-4 job-card">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ job.title }}</h5>
+                                        <p class="card-text">Type: {{ job.get_type_display }}</p>
+                                        <p class="card-text">Location: {{ job.location }}</p>
+                                        <p class="card-text">Status: {{ job.status }}</p>
+                                        <p class="card-text">Deadline: {{ job.deadline|date:'Y-m-d' }}</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <a href="#" class="btn btn-success">View Details</a>
+                                        <a href="#" class="btn btn-primary">Edit</a>
+                                        <a href="#" class="btn btn-danger">Delete</a>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        {% endfor %}
                     </div>
+                
                 </div>
             </div>
         </div>
