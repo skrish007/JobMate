@@ -48,7 +48,27 @@
         background-color: #007A6C; /* Green color with opacity */
         color: white;
     }
+    .messages-container {
+      margin-bottom: 15px;
+    }
     
+    .alert {
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+    
+    .alert-success {
+      background-color: #d4edda;
+      border-color: #c3e6cb;
+      color: #155724;
+    }
+    
+    .alert-danger {
+      background-color: #f8d7da;
+      border-color: #f5c6cb;
+      color: #721c24;
+    }
 </style>
 </head>
 <body>
@@ -110,18 +130,18 @@
   
   <!-- Second Column -->
   <div class="col-md-5">
-    
-  
-      <div class="bg white p-3">
-        <h2 style="text-align: center; font-weight: bold; color: black;">Welcome Back!
-          </h2>
-        <br>
-          {% if msg %}
-          <div id="alertBox" class="alert alert-danger">
-              {{ msg }}
-            </div>
-          {% endif %}
-     
+    <div class="bg white p-3">
+      <h2 style="text-align: center; font-weight: bold; color: black;">Welcome Back!</h2>
+      <br>
+      {% if messages %}
+      <div class="messages-container">
+        {% for message in messages %}
+          <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
           
         <form method="post"  action="{% url 'login' %}" onsubmit= "return validateForm()">
           {% csrf_token %}

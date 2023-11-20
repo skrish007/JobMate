@@ -6,15 +6,15 @@ from django.urls import path, include
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('',views.home),
-    path('home',views.home),
+    path('',views.home,name='home'),
+    path('home',views.home,name='home'),
     path('login', views.login_view, name='login'),
     path('userdash', views.success_view, name='userdash'),
     path('companydash', views.success_view, name='companydash'),
     path('admindash', views.success_view, name='admindash'),
     
-    path('register',views.register),
-    path('companyreg',views.companyreg),
+    path('register',views.register,name='register'),
+    path('companyreg',views.companyreg,name='companyreg'),
     path('logout', views.logout_view, name='logout'),
     path('seekerpro', views.seekerpro, name='seekerpro'),
     
@@ -28,6 +28,7 @@ urlpatterns = [
     path('ad',views.admin,name='ad'),
     path('postjob', views.post_job, name='postjob'),
     path('seekerlist', views.seekerlist, name='seekerlist'),
+    path('companydash', views.seekerview, name='companydash'),
     path('companylist', views.companylist, name='companylist'),
     path('viewpostedjobs', views.posted_jobs, name='viewpostedjobs'),
     path('job/<int:job_id>/', views.viewjobdetails, name='viewjobdetails'),
@@ -43,7 +44,11 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 
+    path('verifymail', views.verifymail, name='verifymail'),
+    path('activate/<uidb64>/<token>/', views.activate, name='activate'),
 
+
+    path('accounts/', include('allauth.urls')),
 ]
 
 

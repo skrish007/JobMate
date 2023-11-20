@@ -1,16 +1,28 @@
 
 from django.db import models
 from PIL import Image
+from django.contrib.auth.decorators import login_required
 
 from datetime import date
 from django.urls import reverse
 #Admin
 from django.contrib.auth.models import AbstractUser
 # Create your models here.
+# models.py
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.mail import send_mail
+import random
+from django.utils import timezone
+
+
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+
+
 class User(AbstractUser):
-    email=models.EmailField(max_length=100,unique=True)
-    USERNAME_FIELD='email'
-    REQUIRED_FIELDS=['first_name', 'last_name','username']
+    email = models.EmailField(max_length=100, unique=True)
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'username']
+
     class Role(models.TextChoices):
         JOBPROVIDER = 'jobprovider', 'Job Provider'
         JOBSEEKER = 'jobseeker', 'Job Seeker'
@@ -21,16 +33,24 @@ class User(AbstractUser):
         choices=Role.choices,
         default=Role.JOBSEEKER,
     )
-class Client(User):
-    class meta:
-        proxy:True
 
-#Job Seekers Database
+    is_verified = models.BooleanField(default=False)
+
+class TokenGenerator(PasswordResetTokenGenerator):
+    def _make_hash_value(self, user, timestamp):
+        return (
+            str(user.pk) + str(timestamp) +
+            str(user.is_verified)
+        )
+
+account_activation_token = TokenGenerator()
+
 GENDER_CHOICES = [
     ('male', 'Male'),
     ('female', 'Female'),
     ('not-specified', 'Prefer not to say'),
 ]
+
 class Job_Seekers(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     seeker_id = models.AutoField(primary_key=True)
@@ -45,20 +65,18 @@ class Job_Seekers(models.Model):
     aadhaar = models.CharField("Aadhaar No", max_length=25)
     pro_pic = models.FileField("Upload Photos", upload_to='seeker/images/', max_length=254, default=0)
     gender = models.CharField("Gender", max_length=20, choices=GENDER_CHOICES, default='not-specified')
-   
-    
-#JobProviders DataBase
+
+
 class Job_Providers(models.Model):
-    #Company Information
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     pro_id = models.AutoField(primary_key=True)
     cname = models.CharField('Name', max_length=50)
     ceoname = models.CharField('CEO Name', max_length=50)
     caddress = models.CharField('Company Address', max_length=150)
     ctype = models.CharField('Company Type', max_length=25)
-    otherctype = models.CharField('Other Company Type', max_length=25,blank=True, null=True)
+    otherctype = models.CharField('Other Company Type', max_length=25, blank=True, null=True)
     cdescription = models.CharField('Company Description', max_length=500)
-    cphone = models.CharField('Company Phone Number',max_length=10)
+    cphone = models.CharField('Company Phone Number', max_length=10)
     website = models.CharField('Company Website', max_length=100)
     empno = models.IntegerField('No Of Employees')
     fyear = models.DateField('Founded Date')
@@ -66,7 +84,10 @@ class Job_Providers(models.Model):
     clicense = models.CharField('License number', max_length=100)
     licensefile = models.FileField('Company Licence in pdf Format', upload_to='provider/license/')
     status = models.CharField('Current Status', max_length=20, default='Not Verified')
-    
+
+    def send_verification_email(self):
+        self.user.send_verification_email()
+
 
 class PostJobs(models.Model):
     ONLINE = 'Online'

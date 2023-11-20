@@ -96,6 +96,8 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
     
 ]
+
+
 LOGIN_REDIRECT_URL = 'userdash'  # Redirect after login
 LOGOUT_REDIRECT_URL = 'logout'  
 

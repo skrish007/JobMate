@@ -110,7 +110,27 @@ input[type="radio"] {
 background-color: #007a6c;
 border-color: #007a6c;
 }
-
+.messages-container {
+    margin-bottom: 15px;
+  }
+  
+  .alert {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+  
+  .alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+  }
+  
+  .alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+  }
   </style>
 
 <body>
@@ -167,11 +187,15 @@ border-color: #007a6c;
               </h2> <div>
                 <br> <br>
                 <br>
-          {% if msg %}
-          <div id="alertBox" class="alert alert-danger">
-              {{ msg }}
-            </div>
-          {% endif %}
+                {% if messages %}
+                <div class="messages-container">
+                  {% for message in messages %}
+                    <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}">
+                      {{ message }}
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
      
   
     <form method="POST" class="was-validated" action="/register" enctype="multipart/form-data" onsubmit= "return validateForm();">

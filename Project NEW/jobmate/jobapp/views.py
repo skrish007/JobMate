@@ -1,14 +1,41 @@
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required,user_passes_test
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth import authenticate, login
+from django.contrib.sites.shortcuts import get_current_site
+from django.urls import reverse
+from django.utils.encoding import force_bytes, force_str
+from django.utils.encoding import force_str
+
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from datetime import datetime
+
 from django.contrib.auth import logout
 import hashlib
+from django.utils import timezone
+from datetime import timedelta
 from django.views.decorators.cache import never_cache
 
-from .models import Job_Seekers, Job_Providers,User,PostJobs
-
+from .models import Job_Seekers, Job_Providers,User,PostJobs,account_activation_token
 def home(request):
     return render(request, "home.html")
+
+from datetime import datetime
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.http import JsonResponse
+
+
+
+class TokenGenerator(PasswordResetTokenGenerator):
+    def _make_hash_value(self, user, timestamp):
+        return f"{user.pk}{timestamp}{user.is_active}"
+
+generate_token = TokenGenerator()
 
 def register(request):
     if request.method == 'POST':
@@ -17,7 +44,7 @@ def register(request):
         last_name = request.POST['last_name']
         email = request.POST['email']
         password = request.POST['password']
-        dob = request.POST['dob']
+        dob = request.POST['dob']  # Assuming dob is in 'YYYY-MM-DD' format
         gender = request.POST['gender']
         loc = request.POST['loc']
         phone = request.POST['phone']
@@ -28,15 +55,13 @@ def register(request):
         aadhaar = request.POST['aadhaar']
         pro_pic = request.FILES.get('pro_pic')
         resume = request.FILES.get('resume')
+      
 
-        # Check if a user with this email already exists
         if User.objects.filter(email=email).exists():
-            messages.error(request, 'User with this email already exists. Please sign in.')
+            messages.error(request, 'User with this email already exists. Please use a different email.')
         else:
-            # Explicitly set the authentication backend when creating the user
-            user = User.objects.create_user(username=email, password=password, email=email)
-            user.backend = 'django.contrib.auth.backends.ModelBackend'  # Set the appropriate backend
-            login(request, user)
+            # Create a user instance
+            user = User.objects.create_user(username=email, password=password, first_name=first_name, last_name=last_name, email=email)
 
             # Create a JobSeeker instance
             seeker = Job_Seekers(
@@ -46,17 +71,49 @@ def register(request):
             )
             seeker.save()
 
-            # Create and save a new JobSeeker object
-            messages.success(request, 'Registration successful. You can now log in.')
+            # Generate a token for this user
+            token = account_activation_token.make_token(user)
+
+            # Get current site
+            current_site = get_current_site(request)
+
+            # Create email body
+            mail_subject = 'Activate your account.'
+            message = render_to_string('emailactivate.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': token,
+            })
+
+            # Send email
+            send_mail(mail_subject, message, 'jobmate2023@gmail.com', [email])
+
+            messages.success(request, 'Registration successful. Check your email for verification.')
             return redirect('login')
 
     return render(request, 'register.html')
 
+def activate(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+        if account_activation_token.check_token(user, token):
+            user.is_verified = True
+            user.save()
+            messages.success(request, 'Email confirmed. You can now login.')
+            return redirect('login')
+        else:
+            messages.error(request, 'Activation link is invalid!')
+            return redirect('register')
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        messages.error(request, 'Activation link is invalid!')
+        return redirect('register')
 def companyreg(request):
     if request.method == 'POST':
         # Extract form data
         cname = request.POST.get('cname', '')
-        cname = request.POST.get('email', '')
+        email = request.POST.get('email', '')
         password = request.POST.get('password', '')
         ceoname = request.POST.get('ceoname')
         caddress = request.POST.get('caddress')
@@ -71,14 +128,16 @@ def companyreg(request):
         licensefile = request.FILES.get('licensefile')
         logo = request.FILES.get('logo')
 
+        # Check if a user with this email already exists
         if User.objects.filter(email=email).exists():
             messages.error(request, 'User with this email already exists. Please sign in.')
         else:
-            user = User.objects.create_user(username=email, password=password,first_name=cname,last_name=ceoname,email=email,role=User.Role.JOBPROVIDER)
-            login(request, user)
+            # Create a user instance
+            user = User.objects.create_user(email=email, password=password, first_name=cname)
+            
+            # Create a JobProvider instance
             provider = Job_Providers(
                 user=user,
-                
                 caddress=caddress,
                 ctype=ctype,
                 otherctype=otherctype,
@@ -90,63 +149,65 @@ def companyreg(request):
                 clicense=clicense,
                 licensefile=licensefile,
                 logo=logo,
-                
             )
             provider.save()
-            messages.success(request, 'Registration successful. You can now log in.')
-            return redirect('login')
+
+            # Send verification email
+            user.send_verification_email()
+
+            messages.success(request, 'Registration successful. Check your email for verification.')
+            return redirect('verifymail')
 
     return render(request, 'companyreg.html')
 
 @never_cache
+
 def login_view(request):
     if request.method == 'POST':
         email = request.POST['email']
         password = request.POST['password']
         user = authenticate(request, email=email, password=password)
 
-        
         if user is not None:
-            login(request, user)
-            request.session['user_role'] = user.role  # Store the user's role in the session
-            if user.role == User.Role.ADMIN:
-                return redirect('admindash')
-            elif user.role == User.Role.JOBSEEKER:
-                request.session['user_id'] = user.id
-                request.session['f_name'] = f"{user.first_name} {user.last_name}"
-                request.session['user_role'] = 'jobseeker'
-                
-                user = request.user
-                seeker, created = Job_Seekers.objects.get_or_create(user=user)
-                user.save()
+            if user.is_verified:
+                login(request, user)
+                request.session['user_role'] = user.role  # Store the user's role in the session
+                if user.role == User.Role.ADMIN:
+                    return redirect('admindash')
+                elif user.role == User.Role.JOBSEEKER:
+                    request.session['user_id'] = user.id
+                    request.session['f_name'] = f"{user.first_name} {user.last_name}"
+                    request.session['user_role'] = 'jobseeker'
 
+                    user = request.user
+                    seeker, created = Job_Seekers.objects.get_or_create(user=user)
+                    user.save()
 
+                    return render(request, 'userdash.html', {"seeker": seeker})
+                elif user.role == User.Role.JOBPROVIDER:
+                    # Set session data for the provider
+                    request.session['user_id'] = user.id
+                    request.session['user_name'] = user.first_name
+                    request.session['user_role'] = 'jobprovider'
 
-                return render(request, 'userdash.html',{"seeker":seeker})  # Replace with your jobseeker page URL name
-            elif user.role == User.Role.JOBPROVIDER:
-    # Set session data for the provider
-                request.session['user_id'] = user.id
-                request.session['user_name'] = user.first_name
-                request.session['user_role'] = 'jobprovider'
-
-    # Get the 'Job_Providers' instance for the current user
-                try:
-                    provider = Job_Providers.objects.get(user=user)
-                    z = provider.status
-                    request.session['status'] = z
-                except Job_Providers.DoesNotExist:
-                    z = 'Not Verified'  # Set a default value if the provider instance doesn't exist
-
-            if z == 'Verified':
-                return redirect('companydash')
-                
+                    # Get the 'Job_Providers' instance for the current user
+                    try:
+                        provider = Job_Providers.objects.get(user=user)
+                        z = provider.status
+                        request.session['status'] = z
+                        request.session['is_verified'] = y
+                    except Job_Providers.DoesNotExist:
+                        z = 'Not Verified'  # Set a default value if the provider instance doesn't exist
+                        
+                    if z == 'Verified':
+                        return redirect('companydash')
+                    else:
+                        return render(request, 'verification_pending.html')
             else:
-                
-                return render(request, 'verification_pending.html')
-        
-
+                messages.success(request, 'Please Verify your Email to continue.')
+        else:
+            messages.error(request, 'Invalid email or password. Please try again.')        
     return render(request, 'login.html')
-
 def logout_view(request):
     logout(request)
     request.session.flush()
@@ -174,6 +235,7 @@ def success_view(request):
     else:
         messages.error(request, 'Invalid user role.')
         return redirect('login')
+
 
 
 from django.contrib.auth.decorators import login_required
@@ -291,7 +353,10 @@ def seekerlist(request):
     return render(request, 'seekerlist.html', {'seekers': seekers})
 
 
-
+def seekerview(request):
+    seekers = Job_Seekers.objects.all()
+    # Implement any custom logic here
+    return render(request, 'companydash.html', {'seekers': seekers})
 
 
 def post_job(request):
@@ -477,3 +542,46 @@ def changepw_pro(request):
 def viewjobdetails(request, job_id):
     job = get_object_or_404(PostJobs, job_id=job_id)
     return render(request, 'jobdetails.html', {'job': job})
+
+
+
+
+
+
+def verifymail(request):
+    if request.method == 'POST':
+        verification_code = request.POST.get('verification_code')
+
+        # Check if the user is authenticated
+        if request.user.is_authenticated:
+            user = request.user
+
+            # Check if the user has otp and the entered OTP matches
+            stored_otp = 123456
+            stored_otp_created_at = request.session.get('otp_created_at')
+
+            print(f"Stored OTP: {stored_otp}, Entered Code: {verification_code}")
+
+            if stored_otp is not None and str(stored_otp) == verification_code:
+                # Check if the OTP has expired (adjust the expiration time as needed)
+                # expiration_time = stored_otp_created_at + timezone.timedelta(minutes=5)
+                # if timezone.now() <= expiration_time:
+                # OTP is valid
+                user.is_verified = True
+                user.save()
+                messages.success(request, 'Email verification successful. You can now log in.')
+
+                # Clear the OTP-related session data after successful verification
+                # request.session.pop('otp', None)
+                # request.session.pop('otp_created_at', None)
+
+                return render(request, 'login.html')
+                # else:
+                # messages.error(request, 'The verification code has expired. Please request a new one.')
+            else:
+                messages.error(request, 'Invalid verification code. Please try again.')
+        else:
+            messages.error(request, 'User is not authenticated. Please log in.')
+
+    return render(request, 'verifymail.html')
+

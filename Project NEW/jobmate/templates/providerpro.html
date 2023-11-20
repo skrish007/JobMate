@@ -165,7 +165,7 @@
     
     <div class="profile-box">
         <h3>Profile Information</h3>
-        <form method="post" action="{% url 'provider_profile_update' %}" enctype="multipart/form-data">
+        <form method="post" "was-validated" action="{% url 'provider_profile_update' %}" enctype="multipart/form-data">
             {% csrf_token %}
             <table class="table table-striped">
                 <tbody>
@@ -380,7 +380,112 @@
                 return true;
             }
         }
-    
+        function validateEmail() {
+            const email = document.getElementById[0].value;
+          
+            const email_error = document.getElementById('email_error');
+        
+            const allowedTlds = [
+                "com",
+                "in",
+                "ac",
+                "co",
+                "org",
+                "net",
+                "edu",
+                "gov",
+                // Add more allowed TLDs here
+            ];
+        
+            const parts = email.split('@');
+            if (parts.length !== 2) {
+                // Email should have exactly one "@" symbol
+                const message = '<i class="bi bi-x-circle-fill text-danger"></i> Invalid email format';
+                emailError.innerHTML = message;
+                emailInput.value = email;
+                return;
+            }
+        
+            const domain = parts[1];
+            const domainParts = domain.split('.');
+            if (domainParts.length < 2) {
+                // Domain should have at least one subdomain and one TLD
+                const message = '<i class="bi bi-x-circle-fill text-danger"></i> Invalid email domain';
+                email_error.innerHTML = message;
+                emailInput.value = email;
+                return;
+            }
+        
+            const tld = domainParts.pop().toLowerCase();
+            if (!allowedTlds.includes(tld) || tld.length > 6 || /\.{2,}/.test(domain)) {
+                // Check if the TLD is in the allowed list, has a valid length (up to 6 characters), and no consecutive dots in the domain
+                const message = '<i class="bi bi-x-circle-fill text-danger"></i> Invalid or unsupported email domain';
+                email_error.innerHTML = message;
+                emailInput.value = email;
+                return;
+            }
+        
+            let message = '<i class="bi bi-check-square-fill text-success mt-5"></i>';
+            email_error.innerHTML = message;
+            emailInput.value = email; // Remove leading/trailing spaces if any
+        }function validateEmail() {
+            const emailInput = document.getElementById('email');
+            const email = emailInput.value.trim().toLowerCase();
+            const emailError = document.getElementById('email_error');
+        
+            const allowedTlds = [
+                "com",
+                "in",
+                "ac",
+                "co",
+                "org",
+                "net",
+                "edu",
+                "gov",
+                // Add more allowed TLDs here
+            ];
+        
+            // Clear previous error messages
+            emailError.innerHTML = '';
+        
+            // Basic email format validation using regex
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(email)) {
+                const message = '<i class="bi bi-x-circle-fill text-danger"></i> Invalid email format';
+                emailError.innerHTML = message;
+                return false;
+            }
+        
+            const parts = email.split('@');
+            if (parts.length !== 2) {
+                const message = '<i class="bi bi-x-circle-fill text-danger"></i> Invalid email format';
+                emailError.innerHTML = message;
+                return false;
+            }
+        
+            const domain = parts[1];
+            const domainParts = domain.split('.');
+            if (domainParts.length < 2) {
+                const message = '<i class="bi bi-x-circle-fill text-danger"></i> Invalid email domain';
+                emailError.innerHTML = message;
+                return false;
+            }
+        
+            const tld = domainParts.pop().toLowerCase();
+            if (!allowedTlds.includes(tld) || tld.length > 6 || /\.{2,}/.test(domain)) {
+                const message = '<i class="bi bi-x-circle-fill text-danger"></i> Invalid or unsupported email domain';
+                emailError.innerHTML = message;
+                return false;
+            }
+        
+            const successMessage = '<i class="bi bi-check-square-fill text-success mt-5"></i>';
+            emailError.innerHTML = successMessage;
+            emailInput.value = email; // Remove leading/trailing spaces if any
+        
+            return true;
+        }
+        
+
         function validateAddress() {
             let caddress = document.getElementsByName("caddress")[0].value;
             let caddressError = document.getElementById("caddress_error");
