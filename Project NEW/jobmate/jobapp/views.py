@@ -195,7 +195,7 @@ def login_view(request):
                         provider = Job_Providers.objects.get(user=user)
                         z = provider.status
                         request.session['status'] = z
-                        request.session['is_verified'] = y
+                        
                     except Job_Providers.DoesNotExist:
                         z = 'Not Verified'  # Set a default value if the provider instance doesn't exist
                         
@@ -221,7 +221,13 @@ def success_view(request):
     if user.role == User.Role.ADMIN:
         return render(request, 'admindash.html')
     elif user.role == User.Role.JOBPROVIDER:
-        return render(request, 'companydash.html')
+        try:
+            provider = Job_Providers.objects.get(user=user)
+            return render(request, 'companydash.html')
+        except Job_Providers.DoesNotExist:
+            
+            provider = Job_Providers.objects.create(user=user)
+            return render(request, 'companydash.html')
     elif user.role == User.Role.JOBSEEKER:
         try:
             seeker = Job_Seekers.objects.get(user=user)
@@ -290,8 +296,7 @@ def seeker_profile_update(request):
         messages.success(request, 'Profile updated successfully.')
         return redirect('userdash')  # Redirect to the user's dashboard on success
 
-    return render(request, 'seekerupdate.html')  
-
+    return render(request, 'seekerpro.html')  
 @login_required
 def providerpro(request):
     # Get the user's profile information based on the currently logged-in user
@@ -543,9 +548,48 @@ def viewjobdetails(request, job_id):
     job = get_object_or_404(PostJobs, job_id=job_id)
     return render(request, 'jobdetails.html', {'job': job})
 
+def delete_job(request, job_id):
+    job = get_object_or_404(PostJobs, job_id=job_id, pro_id__user=request.user)
+    
+    if request.method == 'POST':
+        job.delete()
+        return redirect('view_jobs')
 
+    return render(request, 'delete_job.html', {'job': job})
+    
+def edit_job(request, job_id):
+    job = get_object_or_404(PostJobs, job_id=job_id, pro_id__user=request.user)
 
+    if request.method == 'POST':
+        # Handle form data directly in the view
+        job.title = request.POST.get('title')
+        job.type = request.POST.get('type')
+        job.location = request.POST.get('location')
+        job.description = request.POST.get('description')
+        job.requirements = request.POST.get('requirements')
+        job.minexp = request.POST.get('minexp')
+        job.status = request.POST.get('status')
+        job.min_salary = request.POST.get('min_salary')
+        job.max_salary = request.POST.get('max_salary')
+        job.deadline = request.POST.get('deadline')
+        job.mode = request.POST.get('mode')
+        deadline_str = request.POST['deadline']
+        if deadline_str:
+            deadline = datetime.strptime(deadline_str, '%Y-%m-%d').date()
+        job.deadline = deadline
+        job.save()
+        return redirect('companyjobs')
 
+    return render(request, 'editjob.html', {'job': job})
+
+def companyjobs(request):
+    # Get the currently logged-in company
+    company = Job_Providers.objects.get(user=request.user)
+
+    # Filter jobs based on the logged-in company
+    company_jobs = PostJobs.objects.filter(pro_id=company)
+    print(company_jobs)
+    return render(request, 'companyjobs.html', {'jobs': company_jobs})
 
 
 def verifymail(request):

@@ -17,9 +17,9 @@ urlpatterns = [
     path('companyreg',views.companyreg,name='companyreg'),
     path('logout', views.logout_view, name='logout'),
     path('seekerpro', views.seekerpro, name='seekerpro'),
-    
+
     # URL pattern for the 'seeker_profile_update' view
-    path('seekerupdate', views.seeker_profile_update, name='seekerupdate'),
+    path('seeker_profile_update', views.seeker_profile_update, name='seeker_profile_update'),
     path('providerpro', views.providerpro, name='providerpro'),
 
     path('provider_profile_update', views.provider_profile_update, name='provider_profile_update'),
@@ -46,8 +46,12 @@ urlpatterns = [
 
     path('verifymail', views.verifymail, name='verifymail'),
     path('activate/<uidb64>/<token>/', views.activate, name='activate'),
+    path('companyjobs', views.companyjobs, name='companyjobs'),
+    path('edit_job/<int:job_id>', views.edit_job, name='edit_job'),
 
-
+    path('updatestatus/<int:job_id>', views.companyjobs, name='edit_job'),
+    path('delete_job/<int:job_id>', views.delete_job, name='delete_job'),
+    
     path('accounts/', include('allauth.urls')),
 ]
 

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>JLogin</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+  
+   <!-- Favicons -->
+   <link href="{% static 'assets/img/favicon2.png' %}" rel="icon">
+   <link href="{% static 'assets/img/search.png' %}" rel="apple-touch-icon">
+  
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cinzel">
+
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  
+  <!-- Template Main CSS File -->
+  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+  
+  <!-- =======================================================
+  * Template Name: JobMate
+  * Updated: Sep 18 2023 with Bootstrap v5.3.2
+  * Template URL: https://bootstrapmade.com/JobMate-free-onepage-bootstrap-theme/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+  <style>
+    /* Increase button size on hover */
+    .btn.btn-dark:hover {
+        transform: scale(1.05);
+    }
+
+    /* Change button background color to green on hover */
+    .btn.btn-dark:hover {
+        background-color: #21cfaf; /* Green color with opacity */
+        color: black;
+        #btn
+    {
+      background-color: #007a6c;
+    }
+
+    #session {
+      background-color: black;;
+      color: white;
+      padding: 10px 10px;
+      margin-right: 10px;
+      border-radius: 10px;
+      transition: background-color 0.3s ease; /* Add transition for smooth hover effect */
+  }
+
+  #session:hover {
+      background-color: #007a6c; /* Change background color on hover */
+      color: white; /* Change text color on hover */
+  
+    }
+    .sidebar {
+      /* Your existing sidebar styles */
+      /* Make sure to set an initial position for the sidebar */
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+    }
+  
+    .sidebar-open {
+      transform: translateX(0);
+    }
+  
+    .sidebar-toggle {
+      /* Add styling for the hamburger menu icon */
+    }
+    .profile-box {
+      border: 1px solid #ddd;
+      padding: 20px;
+      margin: 20px 0;
+  }
+  
+  .profile-box h3 {
+      margin-top: 0;
+  }
+    
+</style>
+</head>
+<body>
+
+
+
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top d-flex align-items-center">
+    <div class="container d-flex justify-content-between">
+
+      <div class="logo" id="badge">
+        <h1 style="font-family: 'Cinzel', serif; color: white;" onmouseover="this.style.color='#21cfaf'" onmouseout="this.style.color='white'"> <a href="/"></a>JobMate</h1>
+
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!-- <a href="home.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+      </div>
+
+      <nav id="navbar" class="navbar">
+        <ul>
+            <li class="d-flex justify-content-center"> <!-- Add the justify-content-center class -->
+                <form class="d-flex">
+                    <input class="form-control me-2" type="search" placeholder="Search Jobs" aria-label="Search">
+                    <div class="input-group-append">
+                        <button class="btn btn-success" id="btn" type="button">Search</button>
+                    </div> <!-- Close the div here -->
+                </form>
+            </li>
+
+          <li><a class="nav-link scrollto " href="userdash">Home</a></li>
+          <li><a class="nav-link scrollto active" href="viewpostedjobs">View Jobs</a></li>
+          
+          
+  
+
+        <li class="dropdown">
+          <a href="#">
+             
+            <span id="session" >
+               {{ request.session.f_name }}</span>
+            <i class="bi bi-chevron-down"></i>
+          </a>
+          <ul>
+              
+              <li><a href="seekerpro"><i class="bi bi-pencil-square"></i> My Profile</a></li>
+              <li><a href="change_password"><i class="bi bi-shield-lock"></i> Change Password</a></li>
+              <li><a href="logout"onclick="logout()"><i class="bi bi-box-arrow-right"></i> Sign Out</a></li>
+              <script>
+                function logout() {
+                  // Add your logout logic here, such as clearing session data
+                  alert("You have been logged out.");
+                }
+              </script>
+          </ul>
+      </li>
+      
+      
+      </nav><!-- .navbar -->
+    </div>
+    </div>
+  </header><!-- End Header -->
+
+  <main id="main">
+  <div id="app">
+    <div class="main-wrapper">
+      <div class="navbar-bg"></div>
+      <nav class="navbar navbar-expand-lg main-navbar">
+        <form class="form-inline mr-auto">
+          <ul class="navbar-nav mr-3">
+            <li><a href="#" data-toggle="sidebar" class="nav-link nav-link-lg"><i class="ion ion-navicon-round"></i></a></li>
+            <li><a href="#" data-toggle="search" class="nav-link nav-link-lg d-sm-none"><i class="ion ion-search"></i></a></li>
+          </ul>
+          <div class="search-element">
+            <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn" type="submit"><i class="ion ion-search"></i></button>
+          </div>
+        </form>
+        <ul class="navbar-nav navbar-right">
+            <li class="dropdown dropdown-list-toggle">
+                <a href="#" data-toggle="dropdown" class="nav-link notification-toggle nav-link-lg beep">
+                    <i class="ion ion-ios-bell-outline"></i>
+                </a>
+                <div class="dropdown-menu dropdown-list dropdown-menu-right">
+                    <!-- Add notifications here -->
+                </div>
+            </li>
+            <li class="dropdown">
+                <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg">
+                    <i class="ion ion-android-person d-lg-none"></i>
+                    <div class="d-sm-none d-lg-inline-block">{{ user.username }}
+                    <span id="more-details"><i class="ti-angle-down"></i></span> </div>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <ul>
+                        <li class="more-details">
+                            <a href="#"><i class="ti-user"></i>View Profile</a>
+                            <a href="#!"><i class="ti-settings"></i>Settings</a>
+                            <a href="/logout"><i class="ti-layout-sidebar-left"></i>Logout</a> <!-- Changed the logout link -->
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+      </nav>
+
+      <div class="main-content">
+        <section class="section">
+            <div class="container">
+                <h1>Delete Job</h1>
+                <div class="alert alert-danger" role="alert">
+                    <p>Are you sure you want to delete the job "{{ job.title }}"?</p>
+                </div>
+                <form method="post" action="">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete Job</button>
+                    <a href="{% url 'view_jobs' %}" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </section>
+    </div>
+</body>    

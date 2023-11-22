@@ -256,6 +256,7 @@
               <tbody>
                 {% for seeker in seekers %}
                   <tr>
+                    <td>{{seeker.user.id}}</td>
                     <td>{{ seeker.seeker_id }}</td>
                     <td>{{ seeker.user.first_name }}</td>
                     <td>{{ seeker.dob|date:'Y-m-d' }}</td>
@@ -268,7 +269,13 @@
                     <td><a href="{{ seeker.resume.url }}" target="_blank">View</a></td>
                     <td>{{ seeker.gender }}</td>
                     <td>
-                      <button class="btn btn-danger" type="submit" name="delete{{ seeker.seeker_id }}">Delete</button>
+
+                      {% if seeker.user.is_active == 1 %}
+                      <a href="/updatestatus/{{seeker.user.id}}" class="btn btn-primary">Active</a>
+                  {% else %}
+                      <button class="btn btn-danger" type="submit" name="">Deactive</button>
+                  {% endif %}
+                     
                     </td>
                   </tr>
                 {% endfor %}

@@ -166,7 +166,7 @@
         <div class="form-section" id="reg">
         <h2 style="text-align: center; font-weight: bold; color: black;">Hire Now</h2>
         <br> <br>
-        <form method="POST" action="{% url 'postjob' %}" enctype="multipart/form-data" onsubmit="return validateForm();">
+        <form method="POST" class="was-validated" action="{% url 'postjob' %}" enctype="multipart/form-data" onsubmit="return validateForm();">
             {% csrf_token %}
             <div class="form-column">
                 <!-- Job Title -->
@@ -212,7 +212,7 @@
                 <!-- Experience Required -->
                 <div class="form-group">
                     <label class="form-label" for="experience_required">Experience Required</label>
-                    <input type="text" id="experience_required" name="experience_required" class="form-control" value="Fresher" onInput="validateexperience_required(this.value)">
+                    <input type="text" id="experience_required" name="experience_required" class="form-control" value="Fresher" onInput="validateexp(this.value)">
                     <span id="experience_required_error" class="experience_required_error"></span>
                 </div>
         
@@ -326,14 +326,18 @@
                 // Check if all required fields are filled and valid.
                 // Return true if the form is valid, or false if there are errors.
                 const dateValid = validatedate();
-                const aadhaarValid = validateAadhaar();
+                
+                const titleValid = validatetitle();
+                const expValid = validateexp();
+                const requirementsValid = validaterequirements();
+                const descriptionValid = validatedescription();
                 const skillsValid = validateSkills();
                 const resumeValid = validateFile('resume');
                 const proPicValid = validateFile('pro_pic');
                 const agreeChecked = document.getElementById('agree').checked;
         
                 // Check if all conditions are met
-                if (dateValid && aadhaarValid && skillsValid && resumeValid && proPicValid){
+                if (dateValid && titleValid && descriptionValid && requirementsValid && expValid && skillsValid && resumeValid && proPicValid){
                     if (!agreeChecked) {
                         alert('Please agree to the Terms of Service.');
                         return false;
@@ -494,6 +498,59 @@
                 }
         
                 aadhaar_error.innerHTML = message;
+                return message.includes('text-success');
+            }
+            function validatetitle() {
+                const title = document.getElementById('title').value;
+                const title_error = document.getElementById('title_error');
+                let message = "";
+            
+                // Check for more than 4 consecutive special characters or digits
+                if (/(.*[\d!@#$%^&*()_+]){5,}/.test(title)) {
+                    message = '<i class="bi bi-x-circle-fill text-danger"></i> Title should not contain more than 4 consecutive special characters or digits.';
+                } else if (title.length < 8) {
+                    message = '<i class="bi bi-x-circle-fill text-danger"></i> Title should be at least 8 characters.';
+                } else if (!/[a-zA-Z]{4,}/.test(title)) {
+                    message = '<i class="bi bi-x-circle-fill text-danger"></i> Title should contain at least 4 letters.';
+                } else if (/(.)\1{3,}/.test(title)) {
+                    message = '<i class="bi bi-x-circle-fill text-danger"></i> Title should not have the same letter consecutively 4 times.';
+                } else {
+                    message = '<i class="bi bi-check-square-fill text-success mt-5"></i>';
+                }
+            
+                title_error.innerHTML = message;
+                return message.includes('text-success');
+            }
+            function validatedescription() {
+                const description = document.getElementById('description').value;
+                const description_error = document.getElementById('description_error');
+                let message = "";
+            
+                // Check for more than 4 consecutive digits or special characters
+                if (/(.*[\d!@#$%^&*()_+]){5,}/.test(description)) {
+                    message = '<i class="bi bi-x-circle-fill text-danger"></i> Description should not contain more than 4 consecutive digits or special characters.';
+                } else if (description.length < 15) {
+                    message = '<i class="bi bi-x-circle-fill text-danger"></i> Description should be at least 15 characters.';
+                } else {
+                    message = '<i class="bi bi-check-square-fill text-success mt-5"></i>';
+                }
+            
+                description_error.innerHTML = message;
+                return message.includes('text-success');
+            }
+            function validaterequirements() {
+                const requirements = document.getElementById('requirements').value;
+                const requirements_error = document.getElementById('requirements_error');
+                let message = "";
+            
+                // Check for more than 4 consecutive digits or special characters
+                if (requirements.length < 15) {
+                    message = '<i class="bi bi-x-circle-fill text-danger"></i> Requirements should be at least 15 characters.';
+                } else {
+                    message = '<i class="bi bi-check-square-fill text-success mt-5"></i>';
+                }
+            
+                requirements_error.innerHTML = message;
                 return message.includes('text-success');
             }
             </script>
