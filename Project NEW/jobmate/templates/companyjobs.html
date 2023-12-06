@@ -92,128 +92,85 @@
 </head>
 <body>
 
-
-
-
-  <!-- ======= Header ======= -->
-  <header id="header" class="fixed-top d-flex align-items-center">
-    <div class="container d-flex justify-content-between">
-
-      <div class="logo">
-        <h1 style="font-family: 'Cinzel', serif; color: white;" onmouseover="this.style.color='#21cfaf'" onmouseout="this.style.color='white'"><a href="index.html"></a>JobMate</h1>
-
-        <!-- Uncomment below if you prefer to use an image logo -->
-        <!-- <a href="home.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-      </div>
-
-      <nav id="navbar" class="navbar">
-        <ul>
-            <li class="d-flex justify-content-center"> <!-- Add the justify-content-center class -->
-                <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search Jobs" aria-label="Search">
-                    <div class="input-group-append">
-                        <button class="btn btn-success" id="btn" type="button">Search</button>
-                    </div> <!-- Close the div here -->
-                </form>
-            </li>
-
-          <li><a class="nav-item" href="companydash">Home</a></li>
-          <li><a class="nav-item" href="companyjobs">My Jobs</a></li>
-          
-          <li class="nav-item dropdown">
-            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                <span id="session">
-                  <img src="{{ provider.logo.url }}" class="rounded-circle" style="height: 30px; width: 30px; object-fit: cover; margin-right: 5px;">
-                    {% if request.session.user_name %}
-                        {{ request.session.user_name }}
-                    
-                    {% endif %}
-                </span>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-right">
-              <li class="text-center">
-                  <img src="{{ provider.logo.url }}" class="rounded-circle" style="height: 120px; width: 120px; object-fit: cover; margin-bottom: 10px;">
-              </li>
-              <li><a href="providerpro"><i class="bi bi-pencil-square"></i> My Profile</a></li>
-              <li><a href="changepw_pro"><i class="bi bi-shield-lock"></i> Change Password</a></li>
-              <li><a href="logout"onclick="logout()"><i class="bi bi-box-arrow-right"></i> Sign Out</a></li>
-              <script>
-                function logout() {
-                  // Add your logout logic here, such as clearing session data
-                  alert("You have been logged out.");
-                }
-              </script>
-          </ul>
-      </li>
-      <li><a class="nav-item" href="postjob">Post Job</a></li>
-     
-      
-      
-      </nav><!-- .navbar -->
-    </div>
-    </div>
-  </header><!-- End Header -->
-<body>
+  {% include 'prohead.html' %}
+  <body>
       <div class="container">
-        <div class="job-details">
-
-          {% for job in jobs %}
-            <h1>{{ job.title }}</h1>
-
-            <!-- Job Details -->
-            <section class="details-section">
-                <h2>{{ job.title }}</h2>
-                <table>
-                    <tr>
-                        <th>Type</th>
-                        <td>{{ job.get_type_display }}</td>
-                    </tr>
-                    <tr>
-                        <th>Location</th>
-                        <td>{{ job.location }}</td>
-                    </tr>
-                    <tr>
-                        <th>Status</th>
-                        <td>{{ job.status }}</td>
-                    </tr>
-                    <tr>
-                        <th>Deadline</th>
-                        <td>{{ job.deadline|date:'Y-m-d' }}</td>
-                    </tr>
-                    <tr>
-                        <th>Description</th>
-                        <td>{{ job.description }}</td>
-                    </tr>
-                    <tr>
-                        <th>Requirements</th>
-                        <td>{{ job.requirements }}</td>
-                    </tr>
-                    <tr>
-                        <th>Minimum Experience</th>
-                        <td>{{ job.minexp }}</td>
-                    </tr>
-                    <tr>
-                        <th>Minimum Salary</th>
-                        <td>{{ job.min_salary }} lakhs per annum</td>
-                    </tr>
-                    <tr>
-                        <th>Maximum Salary</th>
-                        <td>{{ job.max_salary }} lakhs per annum</td>
-                    </tr>
-                    <tr>
-                        <th>Mode</th>
-                        <td>{{ job.mode }}</td>
-                    </tr>
-                </table>
-                <br>
-                <div class="button-container">
-                    <!-- Add buttons for editing and deleting jobs -->
-                    <!-- Correct way to generate the URL for edit_job -->
-                    <a href="/edit_job/{{job.job_id}}" class="btn btn-dark">Edit Job</a>
-
-                    <a href="/delete_job/{{job.job_id}}" class="btn btn-danger">Delete Job</a>
+          <div class="job-details">
+              {% for job in jobs %}
+                  <div class="row mb-4">
+                      <div class="col-md-4">
+                          <h1>{{ job.title }}</h1>
+  
+                          <!-- Job Details -->
+                          <section class="details-section">
+                              <h2>Job Details</h2>
+                              <table class="table table-bordered">
+                                  <tr>
+                                      <th>Type</th>
+                                      <td>{{ job.get_type_display }}</td>
+                                  </tr>
+                                  <tr>
+                                      <th>Location</th>
+                                      <td>{{ job.location }}</td>
+                                  </tr>
+                                  <tr>
+                                      <th>Status</th>
+                                      <td>
+                                          <button type="button" class="btn {% if job.status == 'Active' %}btn-success{% else %}btn-danger{% endif %}">
+                                              {{ job.status }}
+                                          </button>
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                    <th>Deadline</th>
+                                    <td>
+                                        <button type="button" class="btn btn-secondary">
+                                            {{ job.deadline|date:'F d, Y' }}
+                                        </button>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <th>Minimum Salary</th>
+                                    <td>{{ job.min_salary }} lakhs per annum</td>
+                                </tr>
+                                <tr>
+                                    <th>Maximum Salary</th>
+                                    <td>{{ job.max_salary }} lakhs per annum</td>
+                                </tr>
+                                <tr>
+                                    <th>Mode</th>
+                                    <td>{{ job.mode }}</td>
+                                </tr>
+                              
+                                <tr> <td>
+                                    <div class="button-container">
+                                <a href="/edit_job/{{ job.job_id }}" class="btn btn-warning">Edit Job</a> </td>
+                                
+                                <td><form method="post" action="{% url 'delete_job_by_company' job_id=job.job_id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger">Delete Job</button>
+                                </form> </td> </tr>
+                            </table>
+                                <!-- View Applicants button in the second line centered 
+                                <div class="second-line-container">
+                                    <center>
+                                        <a href="{% url 'view_applicants' %}" class="btn btn-primary">View Applicants</a>
+                                    </center>
+                                </div>
+                                -->
+                            </div>
+                            
+        
+                            {% if forloop.last or forloop.counter|divisibleby:3 %}
+                                </div>{% endif %}
+                        </div>
+                    {% endfor %}
+        
+                    {% if not jobs %}
+                        <p>No  jobs found.</p>
+                    {% endif %}
                 </div>
-            </section>
-              {% endfor %}
-        </div>
-    </div>
+            </div>
+        </body>
+        
+        </html>

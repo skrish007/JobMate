@@ -313,9 +313,9 @@
                 <span id="logo_error" class="logo_error"></span>
             </div>
             <div class="form-group">
-                <label class="form-label" for="licenseFile">Upload License File (PDF only)</label>
-                <input type="file" id="licenseFile" required name="licenseFile" class="form-control"  accept="application/pdf" >
-                <span id="licenseFile_error" class="licenseFile_error"></span>
+                <label class="form-label" for="licensefile">Upload License File (PDF only)</label>
+                <input type="file" id="licensefile" required name="licensefile" class="form-control"  accept="application/pdf" >
+                <span id="licensefile_error" class="licensefile_error"></span>
             </div>
         </div>
 
@@ -369,7 +369,7 @@
         const confirmPassword = document.getElementById('confirmPassword').value;
         const fyear = document.getElementById('fyear').value.trim();
         const website = document.getElementById('website').value.trim();
-        const licenseFile = document.getElementById('licenseFile').value;
+        const licensefile = document.getElementById('licensefile').value;
         const cdescription = document.getElementById('cdescription').value.trim();
         const cloc = document.getElementById('cloc').value.trim();
         const ceoname = document.getElementById('ceoname').value.trim();
@@ -387,7 +387,7 @@
             confirmPassword === "" ||
             fyear === "" ||
             website === "" ||
-            licenseFile === "" ||
+            licensefile === "" ||
             cdescription === "" ||
             cloc === "" ||
             ceoname === "" ||
@@ -415,10 +415,9 @@
 
     if (cname === "") {
         message = '<i class="bi bi-x-circle-fill text-danger"></i> Company Name is required.';
-    } else if (cname.length < 2) {
-        message = '<i class="bi bi-x-circle-fill text-danger"></i> Company Name must be at least 2 characters long.';
-    } else if (/(.)\1{1,}/.test(cname)) {
-        message = '<i class="bi bi-x-circle-fill text-danger"></i> Company Name cannot have two consecutive identical characters.';
+    } else if (cname.length < 3) {
+        message = '<i class="bi bi-x-circle-fill text-danger"></i> Company Name must be at least 3 characters long.';
+    
     } else {
         message = '<i class="bi bi-check-square-fill text-success mt-5"></i>';
     }
@@ -666,9 +665,7 @@ function validateCeoName() {
         message = '<i class="bi bi-x-circle-fill text-danger"></i> CEO Name is required.';
     } else if (ceoName.length < 2) {
         message = '<i class="bi bi-x-circle-fill text-danger"></i> CEO Name must be at least 2 characters long.';
-    } else if (/(.)\1{1,}/.test(ceoName)) {
-        message = '<i class="bi bi-x-circle-fill text-danger"></i> CEO Name cannot have two consecutive identical characters.';
-    } else {
+    }  else {
         message = '<i class="bi bi-check-square-fill text-success mt-5"></i>';
     }
 
@@ -712,8 +709,8 @@ function validateFile() {
     
 }
     function validateFile() {
-        const licenseFileInput = document.getElementById('licenseFile');
-        const licenseFileError = document.getElementById('licenseFile_error');
+        const licensefileInput = document.getElementById('licensefile');
+        const licensefileError = document.getElementById('licensefile_error');
         const allowedExtensions = ['pdf']; // Allowed file extensions (PDF)
 
         // Your validation logic here (as provided in the previous response)
@@ -722,7 +719,7 @@ function validateFile() {
     }
 
     // Attach the validateFile function to the file input's onchange event
-    document.getElementById('licenseFile').addEventListener('change', validateFile);
+    document.getElementById('licensefile').addEventListener('change', validateFile);
 
 
         

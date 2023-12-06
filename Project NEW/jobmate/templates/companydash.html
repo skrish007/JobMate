@@ -49,6 +49,9 @@
     {
       background-color: #007a6c;
     }
+    #sidebar1 {
+        background-color: black;
+    }
 
     #session {
       background-color: black;;
@@ -65,181 +68,119 @@
   
     }
     
+    
+}
+
+.dashboard-card {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-bottom: 20px;
+    cursor: pointer;}
+.dashboard-card:hover {
+    background-color: #f5f5f5;
+}
+i {
+    font-size: 50px;
+    margin-right: 10px;
+}
 </style>
 </head>
 
 
+{% include 'prohead.html' %}
 
-
-  
-
-
-
-
-  <!-- ======= Header ======= -->
-  <header id="header" class="fixed-top d-flex align-items-center">
-    <div class="container d-flex justify-content-between">
-
-      <div class="logo">
-        <h1 style="font-family: 'Cinzel', serif; color: white;" onmouseover="this.style.color='#21cfaf'" onmouseout="this.style.color='white'"><a href="index.html"></a>JobMate</h1>
-
-        <!-- Uncomment below if you prefer to use an image logo -->
-        <!-- <a href="home.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-      </div>
-
-      <nav id="navbar" class="navbar">
-        <ul>
-            <li class="d-flex justify-content-center"> <!-- Add the justify-content-center class -->
-                <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search Jobs" aria-label="Search">
-                    <div class="input-group-append">
-                        <button class="btn btn-success" id="btn" type="button">Search</button>
-                    </div> <!-- Close the div here -->
-                </form>
-            </li>
-
-          <li><a class="nav-item" href="companydash">Home</a></li>
-          <li><a class="nav-item" href="companyjobs">My Jobs</a></li>
-          
-          <li class="nav-item dropdown">
-            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                <span id="session">
-                  <img src="{{ provider.logo.url }}" class="rounded-circle" style="height: 30px; width: 30px; object-fit: cover; margin-right: 5px;">
-                    {% if request.session.user_name %}
-                        {{ request.session.user_name }}
-                    
-                    {% endif %}
-                </span>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-right">
-              <li class="text-center">
-                  <img src="{{ provider.logo.url }}" class="rounded-circle" style="height: 120px; width: 120px; object-fit: cover; margin-bottom: 10px;">
-              </li>
-              <li><a href="providerpro"><i class="bi bi-pencil-square"></i> My Profile</a></li>
-              <li><a href="changepw_pro"><i class="bi bi-shield-lock"></i> Change Password</a></li>
-              <li><a href="logout"onclick="logout()"><i class="bi bi-box-arrow-right"></i> Sign Out</a></li>
-              <script>
-                function logout() {
-                  // Add your logout logic here, such as clearing session data
-                  alert("You have been logged out.");
-                }
-              </script>
-          </ul>
-      </li>
-      <li><a class="nav-item" href="postjob">Post Job</a></li>
-     
-      
-      
-      </nav><!-- .navbar -->
-    </div>
-    </div>
-  </header><!-- End Header -->
 <body>
-  
-  <main id="main">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-3">
-                <!-- Left sidebar for filtering -->
-                <div class="sidebar">
-                  <br> <br> <br>
-                    <h3>Filter Candidates</h3>
-                    <!-- Location filter -->
-                    <div class="filter-item">
-                        <label for="location">Location:</label>
-                        <input type="text" class="form-control" id="location" placeholder="Enter Location">
+    
+<main id="main">
+    <!-- Left sidebar for filtering -->
+    <div class="sidebar">
+        <h3>Filter Candidates</h3>
+        <!-- Location filter -->
+        <div class="filter-item">
+            <label for="location">Location:</label>
+            <input type="text" class="form-control" id="location" placeholder="Enter Location">
+        </div>
+        <!-- Qualification filter -->
+        <div class="filter-item">
+            <label for="qualification">Qualification:</label>
+            <select class="form-control" id="qualification">
+                <option value="any">Any</option>
+                <option value="bachelor">Bachelor's Degree</option>
+                <option value="master">Master's Degree</option>
+            </select>
+        </div>
+        <!-- Experience filter -->
+        <div class="filter-item">
+            <label for="experience">Experience:</label>
+            <select class="form-control" id="experience">
+                <option value="any">Any</option>
+                <option value="1">1 year</option>
+                <option value="2">2 years</option>
+                <option value="3">3 years</option>
+            </select>
+        </div>
+        <button class="btn btn-primary" type="button">Apply Filters</button>
+    </div>
+
+    <!-- Right section with dashboard cards -->
+    <div class="right-section">
+        <div class="container-fluid">
+            <div class="row">
+                
+                <div class="col-md-4">
+                    <div class="dashboard-card" onclick="navigateTo('companydash')">
+                        <input type ="image" src="{% static 'assets/img/home.jpg' %}" class="img-fluid" alt="" style="width: 500px; height: 300px;">
+
+                        <h4>Home</h4>
                     </div>
-                    <!-- Qualification filter -->
-                    <div class="filter-item">
-                        <label for="qualification">Qualification:</label>
-                        <select class="form-control" id="qualification">
-                            <option value="any">Any</option>
-                            <option value="bachelor">Bachelor's Degree</option>
-                            <option value="master">Master's Degree</option>
-                        </select>
+                </div>
+                <div class="col-md-4">
+                    <div class="dashboard-card" onclick="navigateTo('companyjobs')">
+                        <input type ="image" src="{% static 'assets/img/br.jpg' %}" class="img-fluid" alt="" style="width: 600px; height: 300px;">
+
+                        <h4>My Jobs</h4>
                     </div>
-                    <!-- Experience filter -->
-                    <div class="filter-item">
-                        <label for="experience">Experience:</label>
-                        <select class="form-control" id="experience">
-                            <option value="any">Any</option>
-                            <option value="1">1 year</option>
-                            <option value="2">2 years</option>
-                            <option value="3">3 years</option>
-                        </select>
+                </div>
+                <div class="col-md-4">
+                    <div class="dashboard-card" onclick="navigateTo('providerpro')">
+                        <input type ="image" src="{% static 'assets/img/up.jpg' %}" class="img-fluid" alt="" style="width: 600px; height: 300px;">
+
+                        <h4>My Profile</h4>
                     </div>
-                    <button class="btn btn-primary" type="button">Apply Filters</button>
                 </div>
             </div>
-            <div class="col-md-9">
-                <!-- Navbar for dashboard options -->
-                <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                    <a class="navbar-brand" href="#">Dashboard Options</a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav">
-                            <li class="nav-item">
-                                <a class="nav-link" href="#"><i class="bi bi-gear"></i> Account Settings</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#"><i class="bi bi-file-earmark-text"></i> Create Job</a>
-                            </li>
-                        </ul>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="dashboard-card" onclick="navigateTo('postjob')">
+                        <input type ="image" src="{% static 'assets/img/mega.jpg' %}" class="img-fluid" alt="" style="width: 500px; height: 300px;">
+
+                        <h4>Post Jobs</h4>
                     </div>
-                 <!-- Dashboard content -->
                 </div>
-                <div class="container">
-                    <br><br><br><br>
-                    <h1>Your Posted Jobs</h1>
-                    <div class="row">
-                        {% for job in company_jobs %}
-                            <div class="col-md-4 mb-4 job-card">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ job.title }}</h5>
-                                        <p class="card-text">Type: {{ job.get_type_display }}</p>
-                                        <p class="card-text">Location: {{ job.location }}</p>
-                                        <p class="card-text">Status: {{ job.status }}</p>
-                                        <p class="card-text">Deadline: {{ job.deadline|date:'Y-m-d' }}</p>
-                                    </div>
-                                    <div class="card-footer">
-                                        <a href="#" class="btn btn-success">View Details</a>
-                                        <a href="#" class="btn btn-primary">Edit</a>
-                                        <a href="#" class="btn btn-danger">Delete</a>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
+                <div class="col-md-4">
+                    
+                        <div class="dashboard-card" onclick="navigateTo('view_applicants')">
+                            <input type ="image" src="{% static 'assets/img/pj.jpg' %}" class="img-fluid" alt="" style="width: 600px; height: 300px;">
+    
+                            <h4>View Applicants</h4>
                     </div>
-                
+                </div>
+                <div class="col-md-4">
+                    <div class="dashboard-card" onclick="navigateTo('changepw_pro')">
+                        <input type ="image" src="{% static 'assets/img/pw.jpg' %}" class="img-fluid" alt="" style="width: 600px; height: 300px;">
+    
+                            <h4>Change Password</h4>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
+    <script>
+        function navigateTo(url) {
+            window.location.href = url;
+        }
 
-
-<!-- ======= Footer ======= -->
-{% include "footer.html" %}
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-<!-- Vendor JS Files -->
-<script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
-<script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-<script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
-<script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
-<script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
-<script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
-
-<!-- Template Main JS File -->
-<script src="{% static 'assets/js/main.js' %}"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-
+        function logout() {}
+    </script>
 </body>
-
 </html>

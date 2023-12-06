@@ -83,7 +83,8 @@ class Job_Providers(models.Model):
     logo = models.ImageField('Company Logo in jpg/png Format', upload_to='provider/logo')
     clicense = models.CharField('License number', max_length=100)
     licensefile = models.FileField('Company Licence in pdf Format', upload_to='provider/license/')
-    status = models.CharField('Current Status', max_length=20, default='Not Verified')
+    status = models.BooleanField('Status',default=False)
+ 
 
     def send_verification_email(self):
         self.user.send_verification_email()
@@ -126,3 +127,41 @@ class PostJobs(models.Model):
 
     def __str__(self):
         return self.title
+
+class ApplyJob(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    job_id = models.ForeignKey(PostJobs, on_delete=models.CASCADE)
+    pro_id = models.ForeignKey(Job_Providers, on_delete=models.CASCADE)
+    seeker_id = models.ForeignKey(Job_Seekers, on_delete=models.CASCADE)
+    application_date = models.DateTimeField(default=timezone.now)
+    status = models.CharField(max_length=20, default='Pending')
+
+    def __str__(self):
+        return f"{self.user.first_name} {self.user.last_name} - {self.job_id.title} Application"
+
+class SavedJob(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    seeker_id = models.ForeignKey(Job_Seekers, on_delete=models.CASCADE, null=True, blank=True)
+    pro_id = models.ForeignKey(Job_Providers, on_delete=models.CASCADE, null=True, blank=True)
+    job_id = models.ForeignKey(PostJobs, on_delete=models.CASCADE)
+    stime = models.DateTimeField(default=timezone.now)
+    def __str__(self):
+        return f"{self.user.first_name} {self.user.last_name} - Saved Job: {self.job_id.title}"
+
+from django.core.validators import MaxValueValidator, MinValueValidator
+
+class Rating(models.Model):
+   MAX_STARS = 5
+
+   user = models.ForeignKey(User, on_delete=models.CASCADE)
+   title = models.CharField(max_length=255, blank=True, null=True)
+   stars = models.DecimalField(
+       max_digits=3,
+       decimal_places=2,
+       validators=[MinValueValidator(0), MaxValueValidator(MAX_STARS)]
+   )
+   comment = models.TextField(blank=True, null=True)
+   timestamp = models.DateTimeField(auto_now_add=True)
+
+   def __str__(self):
+        return f"{self.user.username} rated - {self.stars} stars"

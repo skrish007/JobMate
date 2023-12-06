@@ -93,62 +93,7 @@
 <body>
 
 
-
-
-  <!-- ======= Header ======= -->
-  <header id="header" class="fixed-top d-flex align-items-center">
-    <div class="container d-flex justify-content-between">
-
-      <div class="logo" id="badge">
-        <h1 style="font-family: 'Cinzel', serif; color: white;" onmouseover="this.style.color='#21cfaf'" onmouseout="this.style.color='white'"> <a href="/"></a>JobMate</h1>
-
-        <!-- Uncomment below if you prefer to use an image logo -->
-        <!-- <a href="home.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-      </div>
-
-      <nav id="navbar" class="navbar">
-        <ul>
-            <li class="d-flex justify-content-center"> <!-- Add the justify-content-center class -->
-                <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search Jobs" aria-label="Search">
-                    <div class="input-group-append">
-                        <button class="btn btn-success" id="btn" type="button">Search</button>
-                    </div> <!-- Close the div here -->
-                </form>
-            </li>
-
-          <li><a class="nav-link scrollto " href="userdash">Home</a></li>
-          <li><a class="nav-link scrollto active" href="viewpostedjobs">View Jobs</a></li>
-          
-          
-  
-
-        <li class="dropdown">
-          <a href="#">
-             
-            <span id="session" >
-               {{ request.session.f_name }}</span>
-            <i class="bi bi-chevron-down"></i>
-          </a>
-          <ul>
-              
-              <li><a href="seekerpro"><i class="bi bi-pencil-square"></i> My Profile</a></li>
-              <li><a href="change_password"><i class="bi bi-shield-lock"></i> Change Password</a></li>
-              <li><a href="logout"onclick="logout()"><i class="bi bi-box-arrow-right"></i> Sign Out</a></li>
-              <script>
-                function logout() {
-                  // Add your logout logic here, such as clearing session data
-                  alert("You have been logged out.");
-                }
-              </script>
-          </ul>
-      </li>
-      
-      
-      </nav><!-- .navbar -->
-    </div>
-    </div>
-  </header><!-- End Header -->
+  {% include "seekerhead.html" %}
 
   <main id="main">
   <div id="app">
@@ -199,29 +144,81 @@
           
             
           <div class="container">
-            <h1>JOBS</h1>
-            <div class="row">
-                {% for job in jobs %}
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ job.title }}</h5>
-                            <p class="card-text">Type: {{ job.get_type_display }}</p>
-                            <p class="card-text">Location: {{ job.location }}</p>
-                            <p class="card-text">Status: {{ job.status }}</p>
-                            <p class="card-text">Deadline: {{ job.deadline|date:'Y-m-d' }}</p>
-                        </div>
-                        <div class="card-footer">
-                          <a href="{% url 'viewjobdetails' job_id=job.job_id %}" class="btn btn-success">View Details</a>
-                            
-                            
-                            <a href="#" class="btn btn-dark">Apply</a>
-                        </div>
-                    </div>
+            <br>
+            {% if messages %}
+            <div class="messages-container">
+              {% for message in messages %}
+                <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}">
+                  {{ message }}
+
+            
                 </div>
-                {% endfor %}
+              {% endfor %}
             </div>
-        </div>
-    
-</body>
-</html>
+          {% endif %}
+          
+          <h1>JOBS</h1>
+
+          <div class="container">
+              <div class="row">
+                  {% for job in jobs %}
+                  <div class="col-md-4 mb-4">
+                      <div class="card">
+                          <div class="card-body">
+                              <h5 class="card-title">{{ job.title }}</h5>
+                              <table class="table">
+                                  <tbody>
+                                      <tr>
+                                          <th scope="row">Type</th>
+                                          <td>{{ job.get_type_display }}</td>
+                                      </tr>
+                                      <tr>
+                                          <th scope="row">Location</th>
+                                          <td>{{ job.location }}</td>
+                                      </tr>
+                                      <tr>
+                                          <th scope="row">Status</th>
+                                          <td>
+                                              {% if job.status == 'Active' %}
+                                                  <span class="badge bg-success">{{ job.status }}</span>
+                                              {% elif job.status == 'On Hold' %}
+                                                  <span class="badge bg-warning text-dark">{{ job.status }}</span>
+                                              {% elif job.status == 'Closed' %}
+                                                  <span class="badge bg-danger">{{ job.status }}</span>
+                                              {% endif %}
+                                          </td>
+                                      </tr>
+                                      <tr>
+                                          <th scope="row">Deadline</th>
+                                          <td>
+                                              {% if job.deadline > now %}
+                                                  <span class="badge bg-danger">Expired</span>
+                                              {% else %}
+                                                  <span class="badge bg-info">{{ job.deadline|date:'Y-m-d' }}</span>
+                                              {% endif %}
+                                          </td>
+                                      </tr>
+                                  </tbody>
+                              </table>
+                          </div>
+                          <div class="card-footer">
+                              <a href="{% url 'viewjobdetails' job_id=job.job_id %}" class="btn btn-dark">View Details</a>
+                              
+                              <form method="post" action="{% url 'applyjob' job_id=job.job_id %}" style="display: inline;">
+                                  {% csrf_token %}
+                                  <button type="submit" class="btn btn-success">Apply</button>
+                              </form>
+                          
+                              
+                              <form action="{% url 'save_job' job_id=job.job_id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Save <i class="fas fa-heart"></i></button>
+                            </form>                                      
+                              
+                          </div>
+                      </div>
+                  </div>
+                  {% endfor %}
+              </div>
+          </div>
+      

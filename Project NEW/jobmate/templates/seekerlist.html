@@ -124,15 +124,14 @@
               </li>
   
               <li class="menu-header">Components</li>
-  
-              <li>
-                <a href="companylist" class="has-dropdown"><i class="ion ion-flag"></i><span>View Companies</span></a>
-                <ul class="menu-dropdown">
-                  <li><a href="seekerlist"><i class="ion ion-ios-circle-outline"></i> View Jobseekers</a></li>
-                  <li><a href="companylist"><i class="ion ion-ios-circle-outline"></i> View Companies</a></li>
-                </ul>
-                <a href="seekerlist" class="has-dropdown"><i class="ion ion-flag"></i><span>View Jobseekers</span></a>
-              </li>
+
+            <li>
+              <a href="companylist" class="has-dropdown"><i class="ion ion-flag"></i>View Companies</span></a>
+              
+              <a href="seekerlist" class="has-dropdown"><i class="ion ion-flag"></i><span>View Jobseekers</span></a>
+              <a href="all-ratings" class="has-dropdown"><i class="ion ion-flag"></i><span>View Reviews</span></a>
+
+            </li>
             </ul>
             <div class="p-3 mt-4 mb-4">
               <a href="/" class="btn btn-danger btn-shadow btn-round has-icon has-icon-nofloat btn-block">
@@ -245,7 +244,7 @@
                   <th>Location</th>
                   <th>Phone No</th>
                   <th>Qualification</th>
-                  <th>Upload Resume</th>
+                  
                   <th>Aadhaar No</th>
                   <th>Image</th>
                   <th>Resume</th>
@@ -256,26 +255,27 @@
               <tbody>
                 {% for seeker in seekers %}
                   <tr>
-                    <td>{{seeker.user.id}}</td>
+                    
                     <td>{{ seeker.seeker_id }}</td>
                     <td>{{ seeker.user.first_name }}</td>
                     <td>{{ seeker.dob|date:'Y-m-d' }}</td>
                     <td>{{ seeker.loc }}</td>
                     <td>{{ seeker.phone }}</td>
                     <td>{{ seeker.qual }}</td>                   
-                    <td>{{ seeker.resume }}</td>
+                    
                     <td>{{ seeker.aadhaar }}</td>
                     <td><img src="{{ seeker.pro_pic.url }}" class="rounded-circle" alt="Profile Image" style="height: 50px; width: 50px;"></td>
                     <td><a href="{{ seeker.resume.url }}" target="_blank">View</a></td>
                     <td>{{ seeker.gender }}</td>
                     <td>
-
-                      {% if seeker.user.is_active == 1 %}
-                      <a href="/updatestatus/{{seeker.user.id}}" class="btn btn-primary">Active</a>
-                  {% else %}
-                      <button class="btn btn-danger" type="submit" name="">Deactive</button>
-                  {% endif %}
-                     
+                      <form method="POST" action="{% url 'update_status' seeker.user.id %}">
+                        {% csrf_token %}
+                        {% if seeker.user.is_active %}
+                          <button type="submit" class="btn btn-primary">Active</button>
+                        {% else %}
+                          <button type="submit" class="btn btn-danger">Inactive</button>
+                        {% endif %}
+                      </form>
                     </td>
                   </tr>
                 {% endfor %}

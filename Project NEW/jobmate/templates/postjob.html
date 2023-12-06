@@ -114,53 +114,13 @@
 </style>
  
 
-
-
-
-
-  <!-- ======= Header ======= -->
-  <header id="header" class="fixed-top d-flex align-items-center">
-    <div class="container d-flex justify-content-between">
-
-      <div class="logo">
-        <h1 style="font-family: 'Cinzel', serif; color: white;" onmouseover="this.style.color='#21cfaf'" onmouseout="this.style.color='white'"><a href="index.html"></a>JobMate</h1>
-
-        <!-- Uncomment below if you prefer to use an image logo -->
-        <!-- <a href="home.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-      </div>
-
-      <nav id="navbar" class="navbar">
-        <ul>
-          <li><a class="nav-link scrollto active" href="/">Home</a></li>
-          <li><a class="nav-link scrollto" href="login">Already have an Account? Login</a></li>
-          <li><a class="nav-link scrollto" href="register">New Candidate? Sign Up</a></li>
-          <!--<li><a class="nav-link scrollto" href="#about">About</a></li>
-          <li><a class="nav-link scrollto" href="#services">Services</a></li>
-          <li><a class="nav-link scrollto " href="#portfolio">Portfolio</a></li>
-          
-          <li class="dropdown"><a href="#"><span>Register</span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-              <li><a href="register">New Candidate ?</a></li>
-              
-              </li>
-              <li><a href="register">New Job Provider ?</a></li>
-              
-            </ul>
-          </li>
-          <li><a class="nav-link scrollto" href="#contact">Contact</a></li> -->
-        </ul>
-        <i class="bi bi-list mobile-nav-toggle"></i>
-        <br>
-      </nav><!-- .navbar -->
-
-    </div>
-  </header><!-- End Header -->
+{% include 'prohead.html' %}>
   
   <body>
     <div class="container">
         
              <div class="col-md-6">
-            <img src="{% static 'assets/img/jobpost.jpg' %}" alt="" style="max-height: 1000px; max-width: 600px;" class="image">
+            <img src="{% static 'assets/img/jobpost.jpg' %}" alt="" style="max-height: 800px; max-width: 600px;" class="image">
        
     </div>
         <div class="form-section" id="reg">
@@ -212,7 +172,7 @@
                 <!-- Experience Required -->
                 <div class="form-group">
                     <label class="form-label" for="experience_required">Experience Required</label>
-                    <input type="text" id="experience_required" name="experience_required" class="form-control" value="Fresher" onInput="validateexp(this.value)">
+                    <input type="text" id="experience_required" name="experience_required" class="form-control" placeholder = "In years" onInput="validateexp(this.value)">
                     <span id="experience_required_error" class="experience_required_error"></span>
                 </div>
         

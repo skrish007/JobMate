@@ -184,61 +184,7 @@
 
 
 
-
-  <!-- ======= Header ======= -->
-  <header id="header" class="fixed-top d-flex align-items-center">
-    <div class="container d-flex justify-content-between">
-
-      <div class="logo" id="badge">
-        <h1 style="font-family: 'Cinzel', serif; color: white;" onmouseover="this.style.color='#21cfaf'" onmouseout="this.style.color='white'"> <a href="/"></a>JobMate</h1>
-
-        <!-- Uncomment below if you prefer to use an image logo -->
-        <!-- <a href="home.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-      </div>
-
-      <nav id="navbar" class="navbar">
-        <ul>
-            <li class="d-flex justify-content-center"> <!-- Add the justify-content-center class -->
-                <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search Jobs" aria-label="Search">
-                    <div class="input-group-append">
-                        <button class="btn btn-success" id="btn" type="button">Search</button>
-                    </div> <!-- Close the div here -->
-                </form>
-            </li>
-
-          <li><a class="nav-link scrollto " href="userdash">Home</a></li>
-          <li><a class="nav-link scrollto active" href="viewpostedjobs">View Jobs</a></li>
-          
-          
-  
-
-        <li class="dropdown">
-          <a href="#">
-             
-            <span id="session2" >
-               {{ request.session.f_name }}</span>
-            <i class="bi bi-chevron-down"></i>
-          </a>
-          <ul>
-              
-              <li><a href="seekerpro"><i class="bi bi-pencil-square"></i> My Profile</a></li>
-              <li><a href="change_password"><i class="bi bi-shield-lock"></i> Change Password</a></li>
-              <li><a href="logout"onclick="logout()"><i class="bi bi-box-arrow-right"></i> Sign Out</a></li>
-              <script>
-                function logout() {
-                  // Add your logout logic here, such as clearing session data
-                  alert("You have been logged out.");
-                }
-              </script>
-          </ul>
-      </li>
-      
-      
-      </nav><!-- .navbar -->
-    </div>
-    </div>
-  </header><!-- End Header -->
+    {% include 'seekerhead.html' %}
 <div>
   <main id="main">
   <div id="app">
@@ -292,10 +238,16 @@
         <div class="container">
             <div class="job-details">
                 <h1>{{ job.title }}</h1>
-    
+                <div class="button-container">
+                    <form method="post" action="{% url 'applyjob' job_id=job.job_id %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success btn-lg">Apply Now</button>
+                    </form>
+                </div>
+                
                 <!-- Job Details -->
                 <section class="details-section">
-                    <h2>Job Details</h2>
+                    
                     <table>
                         <tr>
                             <th>Type</th>
@@ -337,9 +289,7 @@
                             <th>Mode</th>
                             <td>{{ job.mode }}</td>
                         </tr>
-                        <div class="button-container">
-                            <a href="#" class="button">Apply for this Job</a>
-                        </div>
+                       
                     </div>
                         <!-- Add more job-related fields as needed -->
                     </table>

@@ -77,64 +77,7 @@
   
 
 
-
-
-  <!-- ======= Header ======= -->
-  <header id="header" class="fixed-top d-flex align-items-center">
-    <div class="container d-flex justify-content-between">
-
-      <div class="logo">
-        <h1 style="font-family: 'Cinzel', serif; color: white;" onmouseover="this.style.color='#21cfaf'" onmouseout="this.style.color='white'"><a href="index.html"></a>JobMate</h1>
-
-        <!-- Uncomment below if you prefer to use an image logo -->
-        <!-- <a href="home.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-      </div>
-
-      <nav id="navbar" class="navbar">
-        <ul>
-            <li class="d-flex justify-content-center"> <!-- Add the justify-content-center class -->
-                <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search Jobs" aria-label="Search">
-                    <div class="input-group-append">
-                        <button class="btn btn-success" id="btn" type="button">Search</button>
-                    </div> <!-- Close the div here -->
-                </form>
-            </li>
-
-          <li><a class="nav-item" href="companydash">Home</a></li>
-          
-          
-          <br>
-  
-
-          <li class="dropdown">
-            <a href="#">
-              <i class="bi bi-chevron-down"></i>
-              <span id="session" >
-                 {{ request.session.user_name }}
-               </span>
-            </a>
-            <ul>
-              
-              <li><a href="providerpro"><i class="bi bi-pencil-square"></i> My Profile</a></li>
-              <li><a href="changepw_pro"><i class="bi bi-shield-lock"></i> Change Password</a></li>
-              <li><a href="logout"onclick="logout()"><i class="bi bi-box-arrow-right"></i> Sign Out</a></li>
-              <script>
-                function logout() {
-                  // Add your logout logic here, such as clearing session data
-                  alert("You have been logged out.");
-                }
-              </script>
-          </ul>
-      </li>
-      <li><a class="nav-item" href="postjob">Post Job</a></li>
-     
-      
-      
-      </nav><!-- .navbar -->
-    </div>
-    </div>
-  </header><!-- End Header -->
+{% include 'prohead.html' %}
 <body> <br> <br>
 
     <div class="container-fluid">

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     #'allauth.socialaccount.providers.instagram',
     #'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
+
     'jobapp',
 ]
 
@@ -119,6 +120,7 @@ SOCIALACCOUNT_ADAPTER = 'jobapp.adapters.CustomSocialAccountAdapter'
 
 WSGI_APPLICATION = 'jobmate.wsgi.application'
 
+AUTH_USER_MODEL = 'jobapp.CustomUser'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

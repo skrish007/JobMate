@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Job_Seekers, Job_Providers,User,PostJobs
+from .models import Job_Seekers, Job_Providers,User,PostJobs,SavedJob,Rating
 
 
 class Job_SeekersAdmin(admin.ModelAdmin):
@@ -14,3 +14,5 @@ admin.site.register(Job_Seekers, Job_SeekersAdmin)
 admin.site.register(Job_Providers, Job_ProvidersAdmin)
 admin.site.register(User)
 admin.site.register(PostJobs)
+admin.site.register(SavedJob)
+admin.site.register(Rating)

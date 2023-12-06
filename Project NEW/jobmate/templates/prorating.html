@@ -24,7 +24,6 @@
   <link href="{% static 'assets/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
@@ -88,68 +87,34 @@
   .profile-box h3 {
       margin-top: 0;
   }
-    
+  
+
+.star-rating:hover {
+    color: gold;
+}
+
+.rating-container {
+    margin-bottom: 20px;
+}
+
+.comment-input {
+    width: 100%;
+    height: 120px; /* Increase textarea height */
+    margin-top: 10px;
+}
+
+.comment-input {
+    width: 100%;
+    height: 80px;
+    margin-top: 10px;
+}
+
 </style>
 </head>
 <body>
 
 
-
-
-  <!-- ======= Header ======= -->
-  <header id="header" class="fixed-top d-flex align-items-center">
-    <div class="container d-flex justify-content-between">
-
-      <div class="logo" id="badge">
-        <h1 style="font-family: 'Cinzel', serif; color: white;" onmouseover="this.style.color='#21cfaf'" onmouseout="this.style.color='white'"> <a href="/"></a>JobMate</h1>
-
-        <!-- Uncomment below if you prefer to use an image logo -->
-        <!-- <a href="home.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-      </div>
-
-      <nav id="navbar" class="navbar">
-        <ul>
-            <li class="d-flex justify-content-center"> <!-- Add the justify-content-center class -->
-                <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search Jobs" aria-label="Search">
-                    <div class="input-group-append">
-                        <button class="btn btn-success" id="btn" type="button">Search</button>
-                    </div> <!-- Close the div here -->
-                </form>
-            </li>
-
-          <li><a class="nav-link scrollto " href="userdash">Home</a></li>
-          <li><a class="nav-link scrollto active" href="viewpostedjobs">View Jobs</a></li>
-          
-          
-  
-
-        <li class="dropdown">
-          <a href="#">
-             
-            <span id="session" >
-               {{ request.session.f_name }}</span>
-            <i class="bi bi-chevron-down"></i>
-          </a>
-          <ul>
-              
-              <li><a href="seekerpro"><i class="bi bi-pencil-square"></i> My Profile</a></li>
-              <li><a href="change_password"><i class="bi bi-shield-lock"></i> Change Password</a></li>
-              <li><a href="logout"onclick="logout()"><i class="bi bi-box-arrow-right"></i> Sign Out</a></li>
-              <script>
-                function logout() {
-                  // Add your logout logic here, such as clearing session data
-                  alert("You have been logged out.");
-                }
-              </script>
-          </ul>
-      </li>
-      
-      
-      </nav><!-- .navbar -->
-    </div>
-    </div>
-  </header><!-- End Header -->
+  {% include "prohead.html" %}
 
   <main id="main">
   <div id="app">
@@ -196,17 +161,85 @@
 
       <div class="main-content">
         <section class="section">
-            <div class="container">
-                <h1>Delete Job</h1>
-                <div class="alert alert-danger" role="alert">
-                    <p>Are you sure you want to delete the job "{{ job.title }}"?</p>
+          
+          
+            
+          <div class="container">
+            <br>
+            {% if messages %}
+            <div class="messages-container">
+              {% for message in messages %}
+                <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}">
+                  {{ message }}
+
+            
                 </div>
-                <form method="post" action="">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Delete Job</button>
-                    <a href="{% url 'view_jobs' %}" class="btn btn-secondary">Cancel</a>
-                </form>
+              {% endfor %}
             </div>
-        </section>
-    </div>
-</body>    
+          {% endif %}
+          
+          <body class="container">
+
+            <h1 class="text-center mt-4 mb-4">Add Review</h1>
+            
+            <form method="post" class="was-validated" action="{% url 'add_review2' %}" class="needs-validation" novalidate>
+              {% csrf_token %}
+            
+              <div class="form-group">
+                <label for="title">Title:</label>
+                <input type="text" id="title" required name="title" class="form-control" required>
+                <div class="invalid-feedback">
+                  Please provide a title.
+                </div>
+              </div>
+            
+              <div class="form-group rating-container">
+                <label for="stars">Rate your experience:</label> <center>
+                <div id="stars" class="star-rating" required data-rating="0" style="font-size: 56px; letter-spacing: 20px;;">
+                    <span>&#9733;</span>
+                    <span>&#9733;</span>
+                    <span>&#9733;</span>
+                    <span>&#9733;</span>
+                    <span>&#9733;</span>
+                </div>
+                <input type="hidden" name="stars" id="stars-input" value="0">
+            </div>
+          </center>
+            
+              <div class="form-group">
+                <label for="comment">Leave a comment:</label>
+                <textarea name="comment" id="comment" class="form-control comment-input" required></textarea>
+                <div class="invalid-feedback">
+                  Please provide a comment.
+                </div>
+              </div>
+            <center>
+              <button type="submit" class="btn btn-dark btn-lg">Submit Rating</button>
+            </form>
+            
+            <!-- Add Bootstrap JS and Popper.js links here (replace with the appropriate versions and links) -->
+            <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+            
+            <script>
+                // Add your JavaScript for star rating interactivity here
+                const starRating = document.getElementById('stars');
+                const starsInput = document.getElementById('stars-input');
+            
+                starRating.addEventListener('click', (event) => {
+                    const starIndex = Array.from(starRating.children).indexOf(event.target);
+                    const ratingValue = starIndex + 1;
+            
+                    // Update the visual appearance
+                    for (let i = 0; i < starRating.children.length; i++) {
+                        starRating.children[i].style.color = i < ratingValue ? 'gold' : 'black';
+                    }
+            
+                    // Set the hidden input value
+                    starsInput.value = ratingValue;
+                });
+            </script>
+            
+            </body>
+            </html>
