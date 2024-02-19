@@ -89,98 +89,56 @@ i {
 
 {% include 'prohead.html' %}
 
-<body>
-    
+
 <main id="main">
-    <!-- Left sidebar for filtering -->
-    <div class="sidebar">
-        <h3>Filter Candidates</h3>
-        <!-- Location filter -->
-        <div class="filter-item">
-            <label for="location">Location:</label>
-            <input type="text" class="form-control" id="location" placeholder="Enter Location">
+    <div class="container">
+      <div class="row">
+        
+        <div class="col-md-6">
+          <!-- Rest of your content here --><br> <br> <br> <br> <br><br>
+          <img src="{% static 'assets/img/vector3.jpg' %}" alt="" style="max-height: 800px; max-width: 600px;" class="image">
         </div>
-        <!-- Qualification filter -->
-        <div class="filter-item">
-            <label for="qualification">Qualification:</label>
-            <select class="form-control" id="qualification">
-                <option value="any">Any</option>
-                <option value="bachelor">Bachelor's Degree</option>
-                <option value="master">Master's Degree</option>
-            </select>
-        </div>
-        <!-- Experience filter -->
-        <div class="filter-item">
-            <label for="experience">Experience:</label>
-            <select class="form-control" id="experience">
-                <option value="any">Any</option>
-                <option value="1">1 year</option>
-                <option value="2">2 years</option>
-                <option value="3">3 years</option>
-            </select>
-        </div>
-        <button class="btn btn-primary" type="button">Apply Filters</button>
+   
+        <div class="col-md-5">
+          <br> <br> <br> <br><br><br><br><br><br> <br>
+          {% if messages %}
+          <div class="messages-container">
+            {% for message in messages %}
+              <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}">
+                {{ message }}
+
+          
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+          <!-- Job Search Section -->
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card mb-4">
+                <div class="card-body">
+                  <h2 class="text-center"> Find Your Dream Candidates</h2>
+                  <br>
+                  <div class="input-group mb-3">
+                    <form method="POST"  class="d-flex" action="{% url 'search-view' %}">
+                        {% csrf_token %}
+                          <input type="search" class="form-control me-2" name="search_query" placeholder="Search by Skills" aria-label="Search">
+                          <div class="input-group-append">
+                              <button class="btn btn-success" id="btn" type="submit">Search</button>
+                          </div> <!-- Close the div here -->
+                      </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+         </div>
+         
+   
+      </div>
     </div>
-
-    <!-- Right section with dashboard cards -->
-    <div class="right-section">
-        <div class="container-fluid">
-            <div class="row">
-                
-                <div class="col-md-4">
-                    <div class="dashboard-card" onclick="navigateTo('companydash')">
-                        <input type ="image" src="{% static 'assets/img/home.jpg' %}" class="img-fluid" alt="" style="width: 500px; height: 300px;">
-
-                        <h4>Home</h4>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="dashboard-card" onclick="navigateTo('companyjobs')">
-                        <input type ="image" src="{% static 'assets/img/br.jpg' %}" class="img-fluid" alt="" style="width: 600px; height: 300px;">
-
-                        <h4>My Jobs</h4>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="dashboard-card" onclick="navigateTo('providerpro')">
-                        <input type ="image" src="{% static 'assets/img/up.jpg' %}" class="img-fluid" alt="" style="width: 600px; height: 300px;">
-
-                        <h4>My Profile</h4>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="dashboard-card" onclick="navigateTo('postjob')">
-                        <input type ="image" src="{% static 'assets/img/mega.jpg' %}" class="img-fluid" alt="" style="width: 500px; height: 300px;">
-
-                        <h4>Post Jobs</h4>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    
-                        <div class="dashboard-card" onclick="navigateTo('view_applicants')">
-                            <input type ="image" src="{% static 'assets/img/pj.jpg' %}" class="img-fluid" alt="" style="width: 600px; height: 300px;">
-    
-                            <h4>View Applicants</h4>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="dashboard-card" onclick="navigateTo('changepw_pro')">
-                        <input type ="image" src="{% static 'assets/img/pw.jpg' %}" class="img-fluid" alt="" style="width: 600px; height: 300px;">
-    
-                            <h4>Change Password</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-    <script>
-        function navigateTo(url) {
-            window.location.href = url;
-        }
-
-        function logout() {}
-    </script>
-</body>
-</html>
+   </main>
+  </body>
+  <br> <br> <br>
+  {% include "footer.html" %}

@@ -18,7 +18,7 @@
           <li class="d-flex justify-content-center"> <!-- Add the justify-content-center class -->
             <form method="POST"  class="d-flex" action="{% url 'search-view2' %}">
               {% csrf_token %}
-                <input type="search" class="form-control me-2" name="search_query" placeholder="Search Jobs" aria-label="Search">
+                <input type="search" class="form-control me-2" name="search_query" placeholder="Search Jobs" aria-label="Search" id="seltest">
                 <div class="input-group-append">
                     <button class="btn btn-success" id="btn" type="submit">Search</button>
                 </div> <!-- Close the div here -->
@@ -36,7 +36,7 @@
             <a class="nav-link scrollto" href="applied_jobs"> Applied Jobs</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link scrollto" href="companyview">Companies</a>
+          <a class="nav-link scrollto" id="seltest" href="companyview">Companies</a>
       </li>
         <li class="nav-item dropdown">
             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">

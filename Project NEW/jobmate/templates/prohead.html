@@ -18,7 +18,7 @@
              <li class="d-flex justify-content-center"> <!-- Add the justify-content-center class -->
               <form method="POST"  class="d-flex" action="{% url 'search-view' %}">
                 {% csrf_token %}
-                  <input type="search" class="form-control me-2" name="search_query" placeholder="Search by Skills" aria-label="Search">
+                  <input type="search" class="form-control me-2" name="search_query" placeholder="Search by Skills" aria-label="Search" id="seltest">
                   <div class="input-group-append">
                       <button class="btn btn-success" id="btn" type="submit">Search</button>
                   </div> <!-- Close the div here -->

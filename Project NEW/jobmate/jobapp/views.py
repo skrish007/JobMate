@@ -207,11 +207,11 @@ def login_view(request):
                 request.session['userimg'] = pro_pic_url
                 return redirect('userdash')
             elif user.role == User.Role.JOBPROVIDER:
-                if not user.is_verified:
-                    messages.success(request, 'Please verify your email to continue.')
-                    request.session.flush()
-                    logout(request)
-                    return render(request, 'login.html')
+                #if not user.is_verified:
+                 #   messages.success(request, 'Please verify your email to continue.')
+                  #  request.session.flush()
+                   # logout(request)
+                    #return render(request, 'login.html')
 
                 if not user.is_active:
                     messages.warning(request, 'Your registration is awaiting approval by the Administrator.')
