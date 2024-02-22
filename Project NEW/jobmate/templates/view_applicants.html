@@ -96,78 +96,344 @@
 </style>
 </head>
 <body>
+    {% include 'prohead.html' %}
 
-  {% include 'prohead.html' %}
-
-<body>
-    <div class="container">
-        <br> <br> <br>
-        <div class="job-details">
-            {% for job_title, applications in job_applications.items %} 
-                    <div class="row mb-4">
-                    <div class="col-md-4">
     
-        
-                            {% if applications %}
-                                {% for application in applications %}
-                                <!-- Job Details -->
-                          <section class="details-section"> 
-                            
-                            <table class="table table-bordered"> 
+        <div class="container">
+            <br> <br> <br>
+            <div class="job-details">
+                {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}" role="alert">
+        {{ message }}
+    </div>
+{% endfor %}
+                {% for job_title, applications in job_applications.items %}
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        {% if applications %}
+                        {% for application in applications %}
+                        <!-- Job Details -->
+                        <section class="details-section">
+                            <table class="table table-bordered">
                                 <tr>
                                     <div class="container">
-                                    <center><img src="{{ application.seeker_id.pro_pic.url }}" class="rounded-circle" alt="Profile Image" style="height: 100px; width: 100px;"> </tr> </div>
-                                     <br>
-
-                                <tr>
+                                        <center><img src="{{ application.seeker_id.pro_pic.url }}" class="rounded-circle"
+                                                alt="Profile Image" style="height: 100px; width: 100px;"> </tr> </div>
+                                    <br>
+    
+                                    <tr>
                                         <th>Name</th>
                                         <td>{{ application.seeker_id.user.first_name }} {{ application.seeker_id.user.last_name }}</td>
-                                </tr>
-                                
-                                <tr>
-                                    <th>Job Title</th>
-                                    <td>{{ application.job_id.title }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Resume</th>
-                                    <td><center>
-                                        <a href="{{ application.seeker_id.resume.url }}"  class="btn btn-dark">  View
-                                        </a>
-                                    <a href="{{ application.seeker_id.resume.url }}" download>
-                                    <i class="btn btn-dark bi bi-cloud-download"></i> </a>
-                                    
-                                    </td>
-                                </tr>
-                                
-                                <tr>
-                                    <th>Applied On</th>
-                                    <td>{{ application.application_date|date:'F d, Y'}} </td>                                </tr>
-                                <tr>
-                                    <th>Deadline</th>
-                                    <td>{{ application.job_id.deadline|date:'F d, Y'}} </td>
-                                </tr>
-                                <tr>
-                                    <th>Status</th>
-                                    <td>
-                                        {% if application.status == "Pending" %}
+                                    </tr>
+    
+                                    <tr>
+                                        <th>Applied For</th>
+                                        <td>{{ application.job_id.title }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Resume</th>
+                                        <td><center>
+                                                <a href="{{ application.seeker_id.resume.url }}" class="btn btn-dark"> View
+                                                </a>
+                                                <a href="{{ application.seeker_id.resume.url }}" download>
+                                                    <i class="btn btn-dark bi bi-cloud-download"></i> </a>
+    
+                                    </tr>
+    
+                                    <tr>
+                                        <th>Applied On</th>
+                                        <td>{{ application.application_date|date:'F d, Y'}} </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Deadline</th>
+                                        <td>{{ application.job_id.deadline|date:'F d, Y'}} </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Status</th>
+                                        <td>
+                                            {% if application.status == "Pending" %}
                                             <button class="btn btn-warning">{{ application.status }}</button>
-                                        {% elif application.status == "Selected" %}
+                                            {% elif application.status == "Selected" %}
                                             <button class="btn btn-success">{{ application.status }}</button>
-                                        {% else %}
+                                            {% else %}
                                             <button class="btn btn-danger">{{ application.status }}</button>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                       
+                
+                                        <td colspan="2">
+                                            {% if application.status == 'Pending' %}
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#scheduleModal{{ application.id }}">
+            Schedule Interview
+        </button>
                                         {% endif %}
-                                    </td>
-                                </tr>
-                                    
-                                        
-                                </table>
-                                {% endfor %}
-                            {% else %}
-                                <p class="text-muted">No applicants yet.</p>
-                            {% endif %}
-                        </div>
+                                        <script>
+                                            // Check if the button exists
+                                            if (document.getElementById('scheduleButton')) {
+                                                alert("{{ messages }}");
+                                                window.location.href = "{% url 'view_applicants' %}";
+                                            }
+                                        </script>
+                                        </td>
+                                    </tr>
+    
+                            </table>
+                        </section>
+    
+                        <!-- Modal -->
+<div class="modal fade" id="scheduleModal{{ application.id }}" tabindex="-1" role="dialog"
+aria-labelledby="scheduleModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="scheduleModalLabel">Schedule Interview</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <form id="scheduleForm{{ application.id }}" action="{% url 'schedule_interview' application.id %}" method="POST" onsubmit="return validateInterviewForm('{{ application.id }}');">
+                <!-- Interview fields here -->
+                {% csrf_token %}
+                <input type="hidden" name="application_id" value="{{ application.id }}">
+                <label for="mode" class="form-label">Mode</label><br>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input mode-selection" type="radio" name="mode" id="offline{{ application.id }}" value="offline" checked onclick="toggleFields('offline{{ application.id }}');">
+                    <label class="form-check-label" for="offline{{ application.id }}">Offline</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input mode-selection" type="radio" name="mode" id="online{{ application.id }}" value="online" onclick="toggleFields('online{{ application.id }}');">
+                    <label class="form-check-label" for="online{{ application.id }}">Online</label>
+                </div>
+                <div class="mb-3 platform-link-fields" id="platformLinkFields{{ application.id }}" style="display: none;">
+                    <label for="platform" class="form-label">Platform</label>
+                    <select class="form-select" id="platform" name="platform">
+                        <option value="">Select Platform</option>
+                        <option value="Zoom">Zoom</option>
+                        <option value="Google Meet">Google Meet</option>
+                        <option value="Microsoft Teams">Microsoft Teams</option>
+                    </select>
+                    <div id="platform_error{{ application.id }}" class="invalid-feedback"></div>
+                </div>
+                <div class="mb-3 platform-link-fields" id="linkFields{{ application.id }}" style="display: none;">
+                    <label for="link" class="form-label">Link</label>
+                    <input type="text" class="form-control" id="link" name="link">
+                    <div id="link_error{{ application.id }}" class="invalid-feedback"></div>
+                </div>
+                <div class="mb-3" id="venueField{{ application.id }}" style="display: none;">
+                    <label for="venue" class="form-label">Venue</label>
+                    <input type="text" class="form-control" id="venue{{ application.id }}" name="venue" oninput="validateVenue('{{ application.id }}');">
+                    <span id="venue_error{{ application.id }}" class="text-danger" style="display: none;"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="datetime" class="form-label">Date and Time</label>
+                    <input type="datetime-local" class="form-control" id="datetime" name="datetime" oninput="validateDate(this.value)">
+                    <span id="datetime_error" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="notes" class="form-label">Notes</label>
+                    <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="helpline" class="form-label">Helpline</label>
+                    <input type="text" class="form-control" id="helpline" name="helpline">
+                    <span id="helpline_error" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-dark">Schedule</button>
+            </form>
+        </div>
+        
+        <script>
+            function toggleFields(mode) {
+                if (mode === 'online{{ application.id }}') {
+                    document.getElementById('platformLinkFields{{ application.id }}').style.display = 'block';
+                    document.getElementById('linkFields{{ application.id }}').style.display = 'block';
+                    document.getElementById('venueField{{ application.id }}').style.display = 'none';
+                } else {
+                    document.getElementById('platformLinkFields{{ application.id }}').style.display = 'none';
+                    document.getElementById('linkFields{{ application.id }}').style.display = 'none';
+                    document.getElementById('venueField{{ application.id }}').style.display = 'block';
+                }
+            }
+        
+            function validateVenue(applicationId) {
+                const venue = document.getElementById('venue{{ applicationId }}').value;
+                const venueError = document.getElementById('venue_error{{ applicationId }}');
+        
+                if (!venue.trim()) {
+                    venueError.innerHTML = '';
+                    return true; // Venue can be blank
+                } else if (venue.length < 5) {
+                    venueError.innerHTML = '<i class="bi bi-x-circle-fill text-danger"></i> Venue should have at least 5 characters.';
+                    return false;
+                } else if (venue.length > 25) {
+                    venueError.innerHTML = '<i class="bi bi-x-circle-fill text-danger"></i> Venue should not exceed 25 characters.';
+                    return false;
+                } else if (/[^a-zA-Z\s]/.test(venue)) {
+                    venueError.innerHTML = '<i class="bi bi-x-circle-fill text-danger"></i> Venue should contain only letters and spaces.';
+                    return false;
+                } else if (/[\d]{4}|[^a-zA-Z\s]{4}/.test(venue)) {
+                    venueError.innerHTML = '<i class="bi bi-x-circle-fill text-danger"></i> Venue should not contain 4 consecutive digits or special characters.';
+                    return false;
+                } else {
+                    venueError.innerHTML = '';
+                    return true;
+                }
+            }
+        
+            document.getElementById('venue{{ application.id }}').addEventListener('input', function() {
+                validateVenue('{{ application.id }}');
+            });
+        
+            function validatePlatform(applicationId) {
+                const platform = document.getElementById('platform').value;
+                const platformError = document.getElementById('platform_error{{ applicationId }}');
+        
+                if (!platform.trim()) {
+                    platformError.innerHTML = '<i class="bi bi-x-circle-fill text-danger"></i> Platform is required.';
+                    return false;
+                } else {
+                    platformError.innerHTML = '';
+                    return true;
+                }
+            }
+        
+            document.getElementById('platform').addEventListener('input', function() {
+                validatePlatform('{{ application.id }}');
+            });
+        
+            function validateLink(applicationId) {
+                const link = document.getElementById('link').value;
+                const linkError = document.getElementById('link_error{{ applicationId }}');
+        
+                if (!link.trim()) {
+                    linkError.innerHTML = '<i class="bi bi-x-circle-fill text-danger"></i> Link is required.';
+                    return false;
+                } else {
+                    linkError.innerHTML = '';
+                    return true;
+                }
+            }
+        
+            document.getElementById('link').addEventListener('input', function() {
+                validateLink('{{ application.id }}');
+            });
+        
+        
+            function validateDate(datetime) {
+                const datetimeError = document.getElementById('datetime_error');
+                if (!datetime) {
+                    datetimeError.innerHTML = '<i class="bi bi-x-circle-fill text-danger"></i> Date and time are required.';
+                    return false;
+                }
+            
+                const selectedDate = new Date(datetime);
+                const currentDate = new Date();
+                const twoMonthsFromNow = new Date();
+                twoMonthsFromNow.setMonth(currentDate.getMonth() + 2);
+            
+                let errors = [];
+                if (selectedDate < currentDate) {
+                    errors.push('Invalid date and time. Please select a date in the future.');
+                }
+                if (selectedDate > twoMonthsFromNow) {
+                    errors.push('Selected date and time is too far. Please select a date within the next two months.');
+                }
+            
+                if (errors.length > 0) {
+                    datetimeError.innerHTML = '<i class="bi bi-x-circle-fill text-danger"></i> ' + errors.join(' ');
+                    return false;
+                } else {
+                    datetimeError.innerHTML = '<i class="bi bi-check-circle-fill text-success"></i>';
+                    return true;
+                }
+            }
+            document.getElementById('helpline').addEventListener('input', function() {
+                validateHelpline();
+            });
+            
+            document.getElementById('helpline').addEventListener('input', function() {
+                validateHelpline();
+            });
+            
+            function validateHelpline() {
+                const helpline = document.getElementById('helpline').value;
+                const helplineError = document.getElementById('helpline_error');
+            
+                if (!helpline.trim()) {
+                    helplineError.innerHTML = '<i class="bi bi-x-circle-fill text-danger"></i> Helpline number is required.';
+                    return false;
+                } else if (!/^[6-9]\d{9}$/.test(helpline)) {
+                    let helplineErrorMsg = [];
+                    if (helpline.length !== 10) {
+                        helplineErrorMsg.push('Helpline number should be 10 digits.');
+                    }
+                    if (!/[6-9]/.test(helpline.charAt(0))) {
+                        helplineErrorMsg.push('Helpline number should start with 6, 7, 8, or 9.');
+                    }
+                    if (!/^\d+$/.test(helpline)) {
+                        helplineErrorMsg.push('Helpline number should contain only digits.');
+                    }
+                    helplineError.innerHTML = '<i class="bi bi-x-circle-fill text-danger"></i> ' + helplineErrorMsg.join(' ');
+                    return false;
+                } else {
+                    helplineError.innerHTML = '<i class="bi bi-check-circle-fill text-success"></i>';
+                    return true;
+                }
+            }
+            
+            document.getElementById('scheduleForm{{ application.id }}').addEventListener('submit', function(event) {
+                if (!validateHelpline()) {
+                    event.preventDefault();
+                }
+            });
+            document.getElementById('venue').addEventListener('input', function() {
+                validateVenue();
+            });
+            
+            
+            document.getElementById('scheduleForm{{ application.id }}').addEventListener('submit', function(event) {
+                if (!validateHelpline() || !validateVenue()) {
+                    event.preventDefault();
+                }
+            });
+            
+            function validateInterviewForm(applicationId) {
+                const datetime = document.getElementById('datetime').value;
+                const helpline = document.getElementById('helpline').value;
+                const datetimeError = document.getElementById('datetime_error');
+                const helplineError = document.getElementById('helpline_error');
+            
+                let errors = [];
+            
+                if (!validateDate(datetime)) {
+                    errors.push('Date and time errors.');
+                }
+                
+            
+                if (errors.length > 0) {
+                    // Show all errors together
+                    return false;
+                }
+            
+                return true;
+            }
+            
+            
+        </script>
+        
+        
+                        {% endfor %}
+                        {% else %}
+                        <p class="text-muted"></p>
+                        {% endif %}
+                        
                     </div>
                 </div>
+            </div>
             {% endfor %}
         </div>
     </div>
@@ -175,15 +441,8 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-
-
-        
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-        
     </body>
+    
     
 </html>
 

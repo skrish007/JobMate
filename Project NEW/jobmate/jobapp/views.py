@@ -20,7 +20,7 @@ from django.utils import timezone
 from datetime import timedelta
 from django.views.decorators.cache import never_cache
 
-from .models import Job_Seekers, Job_Providers,User,PostJobs,account_activation_token,ApplyJob,Rating,SavedJob
+from .models import Job_Seekers, Job_Providers,User,PostJobs,Interview,account_activation_token,ApplyJob,Rating,SavedJob
 def home(request):
     return render(request, "home.html")
 
@@ -778,9 +778,13 @@ def applyjob(request, job_id):
 
 
 def appliedjobs(request):
-    print("haiii")
+    print("hello")
     jobs = ApplyJob.objects.filter(user=request.user)
+    for job in jobs:
+        interview = Interview.objects.filter(application_id=job.id).first()
+        job.interview = interview  # Add interview details to the job instance
     return render(request, 'appliedjobs.html', {'applied_jobs': jobs})
+
 
 def companyview(request):     
     companies = Job_Providers.objects.all()
@@ -900,3 +904,59 @@ def update_user_avg_rating(user):
 def view_all_ratings(request):
     ratings = Rating.objects.all()
     return render(request, 'all_ratings.html', {'ratings': ratings})
+
+from .models import Interview
+from django.http import HttpResponseRedirect
+
+
+from django.core.mail import send_mail
+from django.conf import settings
+
+def schedule_interview(request, application_id):
+    if request.method == 'POST':
+        application_id = request.POST.get('application_id')
+        # Get other form data
+        mode = request.POST.get('mode')
+        platform = request.POST.get('platform')
+        link = request.POST.get('link')
+        venue = request.POST.get('venue')
+        datetime = request.POST.get('datetime')
+        notes = request.POST.get('notes')
+        helpline = request.POST.get('helpline')
+
+        # Get the corresponding ApplyJob instance
+        application = ApplyJob.objects.get(id=application_id)
+        pro_id = application.pro_id
+
+        # Save interview details to Interview table
+        interview = Interview.objects.create(
+            application_id=application_id,
+            user=application.user,
+            job_id=application.job_id,
+            pro_id=pro_id,
+            seeker_id=application.seeker_id,
+            scheduled_date=datetime,
+            status='Scheduled',
+            mode=mode,
+            platform=platform,
+            link=link,
+            venue=venue,
+            notes=notes,
+            helpline=helpline
+        )
+        application.status = 'Scheduled'
+        application.save()
+
+        # Send email to the job seeker
+        subject = 'Interview Scheduled'
+        message = f'Your interview for job {application.job_id} has been scheduled on {datetime}. Please log in to JobMate to view more Information.'
+        from_email = settings.EMAIL_HOST_USER
+        to_email = [application.user.email]
+        send_mail(subject, message, from_email, to_email, fail_silently=False)
+
+        # Redirect to a success page
+        messages.success(request, 'Interview scheduled successfully.')
+        return redirect('view_applicants')
+
+    # Handle GET request (not allowed in this case)
+    return render(request, 'error.html', {'message': 'Method Not Allowed'})

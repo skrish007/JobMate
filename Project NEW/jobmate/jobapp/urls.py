@@ -76,6 +76,8 @@ urlpatterns = [
 
 
 
+# MAIN
+path('schedule-interview/<int:application_id>/', views.schedule_interview, name='schedule_interview'),
 
 
 

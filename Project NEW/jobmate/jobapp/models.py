@@ -134,10 +134,32 @@ class ApplyJob(models.Model):
     pro_id = models.ForeignKey(Job_Providers, on_delete=models.CASCADE)
     seeker_id = models.ForeignKey(Job_Seekers, on_delete=models.CASCADE)
     application_date = models.DateTimeField(default=timezone.now)
-    status = models.CharField(max_length=20, default='Pending')
-
+    status = models.CharField(max_length=20, default='Pending')  # Use this field for interview status as well
+   
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name} - {self.job_id.title} Application"
+
+
+class Interview(models.Model):
+    application = models.ForeignKey(ApplyJob, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    job_id = models.ForeignKey(PostJobs, on_delete=models.CASCADE)
+    pro_id = models.ForeignKey(Job_Providers, on_delete=models.CASCADE)
+    seeker_id = models.ForeignKey(Job_Seekers, on_delete=models.CASCADE)
+
+    scheduled_date = models.DateTimeField()
+    STATUS_CHOICES = [
+        ('Scheduled', 'Scheduled'),
+        ('To be scheduled', 'To be scheduled'),
+        ('Cancelled', 'Cancelled'),
+    ]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='To be scheduled')
+    mode = models.CharField(max_length=20, choices=[('Online', 'Online'), ('Offline', 'Offline')], default='Offline')
+    platform = models.CharField(max_length=50, blank=True)
+    link = models.URLField(blank=True)
+    venue = models.CharField(max_length=100, blank=True)
+    notes = models.TextField(blank=True)
+    helpline = models.BigIntegerField(blank=True, null=True)
 
 class SavedJob(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
