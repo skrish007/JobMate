@@ -56,7 +56,7 @@ urlpatterns = [
     path('delete_job_by_company/<int:job_id>/', views.delete_job_by_company, name='delete_job_by_company'),
     
     path('accounts/', include('allauth.urls')),
-    path('updatestatus/<int:user_id>', views.update_status, name='update_status'),
+    path('updatestatus2/<int:user_id>', views.updatestatus2, name='updatestatus2'),
     path('updateproviderstatus/<int:user_id>', views.update_provider_status, name='update_provider_status'),
 
 
@@ -78,6 +78,7 @@ urlpatterns = [
 
 # MAIN
 path('schedule-interview/<int:application_id>/', views.schedule_interview, name='schedule_interview'),
+path('edit_interview/<int:application_id>/', views.edit_interview, name='edit_interview'),
 
 
 

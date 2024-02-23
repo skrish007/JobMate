@@ -165,10 +165,21 @@
                 
                                         <td colspan="2">
                                             {% if application.status == 'Pending' %}
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#scheduleModal{{ application.id }}">
-            Schedule Interview
-        </button>
+                                            <div class="text-center">
+                                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#scheduleModal{{ application.id }}">
+                                                    Schedule Interview
+                                                </button>
+                                            </div>
+                                            {% elif application.status == "Scheduled" %}
+                                            <div class="text-center">
+                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal{{ application.id }}">
+                                                    Edit Interview Schedule
+                                                </button>
+                                            </div>
+                                            
                                         {% endif %}
+                                            
+                                       
                                         <script>
                                             // Check if the button exists
                                             if (document.getElementById('scheduleButton')) {
@@ -181,7 +192,160 @@
     
                             </table>
                         </section>
-    
+                        
+                        <div class="modal fade" id="editModal{{ application.id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ application.id }}" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editModalLabel{{ application.id }}">Edit Interview Schedule</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="editForm{{ application.id }}" action="{% url 'edit_interview' application.id %}" method="POST" onsubmit="return validateEditForm('{{ application.id }}');">
+                                            <!-- Interview fields here -->
+                                            {% csrf_token %}
+                                            <input type="hidden" name="application_id" value="{{ application.id }}">
+                                            <!-- Add fields with pre-populated values for editing -->
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label">Mode</label><br>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="mode" id="editModeOnline" value="Online" {% if application.mode == 'Online' %} checked {% endif %}>
+                                                    <label class="form-check-label" for="editModeOnline">Online</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="mode" id="editModeOffline" value="Offline" {% if application.mode == 'Offline' %} checked {% endif %}>
+                                                    <label class="form-check-label" for="editModeOffline">Offline</label>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3" id="platformField" style="display: {% if application.mode == 'Online' %} block {% else %} none {% endif %}">
+                                                <label for="editPlatform" class="form-label">New Platform</label>
+                                                <select class="form-select" id="editPlatform" name="platform">
+                                                    <option value="">Select Platform</option>
+                                                    <option value="Zoom" {% if application.platform == 'Zoom' %} selected {% endif %}>Zoom</option>
+                                                    <option value="Google Meet" {% if application.platform == 'Google Meet' %} selected {% endif %}>Google Meet</option>
+                                                    <option value="Microsoft Teams" {% if application.platform == 'Microsoft Teams' %} selected {% endif %}>Microsoft Teams</option>
+                                                </select>
+                                                <span id="platform_error" class="text-danger"></span>
+                                            </div>
+                                            
+                                            <div class="mb-3" id="linkField" style="display: {% if application.mode == 'Online' %} block {% else %} none {% endif %}">
+                                                <label for="editLink" class="form-label">New Link</label>
+                                                <input type="text" class="form-control" id="editLink" name="link" value="{{ application.link }}">
+                                                <span id="link_error" class="text-danger"></span>
+                                            </div>
+                                            <div class="mb-3" id="venueField" style="display: {% if application.mode == 'Offline' %} block {% else %} none {% endif %}">
+                                                <label for="editVenue" class="form-label">New Venue</label>
+                                                <input type="text" class="form-control" id="editVenue" name="venue" value="{{ application.venue }}">
+                                                <span id="venue_error" class="text-danger"></span>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="editDatetime" class="form-label">New Date and Time</label>
+                                                <input type="datetime-local" class="form-control" id="editDatetime" name="datetime" value="{{ application.interview_date|date:'Y-m-d\TH:i' }}" oninput="validateDate(this.value)">
+                                                <span id="datetime_error" class="text-danger"></span>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="editNotes" class="form-label">New Notes</label>
+                                                <textarea class="form-control" id="editNotes" name="notes" rows="3">{{ application.notes }}</textarea>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="editHelpline" class="form-label">New Helpline</label>
+                                                <input type="text" class="form-control" id="editHelpline" name="helpline" value="{{ application.helpline }}" oninput="validateHelpline(this.value)">
+                                                <span id="helpline_error" class="text-danger"></span>
+                                            </div>
+                                            
+                                            <button type="submit" class="btn btn-dark">Update</button>
+                                        </form>
+                                    </div>
+                                    
+                                    <script>
+                                        function validateDate(dateValue) {
+                                            var currentDate = new Date();
+                                            var selectedDate = new Date(dateValue);
+                                    
+                                            var twoMonthsLater = new Date();
+                                            twoMonthsLater.setMonth(currentDate.getMonth() + 2);
+                                    
+                                            if (selectedDate < currentDate) {
+                                                document.getElementById('datetime_error').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Date should not be in the past.';
+                                                return false;
+                                            } else if (selectedDate > twoMonthsLater) {
+                                                document.getElementById('datetime_error').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Date should not be more than 2 months in the future.';
+                                                return false;
+                                            } else {
+                                                document.getElementById('datetime_error').innerHTML = '<i class="bi bi-check-circle"></i> Date is valid.';
+                                                return true;
+                                            }
+                                        }
+                                    
+                                        function validateHelpline(helplineValue) {
+                                            var helplineErrorMsg = [];
+                                        
+                                            if (helplineValue.length !== 10) {
+                                                helplineErrorMsg.push('Helpline number should be 10 digits.');
+                                            }
+                                        
+                                            if (!/^[6-9]/.test(helplineValue)) {
+                                                helplineErrorMsg.push('Helpline number should start with 6, 7, 8, or 9.');
+                                            }
+                                        
+                                            if (!/^\d+$/.test(helplineValue)) {
+                                                helplineErrorMsg.push('Helpline number should contain only digits.');
+                                            }
+                                        
+                                            var errorMessage = helplineErrorMsg.join('<br>');
+                                            document.getElementById('helpline_error').innerHTML = errorMessage || '<i class="bi bi-check-circle"></i> Helpline is valid.';
+                                        
+                                            return helplineErrorMsg.length === 0;
+                                        }
+                                        
+                                        
+                                    </script>
+                                    
+                                        <script>
+                                        document.addEventListener('DOMContentLoaded', function() {
+                                            var onlineMode = document.getElementById('editModeOnline');
+                                            var offlineMode = document.getElementById('editModeOffline');
+                                            var platformField = document.getElementById('platformField');
+                                            var linkField = document.getElementById('linkField');
+                                            var venueField = document.getElementById('venueField');
+                                        
+                                            function toggleFields2(mode) {
+                                                if (mode === 'Online') {
+                                                    platformField.style.display = 'block';
+                                                    linkField.style.display = 'block';
+                                                    venueField.style.display = 'none';
+                                                    // Clear the venue field if it's displayed
+                                                    document.getElementById('editVenue').value = '';
+                                                } else {
+                                                    platformField.style.display = 'none';
+                                                    linkField.style.display = 'none';
+                                                    venueField.style.display = 'block';
+                                                    // Clear the platform and link fields if they're displayed
+                                                    document.getElementById('editPlatform').value = '';
+                                                    document.getElementById('editLink').value = '';
+                                                }
+                                            }
+                                        
+                                            // Modify the event listeners to pass the current value of the radio button
+                                            onlineMode.addEventListener('change', function() {
+                                                toggleFields2(this.value);
+                                            });
+                                            offlineMode.addEventListener('change', function() {
+                                                toggleFields2(this.value);
+                                            });
+                                        
+                                            // Call the function initially to set the correct visibility based on the initial mode
+                                            toggleFields2(onlineMode.checked ? 'Online' : 'Offline');
+                                        });
+                                    </script>                                        
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <!-- Modal -->
 <div class="modal fade" id="scheduleModal{{ application.id }}" tabindex="-1" role="dialog"
 aria-labelledby="scheduleModalLabel" aria-hidden="true">
