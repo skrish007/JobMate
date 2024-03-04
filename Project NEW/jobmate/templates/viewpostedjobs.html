@@ -49,6 +49,19 @@
     {
       background-color: #007a6c;
     }
+  
+    .custom-pagination .page-link {
+        color: #dc3545 !important; /* Custom text color */
+        background-color: #f8f9fa !important; /* Custom background color */
+        border-color: #dc3545 !important; /* Custom border color */
+    }
+
+    /* Custom pagination link hover style */
+    .custom-pagination .page-link:hover {
+        color: #fff !important; /* White text color on hover */
+        background-color: #dc3545 !important; /* Custom background color on hover */
+        border-color: #dc3545 !important; /* Custom border color on hover */
+    }
 
     #session {
       background-color: black;;
@@ -95,129 +108,151 @@
 
   {% include "seekerhead.html" %}
 
-  <main id="main">
-  <div id="app">
-    <div class="main-wrapper">
-      <div class="navbar-bg"></div>
-      <nav class="navbar navbar-expand-lg main-navbar">
-        <form class="form-inline mr-auto">
-          <ul class="navbar-nav mr-3">
-            <li><a href="#" data-toggle="sidebar" class="nav-link nav-link-lg"><i class="ion ion-navicon-round"></i></a></li>
-            <li><a href="#" data-toggle="search" class="nav-link nav-link-lg d-sm-none"><i class="ion ion-search"></i></a></li>
-          </ul>
-          <div class="search-element">
-            <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn" type="submit"><i class="ion ion-search"></i></button>
-          </div>
-        </form>
-        <ul class="navbar-nav navbar-right">
-            <li class="dropdown dropdown-list-toggle">
-                <a href="#" data-toggle="dropdown" class="nav-link notification-toggle nav-link-lg beep">
-                    <i class="ion ion-ios-bell-outline"></i>
-                </a>
-                <div class="dropdown-menu dropdown-list dropdown-menu-right">
-                    <!-- Add notifications here -->
-                </div>
-            </li>
-            <li class="dropdown">
-                <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg">
-                    <i class="ion ion-android-person d-lg-none"></i>
-                    <div class="d-sm-none d-lg-inline-block">{{ user.username }}
-                    <span id="more-details"><i class="ti-angle-down"></i></span> </div>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right">
-                    <ul>
-                        <li class="more-details">
-                            <a href="#"><i class="ti-user"></i>View Profile</a>
-                            <a href="#!"><i class="ti-settings"></i>Settings</a>
-                            <a href="/logout"><i class="ti-layout-sidebar-left"></i>Logout</a> <!-- Changed the logout link -->
-                        </li>
-                    </ul>
-                </div>
-            </li>
-        </ul>
-      </nav>
-
-      <div class="main-content">
-        <section class="section">
-          
-          
-            
-          <div class="container">
+<div class="main-content">
+    <section class="section">
+        <div class="container">
             <br>
             {% if messages %}
             <div class="messages-container">
-              {% for message in messages %}
+                {% for message in messages %}
                 <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}">
-                  {{ message }}
-
-            
+                    {{ message }}
                 </div>
-              {% endfor %}
+                {% endfor %}
             </div>
-          {% endif %}
-          
-          <h1>JOBS</h1>
+            {% endif %}
+            <br><br>
+            <h1>JOBS</h1>
 
-          <div class="container">
-              <div class="row">
-                  {% for job in jobs %}
-                  <div class="col-md-4 mb-4">
-                      <div class="card">
-                          <div class="card-body">
-                              <h5 class="card-title">{{ job.title }}</h5>
-                              <table class="table">
-                                  <tbody>
-                                      <tr>
-                                          <th scope="row">Type</th>
-                                          <td>{{ job.get_type_display }}</td>
-                                      </tr>
-                                      <tr>
-                                          <th scope="row">Location</th>
-                                          <td>{{ job.location }}</td>
-                                      </tr>
-                                      <tr>
-                                          <th scope="row">Status</th>
-                                          <td>
-                                              {% if job.status == 'Active' %}
-                                                  <span class="badge bg-success">{{ job.status }}</span>
-                                              {% elif job.status == 'On Hold' %}
-                                                  <span class="badge bg-warning text-dark">{{ job.status }}</span>
-                                              {% elif job.status == 'Closed' %}
-                                                  <span class="badge bg-danger">{{ job.status }}</span>
-                                              {% endif %}
-                                          </td>
-                                      </tr>
-                                      <tr>
-                                          <th scope="row">Deadline</th>
-                                          <td>
-                                              {% if job.deadline > now %}
-                                                  <span class="badge bg-danger">Expired</span>
-                                              {% else %}
-                                                  {{ job.deadline|date:'d-m-Y' }}
-                                              {% endif %}
-                                          </td>
-                                      </tr>
-                                  </tbody>
-                              </table>
-                          </div>
-                          <div class="card-footer d-flex justify-content-between align-items-center">
-                            <a href="{% url 'viewjobdetails' job_id=job.job_id %}" class="btn btn-dark">View Details</a>
-                        
-                            <form method="post" action="{% url 'applyjob' job_id=job.job_id %}" style="display: inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-success">Apply</button>
-                            </form>
-                        
-                            <form action="{% url 'save_job' job_id=job.job_id %}" method="post" style="display: inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger">Save <i class="bi bi-heart"></i></button>
-                            </form>
+            <div class="container">
+                <div class="row" id="jobs-container">
+                    {% for job in jobs %}
+                    <div class="col-md-4 mb-4 job-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ job.title }}</h5>
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Type</th>
+                                            <td>{{ job.get_type_display }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Location</th>
+                                            <td>{{ job.location }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Status</th>
+                                            <td>
+                                                {% if job.status == 'Active' %}
+                                                <span class="badge bg-success">{{ job.status }}</span>
+                                                {% elif job.status == 'On Hold' %}
+                                                <span class="badge bg-warning text-dark">{{ job.status }}</span>
+                                                {% elif job.status == 'Closed' %}
+                                                <span class="badge bg-danger">{{ job.status }}</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Deadline</th>
+                                            <td>
+                                                {% if job.deadline > now %}
+                                                <span class="badge bg-danger">Expired</span>
+                                                {% else %}
+                                                {{ job.deadline|date:'d-m-Y' }}
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="card-footer d-flex justify-content-between align-items-center">
+                                <a href="{% url 'viewjobdetails' job_id=job.job_id %}" class="btn btn-dark">View
+                                    Details</a>
+
+                                <form method="post" action="{% url 'applyjob' job_id=job.job_id %}"
+                                    style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-success">Apply</button>
+                                </form>
+
+                                <form action="{% url 'save_job' job_id=job.job_id %}" method="post"
+                                    style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger">Save <i
+                                            class="bi bi-heart"></i></button>
+                                </form>
+                            </div>
                         </div>
-                        
-                      </div>
-                  </div>
-                  {% endfor %}
-              </div>
-          </div>
-      
+                    </div>
+                    {% endfor %}
+                </div>
+                <div id="pagination-container">
+                    <ul class="pagination justify-content-center custom-pagination">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </div>
+                
+                
+                
+                
+            </div>
+        </div>
+    </section>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var currentPage = 1;
+        var pageSize = 6;
+        var totalJobs = $(".job-card").length;
+        var totalPages = Math.ceil(totalJobs / pageSize);
+
+        function showPage(pageNumber) {
+            $(".job-card").hide();
+            $(".job-card").slice((pageNumber - 1) * pageSize, pageNumber * pageSize).show();
+        }
+
+        function renderPagination() {
+            $("#pagination-container").empty();
+            var paginationHtml = '<ul class="pagination justify-content-center">';
+            paginationHtml += '<li class="page-item" id="previous-page"><a class="page-link" href="#">Previous</a></li>';
+            for (var i = 1; i <= totalPages; i++) {
+                paginationHtml += '<li class="page-item"><a class="page-link" href="#" data-page="' + i + '">' + i + '</a></li>';
+            }
+            paginationHtml += '<li class="page-item" id="next-page"><a class="page-link" href="#">Next</a></li>';
+            paginationHtml += '</ul>';
+            $("#pagination-container").html(paginationHtml);
+        }
+
+        showPage(currentPage);
+        renderPagination();
+
+        $(document).on("click", ".page-link", function (e) {
+            e.preventDefault();
+            var page = parseInt($(this).data("page"));
+            if (!isNaN(page) && page >= 1 && page <= totalPages) {
+                currentPage = page;
+                showPage(currentPage);
+            }
+        });
+
+        $("#next-page").on("click", function () {
+            if (currentPage < totalPages) {
+                currentPage++;
+                showPage(currentPage);
+            }
+        });
+
+        $("#previous-page").on("click", function () {
+            if (currentPage > 1) {
+                currentPage--;
+                showPage(currentPage);
+            }
+        });
+    });
+</script>
+</body>
+    </html>

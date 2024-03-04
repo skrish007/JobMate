@@ -646,17 +646,11 @@ def edit_job(request, job_id):
 
         job.save()
         return redirect('companyjobs')
+        messages.warning(request, 'Updated successfully.')
+
 
     return render(request, 'editjob.html', {'job': job})
 
-def companyjobs(request):
-    # Get the currently logged-in company
-    company = Job_Providers.objects.get(user=request.user)
-
-    # Filter jobs based on the logged-in company
-    company_jobs = PostJobs.objects.filter(pro_id=company)
-    print(company_jobs)
-    return render(request, 'companyjobs.html', {'jobs': company_jobs})
 
 
 def delete_job_by_company(request, job_id):
@@ -674,6 +668,14 @@ def delete_job_by_company(request, job_id):
 
 
 
+def companyjobs(request):
+    # Get the currently logged-in company
+    company = Job_Providers.objects.get(user=request.user)
+
+    # Filter jobs based on the logged-in company
+    company_jobs = PostJobs.objects.filter(pro_id=company)
+    print(company_jobs)
+    return render(request, 'companyjobs.html', {'jobs': company_jobs})
 
 
 def verifymail(request):
@@ -722,7 +724,7 @@ def verifymail(request):
 
 
 
-def updatestatus2(request, user_id):
+def update_status(request, user_id):
     user = User.objects.get(pk=user_id)
     user.is_active = not user.is_active
     user.save()
@@ -958,36 +960,42 @@ def schedule_interview(request, application_id):
 
     # Handle GET request (not allowed in this case)
     return render(request, 'error.html', {'message': 'Method Not Allowed'})
+    
+
+
 
 
 def edit_interview(request, application_id):
     if request.method == 'POST':
         # Retrieve the interview application object
-        application = Interview.objects.get(id=application_id)
+        application = get_object_or_404(Interview, id=id, application_id=application_id)
 
         # Update the interview details based on the form data
+        application.id = request.POST.get('id')
         application.scheduled_date = request.POST.get('datetime')
         application.notes = request.POST.get('notes')
         application.platform = request.POST.get('platform')
         application.link = request.POST.get('link')
         application.mode = request.POST.get('mode')
-
         application.venue = request.POST.get('venue')
-
-
         application.helpline = request.POST.get('helpline')
 
         # Save the updated interview details
         application.save()
         messages.success(request, 'Interview schedule updated successfully.')
 
-        subject = 'Interview Recheduled'
-        message = f'Your interview for job {application.job_id} has been re-scheduled on {datetime}. Please log in to JobMate to view more Information.'
+        # Send an email notification
+        subject = 'Interview Rescheduled'
+        message = f'Your interview for job {application.job_id} has been re-scheduled on {application.scheduled_date}. Please log in to JobMate to view more information.'
         from_email = settings.EMAIL_HOST_USER
         to_email = [application.user.email]
         send_mail(subject, message, from_email, to_email, fail_silently=False)
+
         # Display a success message
         messages.success(request, 'Please Check your Email.')
 
         # Redirect to a page displaying the updated interview details
-        return redirect('view_applicants')  # Adjust this URL as needed
+        return redirect('view_applicants')
+    else:
+        # Handle GET request (not allowed in this case)
+        return render(request, 'error.html', {'message': 'Method Not Allowed'})

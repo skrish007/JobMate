@@ -268,7 +268,7 @@
                     <td><a href="{{ seeker.resume.url }}" target="_blank">View</a></td>
                     <td>{{ seeker.gender }}</td>
                     <td>
-                      <form method="POST" action="{% url 'updatestatus2' seeker.user.id %}">
+                      <form method="POST" action="{% url 'update_status' seeker.user.id %}">
                         {% csrf_token %}
                         {% if seeker.user.is_active %}
                           <button type="submit" class="btn btn-primary">Active</button>
