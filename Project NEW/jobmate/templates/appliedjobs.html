@@ -103,7 +103,7 @@
             <!-- Card Header -->
             <div class="card-header">
                 
-    
+    <br> <br>
                 <!-- viewpostedjobs.html -->
                 {% if messages %}
                 <div class="messages-container">
@@ -118,12 +118,16 @@
                 <h1>JOBS</h1>
 
                 <div class="container">
+                    <br>
                     <div class="row">
+                        <br>
                         {% if applied_jobs %}
                         {% for job in applied_jobs %}
+                        
                         <div class="col-md-4 mb-4">
                             <div class="card">
                                 <div class="card-body">
+                                    
                                             <h2>{{ job.job_id.title }}</h2>
                                             <table class="table">
                                                 <tbody>
@@ -176,7 +180,7 @@
                                             </table>
                                             
                                             {% if job.job_id %}
-                                            <center><a href="{% url 'delete_job' job_id=job.id %}" class="btn btn-danger">Delete</a>
+                                            <center><a href="{% url 'delete_job' job_id=job.id %}" class="btn btn-danger">Withdraw</a>
                                             {% endif %}
                                                                               
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#interviewModal{{ job.id }}">

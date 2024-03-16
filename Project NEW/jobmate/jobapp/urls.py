@@ -73,6 +73,7 @@ urlpatterns = [
     path('update-avg-rating', views.update_user_avg_rating, name='update_user_avg_rating'),
     path('all-ratings', views.view_all_ratings, name='all_ratings'),
 
+    path('view_applicants/<int:job_id>/', views.view_applicants, name='view_applicants'),
 
 
 
@@ -80,6 +81,12 @@ urlpatterns = [
 path('schedule-interview/<int:application_id>/', views.schedule_interview, name='schedule_interview'),
 
 path('edit_interview/<int:application_id>/', views.edit_interview, name='edit_interview'),
+
+path('resumescreen1', views.resume_scrn, name='resumescreen1'),
+path('resume_screening_result', views.resume_scrn, name='resume_screening_result'),
+
+path('reject/<int:application_id>', views.reject_candidate, name='reject_candidate'),
+
 
    
 ]

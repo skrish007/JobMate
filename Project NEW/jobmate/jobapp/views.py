@@ -10,6 +10,8 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from django.utils.encoding import force_bytes, force_str
 from django.utils.encoding import force_str
+from django.utils.html import strip_tags
+
 
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from datetime import datetime
@@ -393,7 +395,7 @@ def seekerlist(request):
     seekers = Job_Seekers.objects.all()
     # Implement any custom logic here
     return render(request, 'seekerlist.html', {'seekers': seekers})
-
+@never_cache
 # views.py
 def search_jobs(request):
     if request.method == 'POST':
@@ -402,7 +404,7 @@ def search_jobs(request):
         return render(request, 'searchjobs.html', {'query': search_query, 'jobs': jobs})
     else:
         return render(request, 'searchjobs.html', {})
-
+@never_cache
 def search_seeker(request):
     if request.method == 'POST':
         search_query = request.POST.get('search_query', '')
@@ -421,7 +423,7 @@ def search_seeker(request):
 
 from django.db.models import Q
 
-
+@never_cache
 def search_loc(request):
     if request.method == 'POST':
         search_query_job = request.POST.get('search_query_job', '')
@@ -444,13 +446,13 @@ def search_loc(request):
         return render(request, 'searchloc.html', {'query_job': search_query_job, 'query_loc': search_query_loc, 'jobs': jobs})
     else:
         return render(request, 'searchloc.html', {})
-
+@never_cache
 def seekerview(request):
     seekers = Job_Seekers.objects.all()
     # Implement any custom logic here
     return render(request, 'companydash.html', {'seekers': seekers})
 
-
+@never_cache
 def post_job(request):
     user_id = request.session.get('user_id')
     
@@ -502,7 +504,7 @@ def post_job(request):
     return render(request, 'postjob.html')
 
 
-
+@never_cache
 
 def posted_jobs(request):
     jobs = PostJobs.objects.all()
@@ -611,7 +613,7 @@ def changepw_pro(request):
             return render(request, 'changepw_pro.html', {'b': b, 'msg': context})
 
     return render(request, 'changepw_pro.html', {'b': b})
-
+@never_cache
 
 def delete_job(request, job_id):
     job = get_object_or_404(PostJobs, job_id=job_id, pro_id__user=request.user)
@@ -621,12 +623,12 @@ def delete_job(request, job_id):
         return redirect('companyjobs')
         
     return render(request, 'deletejob.html', {'job': job})
-
+@never_cache
 def viewjobdetails(request, job_id):
     job = get_object_or_404(PostJobs, job_id=job_id)
     return render(request, 'jobdetails.html', {'job': job})
 
-    
+@never_cache   
 def edit_job(request, job_id):
     job = get_object_or_404(PostJobs, job_id=job_id, pro_id__user=request.user)
 
@@ -651,7 +653,7 @@ def edit_job(request, job_id):
 
     return render(request, 'editjob.html', {'job': job})
 
-
+@never_cache
 
 def delete_job_by_company(request, job_id):
     # Get the job instance or return a 404 response if not found
@@ -667,7 +669,7 @@ def delete_job_by_company(request, job_id):
         return redirect('companydash')
 
 
-
+@never_cache
 def companyjobs(request):
     # Get the currently logged-in company
     company = Job_Providers.objects.get(user=request.user)
@@ -677,7 +679,7 @@ def companyjobs(request):
     print(company_jobs)
     return render(request, 'companyjobs.html', {'jobs': company_jobs})
 
-
+@never_cache
 def verifymail(request):
     if request.method == 'POST':
         verification_code = request.POST.get('verification_code')
@@ -736,8 +738,9 @@ def update_provider_status(request, user_id):
     user.save()
     return redirect('companylist')
 
-
-
+from django.utils import timezone
+from datetime import datetime
+@never_cache
 def applyjob(request, job_id):
     job = get_object_or_404(PostJobs, pk=job_id)
 
@@ -753,10 +756,13 @@ def applyjob(request, job_id):
             job_seeker = Job_Seekers.objects.get(user=request.user)
 
             # Check if the application deadline has passed
-            current_time = datetime.now().date()  # Convert to datetime.date
+ 
+
+            current_time = timezone.now()  # Use Django's timezone to get an offset-aware datetime
             if current_time > job.deadline:
                 messages.warning(request, 'Application deadline has passed. You cannot apply for this job.')
                 return redirect('viewpostedjobs')
+       
 
             # Create a new ApplyJob instance
             application = ApplyJob.objects.create(
@@ -776,7 +782,7 @@ def applyjob(request, job_id):
 
     return render(request, 'viewpostedjobs.html', {'job': job})
 
-
+@never_cache
 def appliedjobs(request):
     print("hello")
     jobs = ApplyJob.objects.filter(user=request.user)
@@ -785,19 +791,18 @@ def appliedjobs(request):
         job.interview = interview  # Add interview details to the job instance
     return render(request, 'appliedjobs.html', {'applied_jobs': jobs})
 
-
+@never_cache
 def companyview(request):     
     companies = Job_Providers.objects.all()
 
     return render(request, 'companyview.html', {'companies': companies})
-    
+@never_cache  
 def delete_job(request, job_id):
     job = get_object_or_404(ApplyJob, id=job_id)
 
     job.delete()
     return redirect('viewpostedjobs')
-
-
+@never_cache
 def view_applicants(request):
     # Get the currently logged-in company
     company = Job_Providers.objects.get(user=request.user)
@@ -821,7 +826,7 @@ def view_applicants(request):
 
 from django.http import JsonResponse
  
-
+@never_cache
 def save_job(request, job_id):
   user = request.user
   job = PostJobs.objects.get(job_id=job_id)
@@ -834,14 +839,14 @@ def save_job(request, job_id):
 
 
   return redirect('viewpostedjobs') 
-
+@never_cache
 def unsave_job(request, job_id):
   user = request.user
   job = PostJobs.objects.get(job_id=job_id)
   SavedJob.objects.filter(user=user, job_id=job).delete()
   messages.warning(request, 'Job has been unsaved.')
   return redirect('view_saved_jobs') 
-
+@never_cache
 
 def view_saved_jobs(request):
     user = request.user
@@ -849,7 +854,7 @@ def view_saved_jobs(request):
     job_list = [job.job_id for job in saved_jobs]
     return render(request, 'viewsavedjobs.html', {'jobs': job_list})
 
-
+@never_cache
 def add_review1(request):
     # Check if the user has already submitted a review
     if request.method == 'POST':
@@ -872,7 +877,7 @@ def add_review1(request):
        
     else:
        return render(request, 'seekerrating.html')
-
+@never_cache
 def add_review2(request):
     if request.method == 'POST':
        title = request.POST['title']
@@ -894,13 +899,13 @@ def add_review2(request):
        
     else:
        return render(request, 'prorating.html')
-
+@never_cache
 def update_user_avg_rating(user):
     # Update the average star rating for the user based on all reviews
     avg_rating = Rating.objects.filter(user=user).aggregate(Avg('stars'))['stars__avg']
     user.avg_rating = avg_rating
     user.save()
-
+@never_cache
 def view_all_ratings(request):
     ratings = Rating.objects.all()
     return render(request, 'all_ratings.html', {'ratings': ratings})
@@ -965,10 +970,28 @@ def schedule_interview(request, application_id):
 
 
 
+
+from django.shortcuts import get_object_or_404
+
+from django.core.exceptions import MultipleObjectsReturned
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.core.mail import send_mail
+from django.conf import settings
+from .models import Interview # Assuming Interview is your model
+
 def edit_interview(request, application_id):
     if request.method == 'POST':
-        # Retrieve the interview application object
-        application = get_object_or_404(Interview, id=id, application_id=application_id)
+        try:
+            # Attempt to get a single Interview object
+            application = Interview.objects.get(application_id=application_id)
+        except MultipleObjectsReturned:
+            # If multiple objects are returned, get the first one
+            application = Interview.objects.filter(application_id=application_id).first()
+            if not application:
+                # Handle the case where no Interview is found
+                messages.error(request, 'No interview found for the given application ID.')
+                return redirect('view_applicants')
 
         # Update the interview details based on the form data
         application.id = request.POST.get('id')
@@ -999,3 +1022,121 @@ def edit_interview(request, application_id):
     else:
         # Handle GET request (not allowed in this case)
         return render(request, 'error.html', {'message': 'Method Not Allowed'})
+
+
+import spacy
+from django.shortcuts import render
+from .models import ResumeScreening
+
+from django.shortcuts import render
+from .models import ResumeScreening
+import spacy
+@never_cache
+def resume_scrn(request):
+    if request.method == 'POST':
+        resume_file = request.FILES.get('resume')
+        job_role = request.POST.get('jobRole')
+        industry = request.POST.get('industry')
+        job_description = request.POST.get('jobDescription')
+
+        # Process uploaded resume file
+        if resume_file:
+            try:
+                # Try decoding as utf-8
+                resume_text = "".join([chunk.decode("utf-8") for chunk in resume_file.chunks()])
+            except UnicodeDecodeError:
+                # Try decoding as latin-1
+                resume_text = "".join([chunk.decode("latin-1") for chunk in resume_file.chunks()])
+
+        # Load spaCy English model
+        nlp = spacy.load("en_core_web_sm")
+
+        # Process resume text
+        doc = nlp(resume_text)
+
+        # Tokenize job role, industry, and job description
+        job_role_tokens = nlp(job_role.lower())
+        industry_tokens = nlp(industry.lower())
+        job_description_tokens = nlp(job_description.lower())
+
+        # Calculate match score based on text similarity
+        role_similarity = doc.similarity(job_role_tokens)
+        industry_similarity = doc.similarity(industry_tokens)
+        description_similarity = doc.similarity(job_description_tokens)
+
+        # Average similarity score
+        match_score = (role_similarity + industry_similarity + description_similarity) / 3
+
+        # Convert match score to percentage
+        match_score_percentage = match_score * 100
+
+        # Save screening details to database
+        resume_screening = ResumeScreening.objects.create(
+            user=request.user,
+            resume_file=resume_file,
+            job_role=job_role,
+            industry=industry,
+            job_description=job_description,
+            score=match_score_percentage
+        )
+
+        # Identify key areas for improvement and provide recommendations
+        recommendations = analyze_resume(doc, job_role_tokens, industry_tokens, job_description_tokens, match_score_percentage)
+
+        # Pass the data to the template
+        context = {
+            'match_score': match_score_percentage,
+            'recommendations': recommendations,
+            'resume_screening': resume_screening,
+            # Add other data and analytics as needed
+        }
+        return render(request, 'resume_screening_result.html', context)
+
+    return render(request, 'resumescreen.html')
+
+# Helper function to analyze the resume and provide recommendations
+def analyze_resume(resume_doc, job_role_tokens, industry_tokens, job_description_tokens, match_score):
+    recommendations = []
+
+    # Example recommendation based on job role, industry, and job description similarity
+    if (resume_doc.similarity(job_role_tokens) * 100 < 60) and \
+       (resume_doc.similarity(industry_tokens) * 100 < 50) and \
+       (resume_doc.similarity(job_description_tokens) * 100 < 70) and \
+       (match_score < 70):
+        recommendations.append("Improve your resume to better match the job role, industry, and job description requirements.")
+
+    # Recommendations based on match score
+    if match_score >= 70:
+        recommendations.append("Your resume aligns well with the job requirements. Great job!")
+    elif match_score >= 60 and match_score < 70:
+        recommendations.append("Your resume is a good match for the job, but there is room for improvement.")
+    elif match_score >= 40 and match_score < 60:
+        recommendations.append("Your resume could be improved to better align with the job requirements.")
+    elif match_score < 40:
+        recommendations.append("Your resume needs significant improvements to match the job requirements. It is not suitable for the position.")
+
+    return recommendations
+
+@never_cache
+def reject_candidate(request, application_id):
+    if request.method == 'POST':
+        application = ApplyJob.objects.get(id=application_id)
+        application.status = 'Rejected'
+        application.save()
+
+        # Send rejection email to the candidate
+        subject = 'Your Application Update from JOBMATE'
+        html_message = render_to_string('rejection_email.html', {'name': application.seeker_id.user.first_name, 'company': application.pro_id.cname, 'title': application.job_id.title})
+        plain_message = strip_tags(html_message)
+        from_email = settings.EMAIL_HOST_USER
+        to_email = application.user.email
+        send_mail(subject, plain_message, from_email, [to_email], html_message=html_message)
+
+        # Show success message
+        messages.error(request, 'Candidate Rejected and Email Sent Successfully')
+
+        # Redirect to a page
+        return redirect('view_applicants')  # Assuming 'view_applicants' is the name of the URL pattern for viewing applicants
+
+    else:
+        return HttpResponseBadRequest('Invalid Request')
