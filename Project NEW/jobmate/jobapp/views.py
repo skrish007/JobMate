@@ -246,13 +246,14 @@ def login_view(request):
 
     return render(request, 'login.html')
 
-
+@login_required
 def logout_view(request):
     logout(request)
     request.session.flush()
     return redirect('/')
 
 
+@login_required
 def success_view(request):
     user = request.user
 
@@ -389,13 +390,14 @@ def verification_pending(request):
 
 @never_cache
 
-
+@login_required
 
 def seekerlist(request):
     seekers = Job_Seekers.objects.all()
     # Implement any custom logic here
     return render(request, 'seekerlist.html', {'seekers': seekers})
 @never_cache
+@login_required
 # views.py
 def search_jobs(request):
     if request.method == 'POST':
@@ -405,6 +407,7 @@ def search_jobs(request):
     else:
         return render(request, 'searchjobs.html', {})
 @never_cache
+@login_required
 def search_seeker(request):
     if request.method == 'POST':
         search_query = request.POST.get('search_query', '')
@@ -422,7 +425,7 @@ def search_seeker(request):
      #   return render(request, 'searchloc.html', {})
 
 from django.db.models import Q
-
+@login_required
 @never_cache
 def search_loc(request):
     if request.method == 'POST':
@@ -447,12 +450,14 @@ def search_loc(request):
     else:
         return render(request, 'searchloc.html', {})
 @never_cache
+@login_required
 def seekerview(request):
     seekers = Job_Seekers.objects.all()
     # Implement any custom logic here
     return render(request, 'companydash.html', {'seekers': seekers})
 
 @never_cache
+@login_required
 def post_job(request):
     user_id = request.session.get('user_id')
     
@@ -505,17 +510,17 @@ def post_job(request):
 
 
 @never_cache
-
+@login_required
 def posted_jobs(request):
     jobs = PostJobs.objects.all()
     return render(request, 'viewpostedjobs.html', {'jobs': jobs})
 
 
-
+@login_required
 def admin(request):
     candidates=Job_Seekers.objects.count()
     companies=Job_Providers.objects.count()
-    
+@login_required
 def companylist(request):
     
 
@@ -527,7 +532,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 
 from django.contrib.auth import authenticate, login
-
+@login_required
 def changepw_seeker(request):
     user_id = request.session.get('user_id')
     if not user_id:
@@ -572,7 +577,7 @@ def changepw_seeker(request):
 
 
 from django.contrib.auth import authenticate, login
-
+@login_required
 def changepw_pro(request):
     user_id = request.session.get('user_id')
     if not user_id:
@@ -614,7 +619,7 @@ def changepw_pro(request):
 
     return render(request, 'changepw_pro.html', {'b': b})
 @never_cache
-
+@login_required
 def delete_job(request, job_id):
     job = get_object_or_404(PostJobs, job_id=job_id, pro_id__user=request.user)
     
@@ -624,11 +629,13 @@ def delete_job(request, job_id):
         
     return render(request, 'deletejob.html', {'job': job})
 @never_cache
+@login_required
 def viewjobdetails(request, job_id):
     job = get_object_or_404(PostJobs, job_id=job_id)
     return render(request, 'jobdetails.html', {'job': job})
 
-@never_cache   
+@never_cache 
+@login_required  
 def edit_job(request, job_id):
     job = get_object_or_404(PostJobs, job_id=job_id, pro_id__user=request.user)
 
@@ -654,7 +661,7 @@ def edit_job(request, job_id):
     return render(request, 'editjob.html', {'job': job})
 
 @never_cache
-
+@login_required
 def delete_job_by_company(request, job_id):
     # Get the job instance or return a 404 response if not found
     job = get_object_or_404(PostJobs, job_id=job_id)
@@ -670,6 +677,7 @@ def delete_job_by_company(request, job_id):
 
 
 @never_cache
+@login_required
 def companyjobs(request):
     # Get the currently logged-in company
     company = Job_Providers.objects.get(user=request.user)
@@ -679,7 +687,8 @@ def companyjobs(request):
     print(company_jobs)
     return render(request, 'companyjobs.html', {'jobs': company_jobs})
 
-@never_cache
+
+
 def verifymail(request):
     if request.method == 'POST':
         verification_code = request.POST.get('verification_code')
@@ -725,13 +734,13 @@ def verifymail(request):
     return HttpResponse('Status updated successfully')  
 
 
-
+@login_required
 def update_status(request, user_id):
     user = User.objects.get(pk=user_id)
     user.is_active = not user.is_active
     user.save()
     return redirect('seekerlist')  # Replace 'your_redirect_view_name' with the actual name of your view
-
+@login_required
 def update_provider_status(request, user_id):
     user = User.objects.get(pk=user_id)
     user.is_active = not user.is_active
@@ -741,6 +750,7 @@ def update_provider_status(request, user_id):
 from django.utils import timezone
 from datetime import datetime
 @never_cache
+@login_required
 def applyjob(request, job_id):
     job = get_object_or_404(PostJobs, pk=job_id)
 
@@ -781,7 +791,7 @@ def applyjob(request, job_id):
             return redirect('viewpostedjobs')  # Redirect to the job listing page
 
     return render(request, 'viewpostedjobs.html', {'job': job})
-
+@login_required
 @never_cache
 def appliedjobs(request):
     print("hello")
@@ -790,19 +800,21 @@ def appliedjobs(request):
         interview = Interview.objects.filter(application_id=job.id).first()
         job.interview = interview  # Add interview details to the job instance
     return render(request, 'appliedjobs.html', {'applied_jobs': jobs})
-
+@login_required
 @never_cache
 def companyview(request):     
     companies = Job_Providers.objects.all()
 
     return render(request, 'companyview.html', {'companies': companies})
 @never_cache  
+@login_required
 def delete_job(request, job_id):
     job = get_object_or_404(ApplyJob, id=job_id)
 
     job.delete()
     return redirect('viewpostedjobs')
 @never_cache
+@login_required
 def view_applicants(request):
     # Get the currently logged-in company
     company = Job_Providers.objects.get(user=request.user)
@@ -825,7 +837,7 @@ def view_applicants(request):
     return render(request, 'view_applicants.html', {'job_applications': job_applications})
 
 from django.http import JsonResponse
- 
+@login_required
 @never_cache
 def save_job(request, job_id):
   user = request.user
@@ -840,6 +852,7 @@ def save_job(request, job_id):
 
   return redirect('viewpostedjobs') 
 @never_cache
+@login_required
 def unsave_job(request, job_id):
   user = request.user
   job = PostJobs.objects.get(job_id=job_id)
@@ -847,7 +860,7 @@ def unsave_job(request, job_id):
   messages.warning(request, 'Job has been unsaved.')
   return redirect('view_saved_jobs') 
 @never_cache
-
+@login_required
 def view_saved_jobs(request):
     user = request.user
     saved_jobs = SavedJob.objects.filter(user=user)
@@ -855,6 +868,7 @@ def view_saved_jobs(request):
     return render(request, 'viewsavedjobs.html', {'jobs': job_list})
 
 @never_cache
+@login_required
 def add_review1(request):
     # Check if the user has already submitted a review
     if request.method == 'POST':
@@ -878,6 +892,7 @@ def add_review1(request):
     else:
        return render(request, 'seekerrating.html')
 @never_cache
+@login_required
 def add_review2(request):
     if request.method == 'POST':
        title = request.POST['title']
@@ -900,11 +915,13 @@ def add_review2(request):
     else:
        return render(request, 'prorating.html')
 @never_cache
+@login_required
 def update_user_avg_rating(user):
     # Update the average star rating for the user based on all reviews
     avg_rating = Rating.objects.filter(user=user).aggregate(Avg('stars'))['stars__avg']
     user.avg_rating = avg_rating
     user.save()
+@login_required
 @never_cache
 def view_all_ratings(request):
     ratings = Rating.objects.all()
@@ -916,7 +933,11 @@ from django.http import HttpResponseRedirect
 
 from django.core.mail import send_mail
 from django.conf import settings
-
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from datetime import datetime
+from .models import ApplyJob, Interview
+@login_required
 def schedule_interview(request, application_id):
     if request.method == 'POST':
         application_id = request.POST.get('application_id')
@@ -925,7 +946,7 @@ def schedule_interview(request, application_id):
         platform = request.POST.get('platform')
         link = request.POST.get('link')
         venue = request.POST.get('venue')
-        datetime = request.POST.get('datetime')
+        scheduled_datetime = request.POST.get('datetime')
         notes = request.POST.get('notes')
         helpline = request.POST.get('helpline')
 
@@ -940,7 +961,7 @@ def schedule_interview(request, application_id):
             job_id=application.job_id,
             pro_id=pro_id,
             seeker_id=application.seeker_id,
-            scheduled_date=datetime,
+            scheduled_date=scheduled_datetime,
             status='Scheduled',
             mode=mode,
             platform=platform,
@@ -952,9 +973,17 @@ def schedule_interview(request, application_id):
         application.status = 'Scheduled'
         application.save()
 
-        # Send email to the job seeker
+        # Format the scheduled datetime for display
+        formatted_date = datetime.strptime(scheduled_datetime, '%Y-%m-%dT%H:%M')
+        formatted_date_str = formatted_date.strftime("%d / %m / %Y")
+
         subject = 'Interview Scheduled'
-        message = f'Your interview for job {application.job_id} has been scheduled on {datetime}. Please log in to JobMate to view more Information.'
+        message = f'Dear {application.user.first_name} {application.user.last_name},\n\n' \
+                  f'Your interview for the job "{application.job_id.title}" at {pro_id.cname} ' \
+                  f'has been scheduled on {formatted_date_str}.\n\n' \
+                  f'Please log in to JobMate to view more information.'
+
+        # Send email to the job seeker
         from_email = settings.EMAIL_HOST_USER
         to_email = [application.user.email]
         send_mail(subject, message, from_email, to_email, fail_silently=False)
@@ -965,6 +994,7 @@ def schedule_interview(request, application_id):
 
     # Handle GET request (not allowed in this case)
     return render(request, 'error.html', {'message': 'Method Not Allowed'})
+
     
 
 
@@ -979,23 +1009,29 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
 from .models import Interview # Assuming Interview is your model
-
+from django.core.mail import send_mail
+from django.conf import settings
+from datetime import datetime
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Interview
+@login_required
 def edit_interview(request, application_id):
     if request.method == 'POST':
         try:
             # Attempt to get a single Interview object
             application = Interview.objects.get(application_id=application_id)
-        except MultipleObjectsReturned:
+        except Interview.DoesNotExist:
+            # Handle the case where no Interview is found
+            messages.error(request, 'No interview found for the given application ID.')
+            return redirect('view_applicants')
+        except Interview.MultipleObjectsReturned:
             # If multiple objects are returned, get the first one
             application = Interview.objects.filter(application_id=application_id).first()
-            if not application:
-                # Handle the case where no Interview is found
-                messages.error(request, 'No interview found for the given application ID.')
-                return redirect('view_applicants')
 
         # Update the interview details based on the form data
-        application.id = request.POST.get('id')
-        application.scheduled_date = request.POST.get('datetime')
+        scheduled_datetime = request.POST.get('datetime')
+        application.scheduled_date = scheduled_datetime
         application.notes = request.POST.get('notes')
         application.platform = request.POST.get('platform')
         application.link = request.POST.get('link')
@@ -1006,10 +1042,16 @@ def edit_interview(request, application_id):
         # Save the updated interview details
         application.save()
         messages.success(request, 'Interview schedule updated successfully.')
-
+        
+        # Format the scheduled date for display in the email
+        formatted_date = datetime.strptime(scheduled_datetime, '%Y-%m-%dT%H:%M').strftime("%d / %m / %Y")
+        
         # Send an email notification
         subject = 'Interview Rescheduled'
-        message = f'Your interview for job {application.job_id} has been re-scheduled on {application.scheduled_date}. Please log in to JobMate to view more information.'
+        message = f'Dear {application.user.first_name} {application.user.last_name},\n\n' \
+                  f'Your interview for the job "{application.job_id.title}" at {application.pro_id.cname} ' \
+                  f'has been scheduled on {formatted_date}.\n\n' \
+                  f'Please log in to JobMate to view more information.'
         from_email = settings.EMAIL_HOST_USER
         to_email = [application.user.email]
         send_mail(subject, message, from_email, to_email, fail_silently=False)
@@ -1032,6 +1074,7 @@ from django.shortcuts import render
 from .models import ResumeScreening
 import spacy
 @never_cache
+@login_required
 def resume_scrn(request):
     if request.method == 'POST':
         resume_file = request.FILES.get('resume')
@@ -1093,7 +1136,7 @@ def resume_scrn(request):
         return render(request, 'resume_screening_result.html', context)
 
     return render(request, 'resumescreen.html')
-
+@login_required
 # Helper function to analyze the resume and provide recommendations
 def analyze_resume(resume_doc, job_role_tokens, industry_tokens, job_description_tokens, match_score):
     recommendations = []
@@ -1118,6 +1161,7 @@ def analyze_resume(resume_doc, job_role_tokens, industry_tokens, job_description
     return recommendations
 
 @never_cache
+@login_required
 def reject_candidate(request, application_id):
     if request.method == 'POST':
         application = ApplyJob.objects.get(id=application_id)
@@ -1140,3 +1184,7 @@ def reject_candidate(request, application_id):
 
     else:
         return HttpResponseBadRequest('Invalid Request')
+
+@login_required
+def logout_error_page(request):
+    return render(request, 'thankyou')

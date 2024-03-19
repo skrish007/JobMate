@@ -86,6 +86,7 @@ path('resumescreen1', views.resume_scrn, name='resumescreen1'),
 path('resume_screening_result', views.resume_scrn, name='resume_screening_result'),
 
 path('reject/<int:application_id>', views.reject_candidate, name='reject_candidate'),
+path('thankyou', views.logout_error_page, name='thankyou'),
 
 
    

@@ -199,13 +199,30 @@ h1 {
     // Example data
     const matchScore = {{ match_score|floatformat:2 }}; // Example match score
     const ctx = document.getElementById('matchScoreChart').getContext('2d');
+    
+    // Function to generate background colors dynamically
+    const generateBackgroundColors = (score) => {
+        const colors = [];
+        const prescribedColor = '#8B0000'; // Specify the prescribed color
+        
+        // Loop through to set the color for each segment
+        for (let i = 0; i < 15; i++) {
+            if (i === 0) {
+                colors.push(prescribedColor); // Set prescribed color for the first segment
+            } else {
+                colors.push('#ffffff'); // Set white color for the rest of the segments
+            }
+        }
+        return colors;
+    };
+    
     new Chart(ctx, {
         type: 'doughnut',
         data: {
             labels: ['Match Score'],
             datasets: [{
                 data: [matchScore],
-                backgroundColor: ['#8B0000', '#FF4500', '#FF6347', '#FFB6C1', '#FFA07A', '#FF8C00', '#FFD700', '#FFFFE0', '#00FF00', '#008000', '#00FFFF', '#008080', '#0000FF', '#000080'], // Deep Red, Light Red, Pale Red, Deep Pink, Pale Rose, Dark Orange, Light Orange, Golden Yellow, Pale Yellow, Blue, Green
+                backgroundColor: generateBackgroundColors(matchScore), // Dynamically generate background colors
                 borderWidth: 1
             }]
         },
@@ -233,6 +250,7 @@ h1 {
         }
     });
 </script>
+
 
     
   {% include "seekerhead.html" %}

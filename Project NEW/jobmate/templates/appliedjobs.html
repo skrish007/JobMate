@@ -94,148 +94,226 @@
 
 
 
+    To troubleshoot the error between displaying the cards, we need to carefully review the structure of the HTML code and identify any potential issues. Here's your code with some annotations to help identify the structure:
 
+    ```html
     {% include "seekerhead.html" %}
-   
-      <div class="container mt-4">
+    <div class="container mt-4">
         <!-- Bootstrap Card -->
         <div class="card">
             <!-- Card Header -->
             <div class="card-header">
-                
-    <br> <br>
-                <!-- viewpostedjobs.html -->
+                <br><br>
+                <!-- Messages Container -->
                 {% if messages %}
                 <div class="messages-container">
                     {% for message in messages %}
-                        <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}">
-                            {{ message }}
-                        </div>
+                    <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}">
+                        {{ message }}
+                    </div>
                     {% endfor %}
                 </div>
                 {% endif %}
-    
+                <!-- Title -->
                 <h1>JOBS</h1>
-
-                <div class="container">
+            </div><!-- End Card Header -->
+    
+            <!-- Container for Jobs -->
+            <div class="container">
+                <br>
+                <div class="row">
                     <br>
+                    <!-- Check if there are applied jobs -->
+                    {% if applied_jobs %}
                     <div class="row">
-                        <br>
-                        {% if applied_jobs %}
+                        <!-- Loop through applied jobs -->
                         {% for job in applied_jobs %}
-                        
                         <div class="col-md-4 mb-4">
                             <div class="card">
                                 <div class="card-body">
-                                    
-                                            <h2>{{ job.job_id.title }}</h2>
-                                            <table class="table">
-                                                <tbody>
-                                                    <tr>
-                                                        <th scope="row">Company</th>
-                                                        <td>{{ job.pro_id.cname }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Status</th>
-                                                        <td>
-                                                            {% if job.status == 'Pending' %}
-                                                                <span class="badge bg-danger">{{ job.status }}</span>
-                                                            {% elif job.status == 'Scheduled' %}
-                                                                <span class="badge bg-success">{{ job.status }}</span>
-                                                            {% else %}
-                                                                {{ job.status }}
-                                                            {% endif %}
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Deadline</th>
-                                                        <td>{{ job.job_id.deadline|date:"F d, Y" }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Website</th>
-                                                        <td>{{ job.pro_id.website }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Minimum Salary</th>
-                                                        <td>{{ job.job_id.min_salary }} Lakhs Per Annum</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Maximum Salary</th>
-                                                        <td>{{ job.job_id.max_salary }} Lakhs Per Annum</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Location</th>
-                                                        <td>{{ job.job_id.location }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Phone Number</th>
-                                                        <td>{{ job.pro_id.cphone }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Applied On</th>
-                                                        <td>{{ job.application_date }}</td>
-                                                    </tr>
-                                                   
-                                                </tbody>
-                                            </table>
-                                            
-                                            {% if job.job_id %}
-                                            <center><a href="{% url 'delete_job' job_id=job.id %}" class="btn btn-danger">Withdraw</a>
-                                            {% endif %}
-                                                                              
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#interviewModal{{ job.id }}">
-                View Interview Details
-            </button>
-            <!-- Interview modal -->
-            <div class="modal fade" id="interviewModal{{ job.id }}" tabindex="-1" aria-labelledby="interviewModalLabel{{ job.id }}" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="interviewModalLabel{{ job.id }}">Interview Details</h5>
-                            <button type="button" class="close " data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            {% if job.interview %}
-                                <div class="row">
-                                    <div class="col">
-                                        <p><strong>Job Title:</strong> {{ job.job_id.title }}</p>
-                                        <p><strong>Candidate Name :</strong> {{ job.seeker_id.name }}</p>
-                                        <p><strong>Company:</strong> {{ job.pro_id.cname }}</p>
-                                        <p><strong>Date and Time:</strong> {{ job.interview.scheduled_date }}</p>
-                                        <p><strong>Mode:</strong> {{ job.interview.mode }}</p>
-                                        <p><strong>Platform:</strong> {{ job.interview.platform }}</p>
-                                        <p><strong>Link:</strong> <a href="{{ job.interview.link }}" target="_blank">{{ job.interview.link }}</a></p>
-                                        <p><strong>Venue:</strong> {{ job.interview.venue }}</p>
-                                        <p><strong>Notes:</strong> {{ job.interview.notes }}</p>
-                                        <p><strong>Helpline:</strong> {{ job.interview.helpline }}</p>
+                                    <!-- Job Title -->
+                                    <h2>{{ job.job_id.title }}</h2>
+                                    <!-- Table for Job Details -->
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">Company</th>
+                                                <td>{{ job.pro_id.cname }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Status</th>
+                                                <td>
+                                                    {% if job.status == 'Pending' %}
+                                                    <span class="badge bg-warning">{{ job.status }}</span>
+                                                    {% elif job.status == 'Scheduled' %}
+                                                    <span class="badge bg-success">{{ job.status }}</span>
+                                                    {% elif job.status == 'Rejected' %}
+                                                    <span class="badge bg-danger">{{ job.status }}</span>
+                                                    {% else %}
+                                                    {{ job.status }}
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Deadline</th>
+                                                <td>{{ job.job_id.deadline|date:"F d, Y" }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Website</th>
+                                                <td>{{ job.pro_id.website }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Minimum CTC</th>
+                                                <td>{{ job.job_id.min_salary }} Lakhs Per Annum</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Maximum CTC</th>
+                                                <td>{{ job.job_id.max_salary }} Lakhs Per Annum</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Location</th>
+                                                <td>{{ job.job_id.location }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Phone Number</th>
+                                                <td>{{ job.pro_id.cphone }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Applied On</th>
+                                                <td>{{ job.application_date }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <!-- Withdraw Button -->
+                                    {% if job.job_id %}
+                                    <center><a href="{% url 'delete_job' job_id=job.id %}" class="btn btn-danger">Withdraw</a>
+                                    {% endif %}
+                                    <!-- View Interview Details Button -->
+                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#interviewModal{{ job.id }}">
+                                        View Interview Details
+                                    </button>
+                                    <!-- Interview modal -->
+                                    <div class="modal fade" id="interviewModal{{ job.id }}" tabindex="-1" aria-labelledby="interviewModalLabel{{ job.id }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="interviewModalLabel{{ job.id }}">Interview Details</h5>
+                                                    <button type="button" class="close " data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <!-- Modal Body -->
+                                                <div class="modal-body">
+                                                    {% if job.interview %}
+                                                    <!-- Display interview details if available -->
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <p><strong>Job Title:</strong> {{ job.job_id.title }}</p>
+                                                            <p><strong>Candidate Name :</strong> {{ job.seeker_id.name }}</p>
+                                                            <p><strong>Company:</strong> {{ job.pro_id.cname }}</p>
+                                                            <p><strong>Date and Time:</strong> {{ job.interview.scheduled_date }}</p>
+                                                            <p><strong>Mode:</strong> {{ job.interview.mode }}</p>
+                                                            <p><strong>Platform:</strong> {{ job.interview.platform }}</p>
+                                                            <p><strong>Link:</strong> <a href="{{ job.interview.link }}" target="_blank">{{ job.interview.link }}</a></p>
+                                                            <p><strong>Venue:</strong> {{ job.interview.venue }}</p>
+                                                            <p><strong>Notes:</strong> {{ job.interview.notes }}</p>
+                                                            <p><strong>Helpline:</strong> {{ job.interview.helpline }}</p>
+                                                        </div>
+                                                    </div>
+                                                    {% else %}
+                                                    <!-- Display message if no interview scheduled yet -->
+                                                    <p>No interview scheduled yet.</p>
+                                                    {% endif %}
+                                                </div>
+                                                <!-- Modal Footer -->
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            {% else %}
-                                <p>No interview scheduled yet.</p>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                                </div><!-- End Card Body -->
+                            </div><!-- End Card -->
+                        </div><!-- End Column -->
+                        <!-- Check if the current job is the last one or divisible by 3 -->
+                        {% if forloop.counter|divisibleby:3 or forloop.last %}
+                    </div><!-- End Row -->
+                    <div class="row">
+                        {% endif %}
+                        {% endfor %}
+                    </div><!-- End Row -->
+                    {% else %}
+                    <!-- Display message if no applied jobs found -->
+                    <p>No applied jobs found.</p>
+                    {% endif %}
+                </div><!-- End Row -->
+            </div><!-- End Container for Jobs -->
+        </div><!-- End Card -->
+        <div id="pagination-container">
+            <ul class="pagination justify-content-center custom-pagination">
+                <li class="page-item" id="previous-page"><a class="page-link" href="#">Previous</a></li>
+                <!-- Add pagination logic here -->
+                <!-- Page numbers will be dynamically generated by JavaScript -->
+                <li class="page-item" id="next-page"><a class="page-link" href="#">Next</a></li>
+            </ul>
         </div>
+    </div><!-- End Container -->
+    ```
     
-                    {% if forloop.counter|divisibleby:3 or forloop.last %}
-                </div>
-                {% endif %} <!-- Close row after every  3 jobs or at the end -->
-                {% endfor %}
-            </div>
-            {% else %}
-                <p>No applied jobs found.</p>
-            {% endif %}
-        </div>
-    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var currentPage = 1;
+            var pageSize = 6;
+            var totalJobs = $(".job-card").length;
+            var totalPages = Math.ceil(totalJobs / pageSize);
     
+            function showPage(pageNumber) {
+                $(".job-card").hide();
+                $(".job-card").slice((pageNumber - 1) * pageSize, pageNumber * pageSize).show();
+            }
+    
+            function renderPagination() {
+                $("#pagination-container").empty();
+                var paginationHtml = '<ul class="pagination justify-content-center">';
+                paginationHtml += '<li class="page-item" id="previous-page"><a class="page-link" href="#">Previous</a></li>';
+                for (var i = 1; i <= totalPages; i++) {
+                    paginationHtml += '<li class="page-item"><a class="page-link" href="#" data-page="' + i + '">' + i + '</a></li>';
+                }
+                paginationHtml += '<li class="page-item" id="next-page"><a class="page-link" href="#">Next</a></li>';
+                paginationHtml += '</ul>';
+                $("#pagination-container").html(paginationHtml);
+            }
+    
+            showPage(currentPage);
+            renderPagination();
+    
+            $(document).on("click", ".page-link", function (e) {
+                e.preventDefault();
+                var page = parseInt($(this).data("page"));
+                if (!isNaN(page) && page >= 1 && page <= totalPages) {
+                    currentPage = page;
+                    showPage(currentPage);
+                }
+            });
+    
+            $("#next-page").on("click", function () {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    showPage(currentPage);
+                }
+            });
+    
+            $("#previous-page").on("click", function () {
+                if (currentPage > 1) {
+                    currentPage--;
+                    showPage(currentPage);
+                }
+            });
+        });
+    </script>
 
 
 

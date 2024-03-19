@@ -102,7 +102,7 @@
             <div class="col-md-6">
               <br><br>
               <h2>Step 1: Upload Your Resume</h2>
-              <input type="file" name="resume" accept=".pdf,.doc,.docx" class="form-control-file mt-3">
+              <input type="file" name="resume" accept=".pdf,.doc,.docx" required class="form-control-file mt-3">
               <button type="button" onclick="nextStep(2)" class="btn btn-primary mt-3">Next</button>
             </div>
           </div>
@@ -117,8 +117,8 @@
             <div class="col-md-6">
               <br><br>
               <h2>Step 2: Specify Job Role and Industry</h2>
-              <input type="text" class="form-control" id="jobRole" name="jobRole" placeholder="Enter your desired job role">
-              <input type="text" class="form-control" id="industry" name="industry" placeholder="Enter the industry you are interested in">
+              <input type="text" class="form-control" id="jobRole" name="jobRole" required placeholder="Enter your desired job role">
+              <input type="text" class="form-control" id="industry" name="industry" required placeholder="Enter the industry you are interested in">
               <button type="button" onclick="prevStep(1)" class="btn btn-secondary mt-3">Previous</button>
               <button type="button" onclick="nextStep(3)" class="btn btn-primary mt-3">Next</button>
             </div>
@@ -134,7 +134,7 @@
             <div class="col-md-6">
               <br><br>
               <h2>Step 3: Add Job Description</h2>
-              <textarea class="form-control" id="jobDescription" name="jobDescription" rows="5" placeholder="Enter job description"></textarea>
+              <textarea class="form-control" id="jobDescription" name="jobDescription" required rows="5" placeholder="Enter job description"></textarea>
               <button type="button" onclick="prevStep(2)" class="btn btn-secondary mt-3">Previous</button>
               <button type="button" onclick="nextStep(4)" class="btn btn-primary mt-3">Next</button>
             </div>

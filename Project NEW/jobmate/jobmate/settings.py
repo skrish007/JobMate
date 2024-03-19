@@ -66,6 +66,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'jobapp.middleware.CheckLogoutMiddleware',
+
 ]
 
 ROOT_URLCONF = 'jobmate.urls'

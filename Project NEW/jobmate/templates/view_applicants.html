@@ -189,9 +189,12 @@
                                                                     <td colspan="2">
                                                                         
                                                                         {% if application.status == 'Pending' %}
+                                                                        <div class="text-center">
                                                                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#scheduleModal{{ application.id }}">
                                                                                 Schedule Interview
                                                                             </button>
+                                                                        </div>
+                                                                        <br>
                                                                         {% elif application.status == "Scheduled" %}
                                                                             <div class="text-center">
                                                                                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#editModal{{ application.id }}"
@@ -259,176 +262,201 @@
                                                                         </button>
                                                                     </div>
                                                                     <div class="modal-body">
+                                                                        {% csrf_token %}
                                                                         <form id="scheduleForm{{ application.id }}" action="{% url 'schedule_interview' application.id %}" method="POST" onsubmit="return validateInterviewForm{{ application.id }}();">
                                                                             {% csrf_token %}
-                                                                            <form id="scheduleForm{{ application.id }}" action="{% url 'schedule_interview' application.id %}" method="POST" onsubmit="return validateInterviewForm{{ application.id }}();">
-                                                                                {% csrf_token %}
-                                                                                <input type="hidden" name="application_id" value="{{ application.id }}">
-                                                                                <label for="mode" class="form-label">Mode</label><br>
-                                                                                
-                                                                                <div class="form-check form-check-inline">
-                                                                                    <input class="form-check-input mode-selection" type="radio" name="mode" id="offline{{ application.id }}" value="offline" checked onclick="toggleFields_{{ application.id }}('offline{{ application.id }}');">
-                                                                                    <label class="form-check-label" for="offline{{ application.id }}">Offline</label>
-                                                                                </div>
-                                                                                <div class="form-check form-check-inline">
-                                                                                    <input class="form-check-input mode-selection" type="radio" name="mode" id="online{{ application.id }}" value="online" onclick="toggleFields_{{ application.id }}('online{{ application.id }}');">
-                                                                                    <label class="form-check-label" for="online{{ application.id }}">Online</label>
-                                                                                </div>
-                                                                                <div class="mb-3 platform-link-fields" id="platformLinkFields{{ application.id }}" style="display: none;">
-                                                                                    <label for="platform" class="form-label">Platform</label>
-                                                                                    <select class="form-select" id="platform" name="platform">
-                                                                                        <option value="">Select Platform</option>
-                                                                                        <option value="Zoom">Zoom</option>
-                                                                                        <option value="Google Meet">Google Meet</option>
-                                                                                        <option value="Microsoft Teams">Microsoft Teams</option>
-                                                                                    </select>
-                                                                                    <div id="platform_error{{ application.id }}" class="invalid-feedback"></div>
-                                                                                </div>
-                                                                                <div class="mb-3 platform-link-fields" id="linkFields{{ application.id }}" style="display: none;">
-                                                                                    <label for="link" class="form-label">Link</label>
-                                                                                    <input type="text" class="form-control" id="link" name="link">
-                                                                                    <div id="link_error{{ application.id }}" class="invalid-feedback"></div>
-                                                                                </div>
-                                                                                <div class="mb-3" id="venueField{{ application.id }}" style="display: none;">
-                                                                                    <label for="venue" class="form-label">Venue</label>
-                                                                                    <input type="text" class="form-control" id="venue{{ application.id }}" name="venue" oninput="validateVenue2{{ application.id }}();">
-                                                                                    <span id="venue_error{{ application.id }}" class="text-danger" style="display: none;"></span>
-                                                                                </div>
-                                                                                <div class="mb-3">
-                                                                                    <label for="datetime" class="form-label">Date and Time</label>
-                                                                                    <input type="datetime-local" class="form-control" id="datetime" name="datetime" oninput="validateDate2{{ application.id }}(this.value)">
-                                                                                    <span id="datetime_error{{ application.id }}" class="text-danger"></span>
-                                                                                    <span id="datetime_msg{{ application.id }}" class="text-success"></span>
-                                                                                </div>
-                                                                                <div class="mb-3">
-                                                                                    <label for="notes" class="form-label">Notes</label>
-                                                                                    <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
-                                                                                </div>
-                                                                                <div class="mb-3">
-                                                                                    <label for="helpline" class="form-label">Helpline</label>
-                                                                                    <input type="text" class="form-control" id="helpline" name="helpline" oninput="validateHelpline2{{ application.id }}(this.value)">
-                                                                                    <span id="helpline_error{{ application.id }}" class="text-danger"></span>
-                                                                                    <span id="helpline_msg{{ application.id }}" class="text-success"></span>
-                        
-                                                                                </div><button type="submit" id="submitButton{{ application.id }}" class="btn btn-dark" >Schedule</button>
-
-                                                                                <span id="successMsg{{ application.id }}" class="text-success" style="display: none;"></span>
+                                                                            <input type="hidden" name="application_id" value="{{ application.id }}">
+                                                        
+                                                                            <label for="mode" class="form-label">Mode</label><br>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input mode-selection" type="radio" name="mode" id="offline{{ application.id }}" value="offline" checked onclick="toggleFields_{{ application.id }}('offline{{ application.id }}');">
+                                                                                <label class="form-check-label" for="offline{{ application.id }}">Offline</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input mode-selection" type="radio" name="mode" id="online{{ application.id }}" value="online" onclick="toggleFields_{{ application.id }}('online{{ application.id }}');">
+                                                                                <label class="form-check-label" for="online{{ application.id }}">Online</label>
+                                                                            </div>
+                                                        
+                                                                            <!-- Platform selection -->
+                                                                            <div class="mb-3 platform-link-fields" id="platformLinkFields{{ application.id }}" style="display: none;">
+                                                                                <label for="platform" class="form-label">Platform</label>
+                                                                                <select class="form-select" id="platform" name="platform">
+                                                                                    <option value="">Select Platform</option>
+                                                                                    <option value="Zoom">Zoom</option>
+                                                                                    <option value="Google Meet">Google Meet</option>
+                                                                                    <option value="Microsoft Teams">Microsoft Teams</option>
+                                                                                </select>
+                                                                                <div id="platform_error{{ application.id }}" class="invalid-feedback"></div>
+                                                                            </div>
+                                                        
+                                                                            <!-- Link input -->
+                                                                            <div class="mb-3 platform-link-fields" id="linkFields{{ application.id }}" style="display: none;">
+                                                                                <label for="link" class="form-label">Link</label>
+                                                                                <input type="text" class="form-control" id="link" name="link">
+                                                                                <div id="link_error{{ application.id }}" class="invalid-feedback"></div>
+                                                                            </div>
+                                                        
+                                                                            <!-- Venue input -->
+                                                                            <div class="mb-3" id="venueField{{ application.id }}" style="display: none;">
+                                                                                <label for="venue" class="form-label">Venue</label>
+                                                                                <input type="text" class="form-control" id="venue{{ application.id }}" name="venue" oninput="validateVenue2{{ application.id }}();">
+                                                                                <span id="venue_error{{ application.id }}" class="text-danger" style="display: none;"></span>
+                                                                            </div>
+                                                        
+                                                                            <!-- Date and time input -->
+                                                                            <div class="mb-3">
+                                                                                <label for="datetime" class="form-label">Date and Time</label>
+                                                                                <input type="datetime-local" class="form-control" id="datetime" name="datetime" oninput="validateDate2{{ application.id }}(this.value)">
+                                                                                <span id="datetime_error{{ application.id }}" class="text-danger"></span>
+                                                                                <span id="datetime_msg{{ application.id }}" class="text-success"></span>
+                                                                            </div>
+                                                        
+                                                                            <!-- Notes textarea -->
+                                                                            <div class="mb-3">
+                                                                                <label for="notes" class="form-label">Notes</label>
+                                                                                <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+                                                                            </div>
+                                                        
+                                                                            <!-- Helpline input -->
+                                                                            <div class="mb-3">
+                                                                                <label for="helpline" class="form-label">Helpline</label>
+                                                                                <input type="text" class="form-control" id="helpline" name="helpline" oninput="validateHelpline2{{ application.id }}(this.value)">
+                                                                                <span id="helpline_error{{ application.id }}" class="text-danger"></span>
+                                                                                <span id="helpline_msg{{ application.id }}" class="text-success"></span>
+                                                                            </div>
+                                                        
+                                                                            <!-- Submit button -->
+                                                                            <button type="submit" id="submitButton{{ application.id }}" class="btn btn-dark" disabled>Schedule</button>
+                                                        
+                                                                            <!-- Success message -->
+                                                                            <span id="successMsg{{ application.id }}" class="text-success" style="display: none;"></span>
                                                                         </form>
                                                                     </div>
+                                                        
+                                                                    <script>
+                                                                        function toggleFields_{{ application.id }}(id) {
+                                                                            const offlineField = document.querySelector(`#venueField{{ application.id }}`);
+                                                                            const platformLinkFields = document.querySelectorAll('.platform-link-fields');
+                                                        
+                                                                            if (document.getElementById(`offline{{ application.id }}`).checked) {
+                                                                                offlineField.style.display = 'block';
+                                                                                platformLinkFields.forEach(field => {
+                                                                                    field.style.display = 'none';
+                                                                                });
+                                                                            } else {
+                                                                                offlineField.style.display = 'none';
+                                                                                platformLinkFields.forEach(field => {
+                                                                                    field.style.display = 'block';
+                                                                                });
+                                                                            }
+                                                                        }
+                                                        
+                                                                        function validateInterviewForm{{ application.id }}() {
+                                                                            // Add your validation logic here
+                                                                            // Return true if the form should be submitted, or false if it should not
+                                                                            // For example:
+                                                                            return validateDate2{{ application.id }}(document.getElementById('datetime').value) && validateHelpline2{{ application.id }}(document.getElementById('helpline').value);
+                                                                        }
+                                                        
+                                                                        function validateDate2{{ application.id }}(dateValue) {
+                                                                            var currentDate = new Date();
+                                                                            var selectedDate = new Date(dateValue);
+                                                                            var twoMonthsLater = new Date();
+                                                                            twoMonthsLater.setMonth(currentDate.getMonth() + 2);
+                                                        
+                                                                            if (isNaN(selectedDate.getTime())) {
+                                                                                // Invalid date format
+                                                                                document.getElementById('datetime_error{{ application.id }}').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Invalid date format.';
+                                                                                document.getElementById('datetime_msg{{ application.id }}').innerHTML = '';
+                                                                                enableSubmitButton('{{ application.id }}');
+                                                                                return false;
+                                                                            }
+                                                        
+                                                                            if (selectedDate < currentDate) {
+                                                                                // Date is in the past
+                                                                                document.getElementById('datetime_error{{ application.id }}').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Date should not be in the past.';
+                                                                                document.getElementById('datetime_msg{{ application.id }}').innerHTML = '';
+                                                                                enableSubmitButton('{{ application.id }}');
+                                                                                return false;
+                                                                            }
+                                                        
+                                                                            if (selectedDate > twoMonthsLater) {
+                                                                                // Date is more than 2 months in the future
+                                                                                document.getElementById('datetime_error{{ application.id }}').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Date should not be more than 2 months in the future.';
+                                                                                document.getElementById('datetime_msg{{ application.id }}').innerHTML = '';
+                                                                                enableSubmitButton('{{ application.id }}');
+                                                                                return false;
+                                                                            }
+                                                        
+                                                                            // Check if year has more than 4 digits
+                                                                            var year = selectedDate.getFullYear().toString();
+                                                                            if (year.length > 4) {
+                                                                                document.getElementById('datetime_error{{ application.id }}').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Invalid year format.';
+                                                                                document.getElementById('datetime_msg{{ application.id }}').innerHTML = '';
+                                                                                enableSubmitButton('{{ application.id }}');
+                                                                                return false;
+                                                                            }
+                                                        
+                                                                            // Valid date
+                                                                            document.getElementById('datetime_error{{ application.id }}').innerHTML = '';
+                                                                            document.getElementById('datetime_msg{{ application.id }}').innerHTML = '<i class="bi bi-check-circle"></i> Date is valid.';
+                                                                            enableSubmitButton('{{ application.id }}');
+                                                                            return true;
+                                                                        }
+                                                        
+                                                                        function validateHelpline2{{ application.id }}(helplineValue) {
+                                                                            var helplineErrorMsg = [];
+                                                        
+                                                                            if (helplineValue.length !== 10) {
+                                                                                helplineErrorMsg.push('Helpline number should be 10 digits.');
+                                                                            }
+                                                        
+                                                                            if (!/^[6-9]/.test(helplineValue)) {
+                                                                                helplineErrorMsg.push('Helpline number should start with 6, 7, 8, or 9.');
+                                                                            }
+                                                        
+                                                                            if (!/^\d+$/.test(helplineValue)) {
+                                                                                helplineErrorMsg.push('Helpline number should contain only digits.');
+                                                                            }
+                                                        
+                                                                            var errorMessage = helplineErrorMsg.join('<br>');
+                                                                            var helplineError = document.getElementById('helpline_error{{ application.id }}');
+                                                                            var helplineMsg = document.getElementById('helpline_msg{{ application.id }}');
+                                                                            helplineError.innerHTML = errorMessage;
+                                                        
+                                                                            if (errorMessage) {
+                                                                                helplineMsg.innerHTML = '';
+                                                                                helplineError.classList.add('text-danger');
+                                                                                helplineMsg.classList.remove('text-success');
+                                                                            } else {
+                                                                                helplineMsg.innerHTML = '<i class="bi bi-check-circle"></i> Helpline is valid.';
+                                                                                helplineError.classList.remove('text-danger');
+                                                                                helplineMsg.classList.add('text-success');
+                                                                            }
+                                                        
+                                                                            enableSubmitButton('{{ application.id }}');
+                                                                            return errorMessage.length === 0;
+                                                                        }
+                                                        
+                                                                        function enableSubmitButton(applicationId) {
+                                                                            var submitButton = document.getElementById('submitButton' + applicationId);
+                                                                            var dateTimeError = document.getElementById('datetime_error' + applicationId);
+                                                                            var helplineError = document.getElementById('helpline_error' + applicationId);
+                                                        
+                                                                            if (dateTimeError.innerHTML === '' && helplineError.innerHTML === '') {
+                                                                                submitButton.removeAttribute('disabled');
+                                                                                document.getElementById('successMsg' + applicationId).style.display = 'block';
+                                                                            } else {
+                                                                                submitButton.setAttribute('disabled', 'disabled');
+                                                                                document.getElementById('successMsg' + applicationId).style.display = 'none';
+                                                                            }
+                                                                        }
+                                                                    </script>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                       <script>
-                                                        function toggleFields_{{ application.id }}(id) {
-                                                            const offlineField = document.querySelector(`#venueField{{ application.id }}`);
-                                                            const platformLinkFields = document.querySelectorAll('.platform-link-fields');
-                                                            if (document.getElementById(`offline{{ application.id }}`).checked) {
-                                                                offlineField.style.display = 'block';
-                                                                platformLinkFields.forEach(field => {
-                                                                    field.style.display = 'none';
-                                                                });
-                                                            } else {
-                                                                offlineField.style.display = 'none';
-                                                                platformLinkFields.forEach(field => {
-                                                                    field.style.display = 'block';
-                                                                });
-                                                            }
-                                                        }  
-
-                                                 
-                                                        function validateDate2{{ application.id }}(dateValue) {
-                                                            var currentDate = new Date();
-                                                            var selectedDate = new Date(dateValue);
-                                                            var twoMonthsLater = new Date();
-                                                            twoMonthsLater.setMonth(currentDate.getMonth() + 2);
                                                         
-                                                            if (isNaN(selectedDate.getTime())) {
-                                                                // Invalid date format
-                                                                document.getElementById('datetime_error{{ application.id }}').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Invalid date format.';
-                                                                document.getElementById('datetime_msg{{ application.id }}').innerHTML = '';
-                                                                enableSubmitButton(false, '{{ application.id }}');
-                                                                return false;
-                                                            }
-                                                        
-                                                            if (selectedDate < currentDate) {
-                                                                // Date is in the past
-                                                                document.getElementById('datetime_error{{ application.id }}').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Date should not be in the past.';
-                                                                document.getElementById('datetime_msg{{ application.id }}').innerHTML = '';
-                                                                enableSubmitButton(false, '{{ application.id }}');
-                                                                return false;
-                                                            }
-                                                        
-                                                            if (selectedDate > twoMonthsLater) {
-                                                                // Date is more than 2 months in the future
-                                                                document.getElementById('datetime_error{{ application.id }}').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Date should not be more than 2 months in the future.';
-                                                                document.getElementById('datetime_msg{{ application.id }}').innerHTML = '';
-                                                                enableSubmitButton(false, '{{ application.id }}');
-                                                                return false;
-                                                            }
-                                                        
-                                                            // Check if year has more than 4 digits
-                                                            var year = selectedDate.getFullYear().toString();
-                                                            if (year.length > 4) {
-                                                                document.getElementById('datetime_error{{ application.id }}').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Invalid year format.';
-                                                                document.getElementById('datetime_msg{{ application.id }}').innerHTML = '';
-                                                                enableSubmitButton(false, '{{ application.id }}');
-                                                                return false;
-                                                            }
-                                                        
-                                                            // Valid date
-                                                            document.getElementById('datetime_error{{ application.id }}').innerHTML = '';
-                                                            document.getElementById('datetime_msg{{ application.id }}').innerHTML = '<i class="bi bi-check-circle"></i> Date is valid.';
-                                                            enableSubmitButton(validateHelpline2{{ application.id }}(document.getElementById('helpline').value), '{{ application.id }}');
-                                                            return true;
-                                                        }
-                                                        
-                                                        function validateHelpline2{{ application.id }}(helplineValue) {
-                                                            var helplineErrorMsg = [];
-                                                        
-                                                            if (helplineValue.length !== 10) {
-                                                                helplineErrorMsg.push('Helpline number should be 10 digits.');
-                                                            }
-                                                        
-                                                            if (!/^[6-9]/.test(helplineValue)) {
-                                                                helplineErrorMsg.push('Helpline number should start with 6, 7, 8, or 9.');
-                                                            }
-                                                        
-                                                            if (!/^\d+$/.test(helplineValue)) {
-                                                                helplineErrorMsg.push('Helpline number should contain only digits.');
-                                                            }
-                                                        
-                                                            var errorMessage = helplineErrorMsg.join('<br>');
-                                                            var helplineError = document.getElementById('helpline_error{{ application.id }}');
-                                                            var helplineMsg = document.getElementById('helpline_msg{{ application.id }}');
-                                                            helplineError.innerHTML = errorMessage;
-                                                        
-                                                            if (errorMessage) {
-                                                                helplineMsg.innerHTML = '';
-                                                                helplineError.classList.add('text-danger');
-                                                                helplineMsg.classList.remove('text-success');
-                                                            } else {
-                                                                helplineMsg.innerHTML = '<i class="bi bi-check-circle"></i> Helpline is valid.';
-                                                                helplineError.classList.remove('text-danger');
-                                                                helplineMsg.classList.add('text-success');
-                                                            }
-                                                        
-                                                            enableSubmitButton(errorMessage.length === 0 && validateDate2{{ application.id }}(document.getElementById('datetime').value), '{{ application.id }}');
-                                                            return errorMessage.length === 0;
-                                                        }
-                                                        
-                                                        function enableSubmitButton(enabled, applicationId) {
-                                                            var submitButton = document.getElementById('submitButton' + applicationId);
-                                                            if (enabled) {
-                                                                submitButton.removeAttribute('disabled');
-                                                                document.getElementById('successMsg' + applicationId).style.display = 'block';
-                                                            } else {
-                                                                submitButton.setAttribute('disabled', 'disabled');
-                                                                document.getElementById('successMsg' + applicationId).style.display = 'none';
-                                                            }
-                                                        }
-                                                        
-                                                        
-                                                    </script>
+                                                    
                                                         <div class="modal fade" id="editModal{{ application.id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ application.id }}" aria-hidden="true">
                                                             <div class="modal-dialog" role="document">
                                                                 <div class="modal-content">
@@ -489,7 +517,7 @@
                                                                                 <span id="helpline_error" class="text-danger"></span>
                                                                             </div>
                                                         
-                                                                            <button type="submit" class="btn btn-dark">Update</button>
+                                                                            <button type="submit"  class="btn btn-dark" >Update</button>
                                                                         </form>
                                                                     </div>
                                                                 </div>
@@ -571,61 +599,7 @@
             });
         });
     </script>
-    <script>
-                                                    
-    function validateDate(dateValue) {
-        var currentDate = new Date();
-        var selectedDate = new Date(dateValue);
     
-        var twoMonthsLater = new Date();
-        twoMonthsLater.setMonth(currentDate.getMonth() + 2);
-    
-        if (selectedDate < currentDate) {
-            document.getElementById('datetime_error').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Date should not be in the past.';
-            document.getElementById('datetime_error').classList.remove('text-success');
-            document.getElementById('datetime_error').classList.add('text-danger');
-            enableUpButton(false);
-            return false;
-        } else if (selectedDate > twoMonthsLater) {
-            document.getElementById('datetime_error').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Date should not be more than 2 months in the future.';
-            document.getElementById('datetime_error').classList.remove('text-success');
-            document.getElementById('datetime_error').classList.add('text-danger');
-            enableUpButton(false);
-            return false;
-        } else {
-            document.getElementById('datetime_msg').innerHTML = '<i class="bi bi-check-circle"></i> Date is valid.';
-            enableUpButton(true);
-            return true;
-        }
-    }
-   
-    function validateHelpline(helplineValue) {
-        var helplineErrorMsg = [];
-    
-        if (helplineValue.length !== 10) {
-            helplineErrorMsg.push('Helpline number should be 10 digits.');
-        }
-    
-        if (!/^[6-9]/.test(helplineValue)) {
-            helplineErrorMsg.push('Helpline number should start with 6, 7, 8, or 9.');
-        }
-    
-        if (!/^\d+$/.test(helplineValue)) {
-            helplineErrorMsg.push('Helpline number should contain only digits.');
-        }
-    
-        var errorMessage = helplineErrorMsg.join('<br>');
-        var errorElement = document.getElementById('helpline_error');
-        errorElement.innerHTML = errorMessage || '<i class="bi bi-check-circle"></i> Helpline is valid.';
-        errorElement.classList.remove('text-danger');
-        errorElement.classList.add('text-success');
-    
-        return helplineErrorMsg.length === 0;
-    }
-    
-                                                        
-                                                        
-                                                    </script>
                                                     
                                                         <script>
                                                         document.addEventListener('DOMContentLoaded', function() {
@@ -663,92 +637,105 @@
                                                             // Call the function initially to set the correct visibility based on the initial mode
                                                             toggleFields2(onlineMode.checked ? 'Online' : 'Offline');
                                                         });
-                                                    </script>                                        
+
+                                                        
+                                                        function validateDate(dateValue) {
+                                                            var currentDate = new Date();
+                                                            var selectedDate = new Date(dateValue);
+                                                            var twoMonthsLater = new Date();
+                                                            twoMonthsLater.setMonth(currentDate.getMonth() + 2);
+                                                    
+                                                            if (isNaN(selectedDate.getTime())) {
+                                                                document.getElementById('datetime_error').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Invalid date format.';
+                                                                document.getElementById('datetime_error').classList.remove('text-success');
+                                                                document.getElementById('datetime_error').classList.add('text-danger');
+                                                                enableUpdateButton();
+                                                                return false;
+                                                            }
+                                                    
+                                                            if (selectedDate < currentDate) {
+                                                                document.getElementById('datetime_error').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Date should not be in the past.';
+                                                                document.getElementById('datetime_error').classList.remove('text-success');
+                                                                document.getElementById('datetime_error').classList.add('text-danger');
+                                                                enableUpdateButton();
+                                                                return false;
+                                                            } else if (selectedDate > twoMonthsLater) {
+                                                                document.getElementById('datetime_error').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Date should not be more than 2 months in the future.';
+                                                                document.getElementById('datetime_error').classList.remove('text-success');
+                                                                document.getElementById('datetime_error').classList.add('text-danger');
+                                                                enableUpdateButton();
+                                                                return false;
+                                                            } else {
+                                                                document.getElementById('datetime_error').innerHTML = '<i class="bi bi-check-circle"></i> Date is valid.';
+                                                                document.getElementById('datetime_error').classList.remove('text-danger');
+                                                                document.getElementById('datetime_error').classList.add('text-success');
+                                                                enableUpdateButton();
+                                                                return true;
+                                                            }
+                                                        }
+                                                    
+                                                        function validateHelpline(helplineValue) {
+                                                            var helplineErrorMsg = [];
+                                                    
+                                                            if (helplineValue.length !== 10) {
+                                                                helplineErrorMsg.push('Helpline number should be 10 digits.');
+                                                            }
+                                                    
+                                                            if (!/^[6-9]/.test(helplineValue)) {
+                                                                helplineErrorMsg.push('Helpline number should start with 6, 7, 8, or 9.');
+                                                            }
+                                                    
+                                                            if (!/^\d+$/.test(helplineValue)) {
+                                                                helplineErrorMsg.push('Helpline number should contain only digits.');
+                                                            }
+                                                    
+                                                            var errorMessage = helplineErrorMsg.join('<br>');
+                                                            var errorElement = document.getElementById('helpline_error');
+                                                            errorElement.innerHTML = errorMessage || '<i class="bi bi-check-circle"></i> Helpline is valid.';
+                                                    
+                                                            if (errorMessage) {
+                                                                errorElement.classList.remove('text-success');
+                                                                errorElement.classList.add('text-danger');
+                                                                enableUpdateButton();
+                                                            } else {
+                                                                errorElement.classList.remove('text-danger');
+                                                                errorElement.classList.add('text-success');
+                                                                enableUpdateButton();
+                                                            }
+                                                    
+                                                            return helplineErrorMsg.length === 0;
+                                                        }
+                                                    
+                                                        function enableUpdateButton() {
+                                                            var updateButton = document.querySelector('button[type="submit"]');
+                                                            var dateTimeError = document.getElementById('datetime_error').classList.contains('text-danger');
+                                                            var helplineError = document.getElementById('helpline_error').classList.contains('text-danger');
+                                                            var dateTimeSuccess = document.getElementById('datetime_error').classList.contains('text-success');
+                                                            var helplineSuccess = document.getElementById('helpline_error').classList.contains('text-success');
+                                                        
+                                                            if (!dateTimeError && !helplineError && (dateTimeSuccess || helplineSuccess)) {
+                                                                updateButton.removeAttribute('disabled');
+                                                            } else {
+                                                                updateButton.setAttribute('disabled', 'disabled');
+                                                            }
+                                                        }
+                                                        
+                                                        // Call the enableUpdateButton function whenever there is a change in the form inputs
+                                                        document.getElementById('editDatetime').addEventListener('input', enableUpdateButton);
+                                                        document.getElementById('editHelpline').addEventListener('input', enableUpdateButton);
+                                                        
+                                                    
+                                                        function validateEditForm(applicationId) {
+                                                            var dateTimeValue = document.getElementById('editDatetime').value;
+                                                            var helplineValue = document.getElementById('editHelpline').value;
+                                                    
+                                                            return validateDate(dateTimeValue) && validateHelpline(helplineValue);
+                                                        }
+                                                    </script>                                      
                                                         
                                         
                                       
-                                                    
-                                        <script>
-                                            function validateDate(dateValue) {
-                                                var currentDate = new Date();
-                                                var selectedDate = new Date(dateValue);
-                                        
-                                                var twoMonthsLater = new Date();
-                                                twoMonthsLater.setMonth(currentDate.getMonth() + 2);
-                                        
-                                                if (selectedDate < currentDate) {
-                                                    document.getElementById('datetime_error').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Date should not be in the past.';
-                                                    return false;
-                                                } else if (selectedDate > twoMonthsLater) {
-                                                    document.getElementById('datetime_error').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Date should not be more than 2 months in the future.';
-                                                    return false;
-                                                } else {
-                                                    document.getElementById('datetime_error').innerHTML = '<i class="bi bi-check-circle"></i> Date is valid.';
-                                                    return true;
-                                                }
-                                            }
-                                        
-                                            function validateHelpline(helplineValue) {
-                                                var helplineErrorMsg = [];
-                                            
-                                                if (helplineValue.length !== 10) {
-                                                    helplineErrorMsg.push('Helpline number should be 10 digits.');
-                                                }
-                                            
-                                                if (!/^[6-9]/.test(helplineValue)) {
-                                                    helplineErrorMsg.push('Helpline number should start with 6, 7, 8, or 9.');
-                                                }
-                                            
-                                                if (!/^\d+$/.test(helplineValue)) {
-                                                    helplineErrorMsg.push('Helpline number should contain only digits.');
-                                                }
-                                            
-                                                var errorMessage = helplineErrorMsg.join('<br>');
-                                                document.getElementById('helpline_error').innerHTML = errorMessage || '<i class="bi bi-check-circle"></i> Helpline is valid.';
-                                            
-                                                return helplineErrorMsg.length === 0;
-                                            }
-                                            
-                                            
-                                        </script>
-                                        
-                                            <script>
-                                            document.addEventListener('DOMContentLoaded', function() {
-                                                var onlineMode = document.getElementById('editModeOnline');
-                                                var offlineMode = document.getElementById('editModeOffline');
-                                                var platformField = document.getElementById('platformField');
-                                                var linkField = document.getElementById('linkField');
-                                                var venueField = document.getElementById('venueField');
-                                            
-                                                function toggleFields2(mode) {
-                                                    if (mode === 'Online') {
-                                                        platformField.style.display = 'block';
-                                                        linkField.style.display = 'block';
-                                                        venueField.style.display = 'none';
-                                                        // Clear the venue field if it's displayed
-                                                        document.getElementById('editVenue').value = '';
-                                                    } else {
-                                                        platformField.style.display = 'none';
-                                                        linkField.style.display = 'none';
-                                                        venueField.style.display = 'block';
-                                                        // Clear the platform and link fields if they're displayed
-                                                        document.getElementById('editPlatform').value = '';
-                                                        document.getElementById('editLink').value = '';
-                                                    }
-                                                }
-                                            
-                                                // Modify the event listeners to pass the current value of the radio button
-                                                onlineMode.addEventListener('change', function() {
-                                                    toggleFields2(this.value);
-                                                });
-                                                offlineMode.addEventListener('change', function() {
-                                                    toggleFields2(this.value);
-                                                });
-                                            
-                                                // Call the function initially to set the correct visibility based on the initial mode
-                                                toggleFields2(onlineMode.checked ? 'Online' : 'Offline');
-                                            });
-                                        </script>                  
+                                                     
                                         
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
