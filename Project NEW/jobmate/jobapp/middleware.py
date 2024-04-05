@@ -12,7 +12,7 @@ class CheckLogoutMiddleware:
             # Check if the user is logged out and trying to access a page via browser history
             if not request.user.is_authenticated and response.status_code == 200:
                 # Exclude the home page and login page from redirection
-                if request.path not in ['/', '/login', '/register', '/companyreg']:
+                if request.path not in ['/', '/login', '/register', '/companyreg','/admin/login/?next=/admin/']:
                     # Redirect to a custom error page
                     return render(request, 'thankyou.html')  # Adjust 'thankyou.html' to the path of your custom error page template
         except Exception as e:

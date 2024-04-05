@@ -825,16 +825,39 @@ def view_applicants(request):
     # Initialize an empty dictionary to hold job titles and corresponding applications
     job_applications = {}
 
+    # Get the search query if it exists
+    search_name = request.GET.get('search_name')
+
+    # Get the application status filter if it exists
+    status_filter = request.GET.get('status')
+    type_filter = request.GET.get('type')
+    mode_filter = request.GET.get('mode')
+
     # Iterate over each job posted by the company
     for job in company_jobs:
         # Get all applications for the current job
         applications = ApplyJob.objects.filter(job_id=job)
 
+        # Filter applications by name if search query exists
+        if search_name:
+            applications = applications.filter(seeker_id__user__first_name__icontains=search_name)
+
+        # Filter applications by status if status filter exists
+        if status_filter and status_filter != 'All':
+            applications = applications.filter(status=status_filter)
+
+        # Filter applications by type if type filter exists
+       
+
+        # Filter applications by mode if mode filter exists
+        
+
         # Add the job title and corresponding applications to the dictionary
         job_applications[job.title] = applications
 
     # Render the 'view_applicants.html' template with the job_applications context
-    return render(request, 'view_applicants.html', {'job_applications': job_applications})
+    return render(request, 'view_applicants.html', {'job_applications': job_applications, 'status_filter': status_filter, 'type_filter': type_filter, 'mode_filter': mode_filter})
+
 
 from django.http import JsonResponse
 @login_required
@@ -962,7 +985,6 @@ def schedule_interview(request, application_id):
             pro_id=pro_id,
             seeker_id=application.seeker_id,
             scheduled_date=scheduled_datetime,
-            status='Scheduled',
             mode=mode,
             platform=platform,
             link=link,
@@ -1185,6 +1207,57 @@ def reject_candidate(request, application_id):
     else:
         return HttpResponseBadRequest('Invalid Request')
 
+
+
+
+
+
+
+from datetime import date
+
+from datetime import datetime
+
+def interview_list(request, pro_id=None):
+    if request.user.is_authenticated and request.user.role == 'jobprovider':
+        # Check if the user is a job provider
+        logged_in_provider = get_object_or_404(Job_Providers, user=request.user)
+        # Retrieve the logged-in job provider
+
+        # Get the start and end dates for the range if they exist
+        start_date = request.GET.get('start_date')
+        end_date = request.GET.get('end_date')
+
+        # Get the sort parameter if it exists
+        sort_by = request.GET.get('sort')
+
+        # Filter interviews by the logged-in job provider and date range
+        scheduled_interviews = Interview.objects.filter(
+    pro_id=logged_in_provider,  # Filter by the logged-in job provider
+    scheduled_date__gte=start_date if start_date else date.today(),  # Filter by start date if provided, else filter by today's date
+    scheduled_date__lte=end_date if end_date else datetime.max,  # Filter by end date if provided, else filter by maximum date
+    application__status='Scheduled'  # Filter by application status='Scheduled'
+).select_related('user', 'job_id', 'seeker_id', 'application')
+
+
+        # Sort interviews by scheduled date in ascending order if the sort parameter is 'date_asc'
+        if sort_by == 'date_asc':
+            scheduled_interviews = scheduled_interviews.order_by('scheduled_date')
+        # Sort interviews by scheduled date in descending order if the sort parameter is 'date_desc'
+        elif sort_by == 'date_desc':
+            scheduled_interviews = scheduled_interviews.order_by('-scheduled_date')
+
+        if not scheduled_interviews:
+            messages.error(request, 'No interviews scheduled for the selected date range or the dates are invalid.')
+
+        # Pass scheduled_interviews, sort_by, start_date, and end_date to the template context for rendering
+        return render(request, 'list_interviews.html', {
+            'scheduled_interviews': scheduled_interviews,
+            'sort_by': sort_by,
+            'start_date': start_date,
+            'end_date': end_date
+        })
+
 @login_required
 def logout_error_page(request):
     return render(request, 'thankyou')
+

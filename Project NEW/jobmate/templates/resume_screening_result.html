@@ -196,60 +196,39 @@ h1 {
 </div>
 
 <script>
-    // Example data
-    const matchScore = {{ match_score|floatformat:2 }}; // Example match score
-    const ctx = document.getElementById('matchScoreChart').getContext('2d');
-    
-    // Function to generate background colors dynamically
-    const generateBackgroundColors = (score) => {
-        const colors = [];
-        const prescribedColor = '#8B0000'; // Specify the prescribed color
-        
-        // Loop through to set the color for each segment
-        for (let i = 0; i < 15; i++) {
-            if (i === 0) {
-                colors.push(prescribedColor); // Set prescribed color for the first segment
-            } else {
-                colors.push('#ffffff'); // Set white color for the rest of the segments
-            }
-        }
-        return colors;
-    };
-    
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Match Score'],
-            datasets: [{
-                data: [matchScore],
-                backgroundColor: generateBackgroundColors(matchScore), // Dynamically generate background colors
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: false
-                },
-                cutout: '50%', // This makes it a donut chart
-                doughnutlabel: {
-                    labels: [
-                        {
-                            text: matchScore.toFixed(2), // Display score with 2 decimal places
-                            font: {
-                                size: 20
-                            }
-                        }
-                    ]
+    document.addEventListener('DOMContentLoaded', function () {
+        const matchScore = parseFloat("{{ match_score|floatformat:2 }}");
+        const ctx = document.getElementById('matchScoreChart').getContext('2d');
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Match Score'],
+                datasets: [{
+                    data: [matchScore, 100 - matchScore], // Data for the donut chart
+                    backgroundColor: ['#8B0000', '#D3D3D3'], // Colors for the segments
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                cutout: '50%', // Size of the hole in the middle of the chart
+                plugins: {
+                    legend: { display: false },
+                    title: { display: false },
+                    doughnutLabel: {
+                        labels: [{
+                            text: matchScore.toFixed(2),
+                            font: { size: 20 }
+                        }]
+                    }
                 }
             }
-        }
+        });
     });
 </script>
+</body>
+</html>
 
 
     

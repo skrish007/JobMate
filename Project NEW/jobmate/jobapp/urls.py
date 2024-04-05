@@ -89,7 +89,8 @@ path('reject/<int:application_id>', views.reject_candidate, name='reject_candida
 path('thankyou', views.logout_error_page, name='thankyou'),
 
 
-   
+path('list_interviews', views.interview_list, name='list_interviews'),
+
 ]
 
 

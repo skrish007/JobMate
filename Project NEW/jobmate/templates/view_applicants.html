@@ -122,14 +122,43 @@
                 </div>
                 {% endif %}
                 <br><br>
-                <h1> <center>Applied Candidates </h1>
-    
+                <h1> <center>Applied Candidates </h1>    
+                    <br><br>
+                    <a href="{% url 'list_interviews' %}" class="btn btn-primary">Scheduled Interviews</a>
+                    
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-md-6">
+                                <form method="GET" action="" class="mb-3">
+                                    <div class="input-group mb-3">
+                                        <input type="text" name="search_name" class="form-control" placeholder="Search by name" aria-label="Search by name" value="{{ request.GET.search_name }}">
+                                        <select class="form-select" name="status">
+                                            <option value="">Filter by status</option>
+                                            <option value="All" {% if request.GET.status == 'All' %} selected {% endif %}>All</option>
+                                            <option value="Pending" {% if request.GET.status == 'Pending' %} selected {% endif %}>Pending</option>
+                                            <option value="Selected" {% if request.GET.status == 'Selected' %} selected {% endif %}>Selected</option>
+                                            <option value="Scheduled" {% if request.GET.status == 'Scheduled' %} selected {% endif %}>Scheduled</option>
+                                            <option value="Rejected" {% if request.GET.status == 'Rejected' %} selected {% endif %}>Rejected</option>
+                                        </select>
+                                        
+                                        <button class="btn btn-outline-secondary" type="submit">Search</button>
+                                        <a class="btn btn-outline-secondary" href="?">Reset</a>
+                                    </div>
+                                </form>
+                                
+                                
+                            </div>
+                        </div>
+                    </div>
+                    
+                        </div>
                     <div class="container">
                         <div class="row" id="jobs-container">
                             <div class="row">
                                 {% for job_title, applications in job_applications.items %}
-                                    {% if applications %}
-                                        {% for application in applications %}
+                                {% for application in applications %}
+                                
+                                
                                             <div class="col-md-4">
                                                 <div class="card">
                                                     <div class="card-body">
@@ -184,7 +213,17 @@
                                                                         {% endif %}
                                                                     </td>
                                                                     
+                                                                    {% if application.status == "Scheduled" %}
+
+                                                                    <tr>
+                                                                        <th scope="row">Scheduled On</th>
+                                                                        <td> {{ interview.interview.scheduled_date |date:'F d, Y'}} </td>
+                                                                        </tr>
+                                                                        
+                                                                        {% endif %}
+                                                                       
                                                                 </tr>
+
                                                                 <tr>
                                                                     <td colspan="2">
                                                                         
@@ -351,27 +390,22 @@
                                                                             }
                                                                         }
                                                         
-                                                                        function validateInterviewForm{{ application.id }}() {
-                                                                            // Add your validation logic here
-                                                                            // Return true if the form should be submitted, or false if it should not
-                                                                            // For example:
-                                                                            return validateDate2{{ application.id }}(document.getElementById('datetime').value) && validateHelpline2{{ application.id }}(document.getElementById('helpline').value);
-                                                                        }
+                                                                       
                                                         
                                                                         function validateDate2{{ application.id }}(dateValue) {
                                                                             var currentDate = new Date();
                                                                             var selectedDate = new Date(dateValue);
                                                                             var twoMonthsLater = new Date();
                                                                             twoMonthsLater.setMonth(currentDate.getMonth() + 2);
-                                                        
+                                                                        
                                                                             if (isNaN(selectedDate.getTime())) {
                                                                                 // Invalid date format
-                                                                                document.getElementById('datetime_error{{ application.id }}').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Invalid date format.';
+                                                                                document.getElementById('datetime_error{{ application.id }}').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Invalid DATE format.';
                                                                                 document.getElementById('datetime_msg{{ application.id }}').innerHTML = '';
                                                                                 enableSubmitButton('{{ application.id }}');
                                                                                 return false;
                                                                             }
-                                                        
+                                                                        
                                                                             if (selectedDate < currentDate) {
                                                                                 // Date is in the past
                                                                                 document.getElementById('datetime_error{{ application.id }}').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Date should not be in the past.';
@@ -379,7 +413,7 @@
                                                                                 enableSubmitButton('{{ application.id }}');
                                                                                 return false;
                                                                             }
-                                                        
+                                                                        
                                                                             if (selectedDate > twoMonthsLater) {
                                                                                 // Date is more than 2 months in the future
                                                                                 document.getElementById('datetime_error{{ application.id }}').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Date should not be more than 2 months in the future.';
@@ -387,7 +421,7 @@
                                                                                 enableSubmitButton('{{ application.id }}');
                                                                                 return false;
                                                                             }
-                                                        
+                                                                        
                                                                             // Check if year has more than 4 digits
                                                                             var year = selectedDate.getFullYear().toString();
                                                                             if (year.length > 4) {
@@ -396,34 +430,34 @@
                                                                                 enableSubmitButton('{{ application.id }}');
                                                                                 return false;
                                                                             }
-                                                        
+                                                                        
                                                                             // Valid date
                                                                             document.getElementById('datetime_error{{ application.id }}').innerHTML = '';
                                                                             document.getElementById('datetime_msg{{ application.id }}').innerHTML = '<i class="bi bi-check-circle"></i> Date is valid.';
                                                                             enableSubmitButton('{{ application.id }}');
                                                                             return true;
                                                                         }
-                                                        
+                                                                        
                                                                         function validateHelpline2{{ application.id }}(helplineValue) {
                                                                             var helplineErrorMsg = [];
-                                                        
+                                                                        
                                                                             if (helplineValue.length !== 10) {
                                                                                 helplineErrorMsg.push('Helpline number should be 10 digits.');
                                                                             }
-                                                        
+                                                                        
                                                                             if (!/^[6-9]/.test(helplineValue)) {
                                                                                 helplineErrorMsg.push('Helpline number should start with 6, 7, 8, or 9.');
                                                                             }
-                                                        
+                                                                        
                                                                             if (!/^\d+$/.test(helplineValue)) {
                                                                                 helplineErrorMsg.push('Helpline number should contain only digits.');
                                                                             }
-                                                        
+                                                                        
                                                                             var errorMessage = helplineErrorMsg.join('<br>');
                                                                             var helplineError = document.getElementById('helpline_error{{ application.id }}');
                                                                             var helplineMsg = document.getElementById('helpline_msg{{ application.id }}');
                                                                             helplineError.innerHTML = errorMessage;
-                                                        
+                                                                        
                                                                             if (errorMessage) {
                                                                                 helplineMsg.innerHTML = '';
                                                                                 helplineError.classList.add('text-danger');
@@ -433,16 +467,18 @@
                                                                                 helplineError.classList.remove('text-danger');
                                                                                 helplineMsg.classList.add('text-success');
                                                                             }
-                                                        
+                                                                        
                                                                             enableSubmitButton('{{ application.id }}');
                                                                             return errorMessage.length === 0;
                                                                         }
-                                                        
+                                                                        
+                                                                       
+                                                                        
                                                                         function enableSubmitButton(applicationId) {
                                                                             var submitButton = document.getElementById('submitButton' + applicationId);
                                                                             var dateTimeError = document.getElementById('datetime_error' + applicationId);
                                                                             var helplineError = document.getElementById('helpline_error' + applicationId);
-                                                        
+                                                                        
                                                                             if (dateTimeError.innerHTML === '' && helplineError.innerHTML === '') {
                                                                                 submitButton.removeAttribute('disabled');
                                                                                 document.getElementById('successMsg' + applicationId).style.display = 'block';
@@ -451,6 +487,7 @@
                                                                                 document.getElementById('successMsg' + applicationId).style.display = 'none';
                                                                             }
                                                                         }
+                                                                       
                                                                     </script>
                                                                 </div>
                                                             </div>
@@ -527,9 +564,13 @@
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            
                                         {% endfor %}
-                                    {% endif %}
+                                    
                                 {% endfor %}
+
+                                
                             </div>
                         </div>
                     </div>
@@ -549,6 +590,8 @@
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+       
+      
         $(document).ready(function () {
             var currentPage = 1;
             var pageSize = 6;

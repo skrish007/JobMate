@@ -148,12 +148,7 @@ class Interview(models.Model):
     seeker_id = models.ForeignKey(Job_Seekers, on_delete=models.CASCADE)
 
     scheduled_date = models.DateTimeField()
-    STATUS_CHOICES = [
-        ('Scheduled', 'Scheduled'),
-        ('To be scheduled', 'To be scheduled'),
-        ('Cancelled', 'Cancelled'),
-    ]
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='To be scheduled')
+   
     mode = models.CharField(max_length=20, choices=[('Online', 'Online'), ('Offline', 'Offline')], default='Offline')
     platform = models.CharField(max_length=50, blank=True)
     link = models.URLField(blank=True)
